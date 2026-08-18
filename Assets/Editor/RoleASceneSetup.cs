@@ -140,19 +140,23 @@ namespace Daeume.Editor
             CreateLabel("K: 붙잡기", new Vector2(0.8f, 1.65f));
 
             var remnant = CreateBlock("RemnantDummy", new Vector2(3f, -0.5f), new Vector2(0.8f, 1f), new Color(0.75f, 0.18f, 0.2f));
-            remnant.AddComponent<BoxCollider2D>();
+            remnant.AddComponent<BoxCollider2D>().size = Vector2.one;
             remnant.AddComponent<PrototypeRemnant>();
             CreateLabel("J: 공격 3회", new Vector2(3f, 0.45f));
 
             var interactable = CreateBlock("InteractionDummy", new Vector2(5.2f, -0.5f), new Vector2(0.8f, 1f), new Color(1f, 0.85f, 0.35f));
-            interactable.AddComponent<BoxCollider2D>().isTrigger = true;
+            var interactionCollider = interactable.AddComponent<BoxCollider2D>();
+            interactionCollider.size = Vector2.one;
+            interactionCollider.isTrigger = true;
             interactable.AddComponent<PrototypeInteractable>();
             CreateLabel("E: 상호작용", new Vector2(5.2f, 0.45f));
 
             var checkpoint = CreateBlock("CheckpointMarker", new Vector2(6.7f, -0.75f), new Vector2(0.15f, 1f), new Color(0.3f, 0.9f, 0.9f));
             checkpoint.GetComponent<SpriteRenderer>().sortingOrder = -1;
             var traumaSource = CreateBlock("TraumaDummy", new Vector2(8.1f, -0.35f), new Vector2(1f, 1.5f), new Color(0.04f, 0.03f, 0.05f));
-            traumaSource.AddComponent<BoxCollider2D>().isTrigger = true;
+            var traumaCollider = traumaSource.AddComponent<BoxCollider2D>();
+            traumaCollider.size = Vector2.one;
+            traumaCollider.isTrigger = true;
             traumaSource.AddComponent<TraumaContactSource>();
             CreateLabel("접촉: Checkpoint 복귀", new Vector2(8.1f, 0.65f));
 
@@ -193,7 +197,7 @@ namespace Daeume.Editor
         private static GameObject CreateSolidBlock(string name, Vector2 position, Vector2 size, Color color)
         {
             var gameObject = CreateBlock(name, position, size, color);
-            gameObject.AddComponent<BoxCollider2D>();
+            gameObject.AddComponent<BoxCollider2D>().size = Vector2.one;
             return gameObject;
         }
 

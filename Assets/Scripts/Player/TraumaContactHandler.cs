@@ -4,12 +4,6 @@ using UnityEngine;
 
 namespace Daeume.Player
 {
-    public sealed class TraumaContactSource : MonoBehaviour, IDamageable
-    {
-        public DamageTargetKind TargetKind => DamageTargetKind.Trauma;
-        public DamageResult ApplyDamage(DamageRequest request) => new(false, 0);
-    }
-
     public sealed class TraumaContactHandler : MonoBehaviour
     {
         [SerializeField, Min(0f)] private float traumaGrabSeconds = 1f;
