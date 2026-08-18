@@ -3,6 +3,7 @@ using Daeume.Core;
 using Daeume.Flow;
 using Daeume.Interaction;
 using Daeume.Player;
+using Daeume.Prototype;
 using NUnit.Framework;
 using UnityEditor.SceneManagement;
 using UnityEngine;
@@ -46,6 +47,20 @@ namespace Daeume.Tests.EditMode
             var names = input.actions.FindActionMap("Player").actions.Select(action => action.name).ToArray();
             Assert.That(names, Is.EquivalentTo(new[] { "Move", "Jump", "Attack", "Grab", "Interact", "Pause" }));
             Assert.That(input.actions.FindAction("Move").expectedControlType, Is.EqualTo("Vector2"));
+        }
+
+        [Test]
+        public void Test_PrototypeScene_HasAllFeatureStations()
+        {
+            var scene = EditorSceneManager.OpenScene("Assets/Scenes/RoleAPrototype.unity", OpenSceneMode.Single);
+            var roots = scene.GetRootGameObjects();
+            Assert.That(Find(roots, "Player").GetComponent<PlayerController>(), Is.Not.Null);
+            Assert.That(Find(roots, "OneWayPlatform").GetComponent<PlatformEffector2D>(), Is.Not.Null);
+            Assert.That(Find(roots, "GrabbableZone").GetComponent<GrabbableSurface>(), Is.Not.Null);
+            Assert.That(Find(roots, "RemnantDummy").GetComponent<PrototypeRemnant>(), Is.Not.Null);
+            Assert.That(Find(roots, "InteractionDummy").GetComponent<PrototypeInteractable>(), Is.Not.Null);
+            Assert.That(Find(roots, "TraumaDummy").GetComponent<TraumaContactSource>(), Is.Not.Null);
+            Assert.That(Find(roots, "PrototypeSystems").GetComponent<PrototypeHarness>(), Is.Not.Null);
         }
 
         private static GameObject Find(GameObject[] roots, string name)

@@ -1,1 +1,1 @@
-{"name":"Daeume.Editor","rootNamespace":"Daeume.Editor","references":["Daeume.Core","Daeume.Player","Daeume.Interaction","Daeume.Flow","Unity.InputSystem"],"includePlatforms":["Editor"],"autoReferenced":true}
+{"name":"Daeume.Editor","rootNamespace":"Daeume.Editor","references":["Daeume.Core","Daeume.Player","Daeume.Interaction","Daeume.Flow","Daeume.Prototype","Unity.InputSystem"],"includePlatforms":["Editor"],"autoReferenced":true}

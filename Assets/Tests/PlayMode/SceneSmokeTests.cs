@@ -1,5 +1,7 @@
 using System.Collections;
 using NUnit.Framework;
+using Daeume.Prototype;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.TestTools;
 
@@ -25,6 +27,18 @@ namespace Daeume.Tests.PlayMode
             }
 
             Assert.Fail("Boot did not load Persistent and Title within 180 frames.");
+        }
+
+        [UnityTest]
+        public IEnumerator Test_PrototypeScene_LoadsWithoutConsoleErrors()
+        {
+            SceneManager.LoadScene("RoleAPrototype", LoadSceneMode.Single);
+            yield return null;
+            Assert.That(Object.FindFirstObjectByType<PrototypeHarness>(), Is.Not.Null);
+            Assert.That(GameObject.Find("RemnantDummy"), Is.Not.Null);
+            Assert.That(GameObject.Find("InteractionDummy"), Is.Not.Null);
+            Assert.That(GameObject.Find("TraumaDummy"), Is.Not.Null);
+            LogAssert.NoUnexpectedReceived();
         }
     }
 }
