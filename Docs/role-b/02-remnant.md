@@ -52,10 +52,10 @@ Role A 전투 contract에 연결되는 근접형 Remnant 한 종을 구현하고
 
 ## 세션 결과
 
-- 상태: 미시작
-- 커밋:
-- 구현:
-- 테스트:
-- 수동 QA:
-- contract 변경:
-- 다음 세션 주의점:
+- 상태: 완료
+- 커밋: `90fabc8` (`feat: add Stage 1 melee remnant`)
+- 구현: Stage 1 근접형 Remnant 데이터, `Idle/Alert/Approach/Attack/Hit/Dead` 6상태 runtime, 공격 telegraph, Role A 상호 피해, 사망 후 Collider·공격 차단, `Echo/Intrusion` 트라우마 방향 반응을 추가했다. Prefab을 `stage01.remnant.spawn.01`에 연결했다. 둥근 내장 UI sprite로 읽기 어려웠던 B1 blockout도 Role B 사각 placeholder와 구역 label/marker 표시로 교체했다.
+- 테스트: B2 EditMode 2/2, B2 PlayMode 5/5 통과. 시각 수정 후 전체 EditMode 29/29, 전체 PlayMode 32/32 통과. 최종 실패 0, Unity Console error 0.
+- 수동 QA: Unity 2D Scene 캡처로 START/RECOVERY/ENCOUNTER/MEMORY·CHASE 구역, spawn marker와 Remnant 배치를 확인했다. Stage01 Prefab의 telegraph renderer 활성화, Player 공격 3회 소멸, 소멸 후 판정 비활성화를 PlayMode에서 확인했다.
+- contract 변경: 기존 공용 contract 변경 없음. `Daeume.Enemy.MeleeRemnant`, `MeleeRemnantData`, `RemnantState`, `RemnantPressureProfile`을 새 Role B API로 추가했다. B4가 `SetPressure`와 `SetTraumaTarget`을 호출할 수 있다.
+- 다음 세션 주의점: B3는 `Assets/Prefabs/Enemy/Stage01_MeleeRemnant.prefab`을 wave spawn 대상으로 사용하고, spawn 시 `SetTarget`을 생략해도 `DamageTargetKind.Player`를 자동 탐색한다. Scene의 기존 focused instance는 Encounter 연결 시 직접 재배치하지 말고 marker/prefab 참조로 전환한다.
