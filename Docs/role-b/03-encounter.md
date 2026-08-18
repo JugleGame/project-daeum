@@ -54,10 +54,10 @@ Stage 1에서 구간 진입, 근접형 Remnant Spawn, 출구 잠금, Wave 전멸
 
 ## 세션 결과
 
-- 상태: 미시작
-- 커밋:
-- 구현:
-- 테스트:
-- 수동 QA:
-- contract 변경:
-- 다음 세션 주의점:
+- 상태: 완료
+- 커밋: `f8216a8` (`feat: add Stage 1 encounter waves`)
+- 구현: `EncounterData`와 Stage01 Encounter asset, `EncounterController`의 2-Wave `DefeatAll` 진행, 런타임 근접형 Remnant Spawn, 출구 잠금/해제, 완료 후 재진입 차단을 구현했다. `WarningPulseHazard`는 Player/Remnant 모두에게 체력 1을 보존하는 동일 피해 규칙과 시각 경고·런타임 placeholder 경고음을 제공한다.
+- 테스트: B3 focused EditMode 2/2, PlayMode 6/6. 전체 회귀 EditMode 31/31, PlayMode 38/38. Compile/Console error 0.
+- 수동 QA: Stage01 encounter 구간에서 사각 blockout 기준 Spawn marker, 경고 pulse, 잠금 barrier 위치를 2D Scene capture로 확인했으며 QA 뒤 활성 Scene을 저장된 `Boot`로 복구했다.
+- contract 변경: `EncounterStateChanged(EncounterId, State, WaveNumber)`, `EncounterWaveStarted(EncounterId, WaveNumber, SpawnCount)`를 EventBus 소비용으로 추가했다. `MeleeRemnant.Died` 이벤트를 Wave 전멸 판정 경계로 제공한다.
+- 다음 세션 주의점: B4 director는 Encounter 상태 이벤트를 소비하되 조우 Spawn 책임을 다시 구현하지 않는다. 경고음은 최종 audio asset이 아닌 명시적 런타임 placeholder다.
