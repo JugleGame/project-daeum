@@ -1,5 +1,7 @@
 using System.Collections;
 using NUnit.Framework;
+using Daeume.Core;
+using Daeume.Flow;
 using Daeume.Player;
 using Daeume.Prototype;
 using UnityEngine;
@@ -59,6 +61,34 @@ namespace Daeume.Tests.PlayMode
             Assert.That(player.transform.position.y, Is.GreaterThan(-0.8f));
             Assert.That(Mathf.Abs(body.linearVelocity.y), Is.LessThan(0.1f));
             Assert.That(controller.IsGrounded, Is.True);
+            LogAssert.NoUnexpectedReceived();
+        }
+
+        [UnityTest]
+        public IEnumerator Test_PrototypeCheckpoint_ActivatesOnContactAndRestoresPlayer()
+        {
+            SceneManager.LoadScene("RoleAPrototype", LoadSceneMode.Single);
+            yield return null;
+
+            var player = GameObject.Find("Player");
+            var body = player.GetComponent<Rigidbody2D>();
+            var marker = GameObject.Find("CheckpointMarker");
+            var checkpoint = marker.GetComponent<PrototypeCheckpoint>();
+            var flow = Object.FindFirstObjectByType<SceneFlowController>();
+            Assert.That(checkpoint.Activated, Is.False);
+
+            body.position = marker.transform.position;
+            body.linearVelocity = Vector2.zero;
+            Physics2D.SyncTransforms();
+            yield return new WaitForFixedUpdate();
+
+            Assert.That(checkpoint.Activated, Is.True);
+            Assert.That(flow.CurrentData.PlayerPosition, Is.EqualTo((Vector2)marker.transform.position));
+
+            body.position = new Vector2(8f, 0f);
+            GameManager.Instance.Events.Publish(new ChaseCheckpointRestoreRequested("Stage01_Chase"));
+            yield return null;
+            Assert.That(Vector2.Distance(body.position, marker.transform.position), Is.LessThan(0.01f));
             LogAssert.NoUnexpectedReceived();
         }
     }

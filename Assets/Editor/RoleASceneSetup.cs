@@ -151,8 +151,13 @@ namespace Daeume.Editor
             interactable.AddComponent<PrototypeInteractable>();
             CreateLabel("E: 상호작용", new Vector2(5.2f, 0.45f));
 
-            var checkpoint = CreateBlock("CheckpointMarker", new Vector2(6.7f, -0.75f), new Vector2(0.15f, 1f), new Color(0.3f, 0.9f, 0.9f));
+            var checkpoint = CreateBlock("CheckpointMarker", new Vector2(6.7f, -0.5f), new Vector2(0.15f, 1f), new Color(0.3f, 0.9f, 0.9f));
             checkpoint.GetComponent<SpriteRenderer>().sortingOrder = -1;
+            var checkpointCollider = checkpoint.AddComponent<BoxCollider2D>();
+            checkpointCollider.size = Vector2.one;
+            checkpointCollider.isTrigger = true;
+            var prototypeCheckpoint = checkpoint.AddComponent<PrototypeCheckpoint>();
+            SetObjectReference(prototypeCheckpoint, "flow", flow);
             var traumaSource = CreateBlock("TraumaDummy", new Vector2(8.1f, -0.35f), new Vector2(1f, 1.5f), new Color(0.04f, 0.03f, 0.05f));
             var traumaCollider = traumaSource.AddComponent<BoxCollider2D>();
             traumaCollider.size = Vector2.one;
@@ -172,9 +177,6 @@ namespace Daeume.Editor
             SetObjectReference(follow, "target", player.transform);
 
             var harness = systems.AddComponent<PrototypeHarness>();
-            SetObjectReference(harness, "player", player.transform);
-            SetObjectReference(harness, "checkpoint", checkpoint.transform);
-            SetObjectReference(harness, "flow", flow);
 
             EditorSceneManager.SaveScene(scene, scenePath);
             EnsureBuildScene(scenePath);

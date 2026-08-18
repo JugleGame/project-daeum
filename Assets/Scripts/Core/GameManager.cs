@@ -2,6 +2,7 @@ using UnityEngine;
 
 namespace Daeume.Core
 {
+    [DefaultExecutionOrder(-100)]
     public sealed class GameManager : MonoBehaviour
     {
         public static GameManager Instance { get; private set; }
