@@ -12,8 +12,10 @@ namespace Daeume.ContaminationRuntime
         [SerializeField] private string chaseId = "chase-stage01-left-escape";
         [SerializeField] private Transform player;
         [SerializeField] private Transform pursuer;
+        [SerializeField] private ChaseSpeedAssistAdapter speedAssist;
 
         private string loadedOverlay = string.Empty;
+        private bool deadEndBlocked;
 
         public ContaminationVariantData Data => data;
         public PressureStage Pressure { get; private set; } = PressureStage.Stable;
@@ -22,6 +24,9 @@ namespace Daeume.ContaminationRuntime
         public float RemainingChaseSeconds => data == null ? 0f : Mathf.Max(0f, data.TargetChaseSeconds - ElapsedChaseSeconds);
         public int TeleportCount { get; private set; }
         public string VariantId => data == null ? string.Empty : data.VariantId;
+        public float EffectiveChaseSpeed => speedAssist == null ? data?.ChaseSpeed ?? 0f : speedAssist.ResolveSpeed(data?.ChaseSpeed ?? 0f);
+        public float EffectiveMinDistance => speedAssist == null ? data?.MinDistance ?? 0f : speedAssist.ResolveApproachDistance(data?.MinDistance ?? 0f, data?.MaxDistance ?? 0f);
+        public bool DeadEndBlocked => deadEndBlocked;
         public event Action<string, bool> OverlayRequested;
 
         private void Update()
@@ -67,6 +72,10 @@ namespace Daeume.ContaminationRuntime
             BeginChase();
         }
 
+        public void SetSpeedAssist(ChaseSpeedAssistAdapter adapter) => speedAssist = adapter;
+
+        public void SetDeadEndBlocked(bool blocked) => deadEndBlocked = blocked;
+
         public void Tick(float deltaTime)
         {
             if (!ChaseActive || data == null) return;
@@ -98,13 +107,21 @@ namespace Daeume.ContaminationRuntime
             var direction = Mathf.Approximately(offset, 0f) ? -1f : Mathf.Sign(offset);
             var distance = Mathf.Abs(offset);
             float targetDistance;
-            if (distance < data.MinDistance) targetDistance = data.MinDistance;
-            else if (distance > data.MaxDistance) targetDistance = data.MaxDistance;
-            else return;
+            if (distance > data.MaxDistance || deadEndBlocked) targetDistance = data.MaxDistance;
+            else targetDistance = EffectiveMinDistance;
+
+            if (Mathf.Approximately(distance, targetDistance)) return;
 
             var targetX = player.position.x + direction * targetDistance;
+            var actor = pursuer.GetComponent<TraumaChaseActor>();
+            if (actor != null)
+            {
+                actor.ApplyDirective(CreateDirective(), deltaTime, targetDistance);
+                return;
+            }
+
             var position = pursuer.position;
-            position.x = Mathf.MoveTowards(position.x, targetX, data.ChaseSpeed * deltaTime);
+            position.x = Mathf.MoveTowards(position.x, targetX, EffectiveChaseSpeed * deltaTime);
             pursuer.position = position;
         }
 
@@ -112,9 +129,15 @@ namespace Daeume.ContaminationRuntime
         {
             if (player == null || pursuer == null) return;
             var distance = Mathf.Abs(player.position.x - pursuer.position.x);
-            GameManager.Instance?.Events.Publish(new ChaseDirectiveIssued(
+            GameManager.Instance?.Events.Publish(CreateDirective(distance));
+        }
+
+        private ChaseDirectiveIssued CreateDirective(float? measuredDistance = null)
+        {
+            var distance = measuredDistance ?? Mathf.Abs(player.position.x - pursuer.position.x);
+            return new ChaseDirectiveIssued(
                 chaseId, player.position, pursuer.position, distance,
-                data.MinDistance, data.MaxDistance, data.ChaseSpeed, RemainingChaseSeconds));
+                EffectiveMinDistance, data.MaxDistance, EffectiveChaseSpeed, RemainingChaseSeconds);
         }
 
         private void PublishChaseState()
