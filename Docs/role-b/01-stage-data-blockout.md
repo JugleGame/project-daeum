@@ -49,10 +49,10 @@
 
 ## 세션 결과
 
-- 상태: 미시작
-- 커밋:
-- 구현:
-- 테스트:
-- 수동 QA:
-- contract 변경:
-- 다음 세션 주의점:
+- 상태: 완료
+- 커밋: `0b17eb3` (`feat: add Stage 1 data and blockout`)
+- 구현: 13개 Stage를 수용하는 `StageData` 스키마와 Stage 1 asset을 추가했다. `Stage01_Base`에 시작 지형, 일방향 발판, 붙잡기 벽, 낙하 복귀 계단, encounter 구간, 카메라 경계와 후속 세션용 안정 marker 9개를 Scene 저작 데이터로 배치했다.
+- 테스트: B1 EditMode 4/4 통과, B1 PlayMode 2/2 통과, 영향받는 전체 PlayMode 회귀 27/27 통과, 실패 0, 최종 Unity Console error 0.
+- 수동 QA: Unity 2D Scene 캡처로 전체 blockout 배치를 확인했다. PlayMode에서 Input System D 키 입력, 점프, 붙잡기, 낙하 복귀 바닥 착지와 카메라 최소/최대 경계를 검증했다.
+- contract 변경: 기존 공용 contract 변경 없음. `Daeume.Stage.StageData`, `StageDefinition`, `StageMarker`, `StageCameraBounds`를 새 Role B API로 추가했다. event payload는 추가하지 않았다.
+- 다음 세션 주의점: B2는 `stage01.remnant.spawn.01`, `stage01.remnant.spawn.02` marker를 사용한다. B3~B5는 각각 `stage01.encounter.01.trigger`, `stage01.encounter.01.exit`, `stage01.memory.anchor.01`, `stage01.chase.start`, `stage01.escape`를 재배치 없이 소비한다.
