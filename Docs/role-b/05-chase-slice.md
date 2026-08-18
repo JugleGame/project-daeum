@@ -59,10 +59,10 @@ Stage 1에서 기억 완료 이후 오염 전환, 좌향 도주, 조명 기믹, 
 
 ## 세션 결과
 
-- 상태: 미시작
-- 커밋:
-- 구현:
-- 테스트:
-- 수동 QA:
-- contract 변경:
-- 다음 세션 주의점:
+- 상태: 완료
+- 커밋: `9e57d7e` (`feat: complete Stage 1 chase slice`)
+- 구현: `StageOneChaseController`가 debug memory 완료 입력을 `Memory → Chase`로 연결하고 `Stage01_Chase` checkpoint에 player 위치/health/동일 contamination Variant를 저장한다. `TraumaChaseActor`는 기존 `ChaseDirectiveIssued`의 속도·거리 지시를 실행하되 추격 종료를 결정하지 않으며 `TraumaContactSource`를 유지한다. Director는 정지 player에게 `MinDistance`까지 계속 접근하고 dead-end zone에서는 `MaxDistance`까지 물러난다. 좌향/막힌 길/탈출 신호는 조명 색과 함께 `←`, `║`, `▣` 형태·문자 cue를 제공한다. `ChaseSpeedAssistAdapter`는 speed와 접근 거리 압박만 완화하고 route, signal, timing, escape, Variant는 바꾸지 않는다. 탈출 trigger는 Role A `SceneFlowController.CompleteStageOne`을 우선 사용하고 standalone smoke에서는 `GameManager` 상태 contract로 `Cleared`를 확인한다.
+- 테스트: focused EditMode `StageOneChaseLayoutTests` 2/2, focused PlayMode `StageOneChaseTests` 5/5. 전체 회귀 EditMode 34/34, PlayMode 50/50. Compile error 0, Console error 0.
+- 수동 QA: 저장하지 않은 QA player/runtime을 `Stage01_Base`에 임시 배치해 Context Menu debug memory trigger를 실행했다. `StageState.Chase`, `Stage01_Overlay_Intrusion` additive load, 좌향 입력 이동, Trauma directive 실행 및 접근을 확인했고 접촉 후 `StageState.Failed`를 확인했다. 이어 `Stage01_Chase` retry를 동일 Variant `Stage01_Overlay_Intrusion`으로 시작하고 escape trigger에 진입해 `StageState.Cleared`를 확인했다. 임시 객체는 Play Mode 종료 후 저장된 `Stage01_Base`를 다시 열어 제거했다.
+- contract 변경: Role A public contract 변경 없음. 기존 `ChaseDirectiveIssued`, `TraumaContactSource`, `SceneFlowController.SaveChaseCheckpoint`, `SceneFlowController.CompleteStageOne`, `GameManager` 상태 전이를 그대로 소비한다. 실제 `MemoryComplete` 및 `AssistSettings` contract는 아직 없으며 각각 `MemoryCompletionAdapter`와 `ChaseSpeedAssistAdapter` 뒤에 격리했다.
+- 다음 세션 주의점: B-QA는 `Stage01_Base`의 `B4_ContaminationDirector/MemoryCompletionAdapter`에서 debug memory 완료를 시작하고 왼쪽으로 달려 `Signal_Left_01 → Signal_DeadEnd_01 → Signal_Exit_01` 순서와 escape trigger를 재현한다. 실제 `MemoryComplete`가 생기면 `MemoryCompletionAdapter` 입력만 교체한다. 실제 assist 설정이 생기면 `ChaseSpeedAssistAdapter.Configure` 입력만 교체한다. QA 종료 후 저장된 `Boot`를 활성 Scene으로 복구한다.
