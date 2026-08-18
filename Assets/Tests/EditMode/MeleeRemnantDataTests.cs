@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using Daeume.Contamination;
+using Daeume.Encounter;
 using Daeume.Enemy;
 using Daeume.Stage;
 using NUnit.Framework;
@@ -45,13 +46,20 @@ namespace Daeume.Tests.EditMode
             Assert.That(telegraph, Is.Not.Null);
             Assert.That(telegraph.enabled, Is.False);
 
-            var scene = EditorSceneManager.OpenScene(ScenePath, OpenSceneMode.Single);
-            var marker = Find(scene, "RemnantSpawnMarker_01").GetComponent<StageMarker>();
-            var instance = Find(scene, "Stage01_MeleeRemnant_01").GetComponent<MeleeRemnant>();
-            Assert.That(instance, Is.Not.Null);
-            Assert.That(instance.SpawnMarkerId, Is.EqualTo(marker.MarkerId));
-            Assert.That(Vector2.Distance(instance.transform.position, marker.transform.position), Is.LessThan(.01f));
-            Assert.That(PrefabUtility.IsPartOfPrefabInstance(instance), Is.True);
+            var scene = EditorSceneManager.OpenScene(ScenePath, OpenSceneMode.Additive);
+            try
+            {
+                var marker = Find(scene, "RemnantSpawnMarker_01").GetComponent<StageMarker>();
+                var controller = Find(scene, "EncounterTriggerMarker").GetComponent<EncounterController>();
+                Assert.That(controller, Is.Not.Null);
+                Assert.That(controller.Data.SpawnMarkerIds, Does.Contain(marker.MarkerId));
+                var serialized = new SerializedObject(controller);
+                Assert.That(serialized.FindProperty("enemyPrefab").objectReferenceValue, Is.EqualTo(prefabRemnant));
+            }
+            finally
+            {
+                EditorSceneManager.CloseScene(scene, true);
+            }
         }
 
         private static GameObject Find(Scene scene, string name)

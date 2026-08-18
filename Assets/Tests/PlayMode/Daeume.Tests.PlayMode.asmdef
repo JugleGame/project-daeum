@@ -1,7 +1,7 @@
 {
   "name": "Daeume.Tests.PlayMode",
   "rootNamespace": "Daeume.Tests.PlayMode",
-  "references": ["Daeume.Core", "Daeume.Player", "Daeume.Interaction", "Daeume.Flow", "Daeume.Prototype", "Daeume.Contamination", "Daeume.Enemy", "Daeume.Stage", "Unity.InputSystem"],
+  "references": ["Daeume.Core", "Daeume.Player", "Daeume.Interaction", "Daeume.Flow", "Daeume.Prototype", "Daeume.Contamination", "Daeume.Enemy", "Daeume.Encounter", "Daeume.Stage", "Unity.InputSystem"],
   "optionalUnityReferences": ["TestAssemblies"],
   "autoReferenced": false
 }

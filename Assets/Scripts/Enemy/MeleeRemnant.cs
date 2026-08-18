@@ -1,3 +1,4 @@
+using System;
 using Daeume.Contamination;
 using Daeume.Core;
 using UnityEngine;
@@ -40,6 +41,7 @@ namespace Daeume.Enemy
         public bool CanDealDamage => State != RemnantState.Dead && bodyCollider != null && bodyCollider.enabled;
         public string SpawnMarkerId => spawnMarkerId;
         public MeleeRemnantData Data => data;
+        public event Action<MeleeRemnant> Died;
 
         private RemnantPressureProfile Profile => DataOrDefault.GetProfile(pressureStage);
         private MeleeRemnantData DataOrDefault
@@ -234,6 +236,7 @@ namespace Daeume.Enemy
             if (bodyCollider == null) bodyCollider = GetComponent<Collider2D>();
             bodyCollider.enabled = false;
             if (bodyRenderer != null) bodyRenderer.color = new Color(0.2f, 0.2f, 0.24f, 0.35f);
+            Died?.Invoke(this);
         }
 
         private bool TargetInRange(float range)

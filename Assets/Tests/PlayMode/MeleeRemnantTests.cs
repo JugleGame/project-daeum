@@ -1,6 +1,7 @@
 using System.Collections;
 using Daeume.Contamination;
 using Daeume.Core;
+using Daeume.Encounter;
 using Daeume.Enemy;
 using Daeume.Player;
 using NUnit.Framework;
@@ -127,8 +128,11 @@ namespace Daeume.Tests.PlayMode
             yield return null;
 
             var combat = Object.FindAnyObjectByType<PlayerCombat>();
-            var remnant = GameObject.Find("Stage01_MeleeRemnant_01").GetComponent<MeleeRemnant>();
+            var encounter = Object.FindAnyObjectByType<EncounterController>();
             Assert.That(combat, Is.Not.Null);
+            Assert.That(encounter, Is.Not.Null);
+            Assert.That(encounter.TryActivate(), Is.True);
+            var remnant = encounter.ActiveEnemies[0];
             Assert.That(remnant, Is.Not.Null);
             remnant.transform.position = combat.transform.position + Vector3.right * .55f;
             Physics2D.SyncTransforms();
