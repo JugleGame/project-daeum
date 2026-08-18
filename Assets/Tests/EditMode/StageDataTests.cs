@@ -1,7 +1,9 @@
 using System.Linq;
+using Daeume.Contamination;
 using Daeume.Stage;
 using NUnit.Framework;
 using UnityEditor;
+using UnityEngine;
 
 namespace Daeume.Tests.EditMode
 {
@@ -44,6 +46,27 @@ namespace Daeume.Tests.EditMode
             Assert.That(data.PrimaryContaminationChannels, Is.Not.Empty);
             Assert.That(data.ContaminationVariantId, Is.EqualTo("Stage01_Overlay_Intrusion"));
             Assert.That(data.ChaseId, Is.EqualTo("chase-stage01-left-escape"));
+        }
+
+        [Test]
+        public void Test_Contamination_VariantDeclaresStableEchoIntrusionSlice()
+        {
+            var data = ScriptableObject.CreateInstance<ContaminationVariantData>();
+            data.Configure(
+                "Stage01_Overlay_Intrusion",
+                "Stage01_Overlay_Echo",
+                "Stage01_Overlay_Intrusion",
+                45f,
+                6f,
+                2f,
+                7f);
+
+            Assert.That(data.ValidateData(out var error), Is.True, error);
+            Assert.That(data.OverlayFor(PressureStage.Stable), Is.Empty);
+            Assert.That(data.OverlayFor(PressureStage.Echo), Is.EqualTo("Stage01_Overlay_Echo"));
+            Assert.That(data.OverlayFor(PressureStage.Intrusion), Is.EqualTo("Stage01_Overlay_Intrusion"));
+            Assert.That(data.OverlayFor(PressureStage.Collapse), Is.Empty);
+            Object.DestroyImmediate(data);
         }
 
         private static StageData LoadStageOne()

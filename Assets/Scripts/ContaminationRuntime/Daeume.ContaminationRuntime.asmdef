@@ -1,0 +1,1 @@
+{"name":"Daeume.ContaminationRuntime","rootNamespace":"Daeume.ContaminationRuntime","references":["Daeume.Core","Daeume.Contamination","Daeume.Encounter","Daeume.Flow"],"autoReferenced":true}

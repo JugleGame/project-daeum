@@ -211,6 +211,111 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
   m_BlendShapeWeights: []
+--- !u!1 &25591916
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 25591922}
+  - component: {fileID: 25591921}
+  - component: {fileID: 25591920}
+  - component: {fileID: 25591919}
+  - component: {fileID: 25591918}
+  - component: {fileID: 25591917}
+  m_Layer: 0
+  m_Name: B4_ContaminationDirector
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &25591917
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 25591916}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ce82708e18f80045aacaa51136edfcd, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Daeume.ContaminationRuntime::Daeume.ContaminationRuntime.ContaminationDebugControl
+  director: {fileID: 25591921}
+  debugPressure: 0
+  debugDistance: 5
+--- !u!114 &25591918
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 25591916}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 69c271b3172df464da4f4db1bcc1889e, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Daeume.ContaminationRuntime::Daeume.ContaminationRuntime.MemoryCompletionAdapter
+  director: {fileID: 25591921}
+--- !u!114 &25591919
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 25591916}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 003bf9c0ef2c112418eb1aa67cb14aab, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Daeume.ContaminationRuntime::Daeume.ContaminationRuntime.EncounterContaminationAdapter
+  director: {fileID: 25591921}
+--- !u!114 &25591920
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 25591916}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc0476790df0c224c9f1cbcbb175190d, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Daeume.ContaminationRuntime::Daeume.ContaminationRuntime.OverlaySceneLoader
+--- !u!114 &25591921
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 25591916}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8444aa18a39c8284cb8597ad15c91d0f, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Daeume.ContaminationRuntime::Daeume.ContaminationRuntime.ContaminationDirector
+  data: {fileID: 11400000, guid: c01560c4dde1d6a44b259f3a9c6e4de1, type: 2}
+  chaseId: chase-stage01-left-escape
+  player: {fileID: 0}
+  pursuer: {fileID: 0}
+--- !u!4 &25591922
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 25591916}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &97159563
 GameObject:
   m_ObjectHideFlags: 0
@@ -5184,3 +5289,4 @@ SceneRoots:
   m_Roots:
   - {fileID: 1476572917}
   - {fileID: 1383319153}
+  - {fileID: 25591922}
