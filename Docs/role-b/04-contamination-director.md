@@ -57,10 +57,10 @@ Stage 1의 `Stable`, `Echo`, `Intrusion` pressure와 additive Variant overlay를
 
 ## 세션 결과
 
-- 상태: 미시작
-- 커밋:
-- 구현:
-- 테스트:
-- 수동 QA:
-- contract 변경:
-- 다음 세션 주의점:
+- 상태: 완료
+- 커밋: `0e66fd9` (`feat: add Stage 1 contamination director`)
+- 구현: `ContaminationVariantData`가 Stage01의 고정 Variant, Echo/Intrusion overlay, 45초 추격, 속도와 거리 범위를 선언한다. `ContaminationDirector`가 Stable/Echo/Intrusion 전환, additive overlay 요청, 추격 시간 종료와 연속 이동 기반 거리 보정을 소유한다. `OverlaySceneLoader`, B3 Encounter adapter, 교체 가능한 Memory debug adapter, Inspector debug pressure/distance control을 Stage01에 연결했다. 두 overlay의 충돌/표시는 Scene에 정적으로 저작했고 build scene 목록에서 활성화했다.
+- 테스트: B4 focused EditMode 1/1, PlayMode 7/7. 전체 회귀 EditMode 32/32, PlayMode 45/45. Compile/Console error 0.
+- 수동 QA: 저장된 Boot가 clean임을 확인한 뒤 Stage01 base와 Intrusion overlay를 additive로 함께 열어 사각 blockout 지형이 base를 닫거나 복제하지 않고 겹쳐지는 것을 2D capture로 확인했다. QA 뒤 overlay/base를 저장 없이 닫고 활성 Scene을 `Boot`로 복구했다.
+- contract 변경: `ContaminationPressureChanged(VariantId, Pressure, OverlayScene)`는 pressure 전환 때 발생한다. `ChaseStateChanged(ChaseId, Active, ElapsedSeconds, TargetSeconds)`는 추격 시작/종료 때 발생한다. `ChaseDirectiveIssued(ChaseId, PlayerPosition, PursuerPosition, Distance, MinDistance, MaxDistance, Speed, RemainingSeconds)`는 추격 tick마다 발생하며 Role C는 위치/속도 목표를 소비하되 종료를 결정하지 않는다. 계약 위치는 `Assets/Scripts/ContaminationRuntime/ContaminationEvents.cs`다.
+- 다음 세션 주의점: B5는 이름이 `Trauma`인 actor 또는 명시적 Transform을 Director에 연결하고 위 directive를 실행해야 한다. 실제 `MemoryComplete`가 생기면 `MemoryCompletionAdapter` 입력만 교체한다. B5와 B-QA는 이번 세션에서 수행하지 않았다.
