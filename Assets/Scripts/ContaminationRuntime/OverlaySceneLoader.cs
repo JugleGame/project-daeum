@@ -8,17 +8,35 @@ namespace Daeume.ContaminationRuntime
 {
     public sealed class OverlaySceneLoader : MonoBehaviour
     {
+        private GameManager subscribedManager;
+
         public string LastRequestedScene { get; private set; } = string.Empty;
         public bool LastRequestWasLoad { get; private set; }
 
-        private void Awake()
+        private void Awake() => EnsureSubscribed();
+
+        private void OnEnable() => EnsureSubscribed();
+
+        private void Start() => EnsureSubscribed();
+
+        private void OnDisable() => Unsubscribe();
+
+        private void OnDestroy() => Unsubscribe();
+
+        private void EnsureSubscribed()
         {
-            GameManager.Instance?.Events.Subscribe<OverlaySceneLoadRequested>(HandleRequest);
+            var manager = GameManager.Instance;
+            if (manager == null || manager == subscribedManager) return;
+            Unsubscribe();
+            subscribedManager = manager;
+            subscribedManager.Events.Subscribe<OverlaySceneLoadRequested>(HandleRequest);
         }
 
-        private void OnDestroy()
+        private void Unsubscribe()
         {
-            GameManager.Instance?.Events.Unsubscribe<OverlaySceneLoadRequested>(HandleRequest);
+            if (subscribedManager == null) return;
+            subscribedManager.Events.Unsubscribe<OverlaySceneLoadRequested>(HandleRequest);
+            subscribedManager = null;
         }
 
         public void HandleRequest(OverlaySceneLoadRequested request)

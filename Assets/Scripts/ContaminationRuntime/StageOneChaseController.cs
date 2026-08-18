@@ -58,8 +58,8 @@ namespace Daeume.ContaminationRuntime
 
         private void ResolveReferences()
         {
-            if (director == null) director = FindFirstObjectByType<ContaminationDirector>();
-            if (flow == null) flow = FindFirstObjectByType<SceneFlowController>();
+            if (director == null) director = FindAnyObjectByType<ContaminationDirector>();
+            if (flow == null) flow = FindAnyObjectByType<SceneFlowController>();
             if (player == null)
             {
                 var found = GameObject.Find("Player");
