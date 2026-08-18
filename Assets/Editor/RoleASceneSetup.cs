@@ -169,6 +169,7 @@ namespace Daeume.Editor
 
             var harness = systems.AddComponent<PrototypeHarness>();
             SetObjectReference(harness, "player", player.transform);
+            SetObjectReference(harness, "checkpoint", checkpoint.transform);
             SetObjectReference(harness, "flow", flow);
 
             EditorSceneManager.SaveScene(scene, scenePath);

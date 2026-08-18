@@ -5,6 +5,7 @@ using Daeume.Interaction;
 using Daeume.Player;
 using Daeume.Prototype;
 using NUnit.Framework;
+using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -60,7 +61,9 @@ namespace Daeume.Tests.EditMode
             Assert.That(Find(roots, "RemnantDummy").GetComponent<PrototypeRemnant>(), Is.Not.Null);
             Assert.That(Find(roots, "InteractionDummy").GetComponent<PrototypeInteractable>(), Is.Not.Null);
             Assert.That(Find(roots, "TraumaDummy").GetComponent<TraumaContactSource>(), Is.Not.Null);
-            Assert.That(Find(roots, "PrototypeSystems").GetComponent<PrototypeHarness>(), Is.Not.Null);
+            var harness = Find(roots, "PrototypeSystems").GetComponent<PrototypeHarness>();
+            Assert.That(harness, Is.Not.Null);
+            Assert.That(new SerializedObject(harness).FindProperty("checkpoint").objectReferenceValue, Is.Not.Null);
         }
 
         private static GameObject Find(GameObject[] roots, string name)

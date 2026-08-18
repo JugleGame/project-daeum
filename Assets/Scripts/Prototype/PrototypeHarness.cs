@@ -7,17 +7,18 @@ namespace Daeume.Prototype
     public sealed class PrototypeHarness : MonoBehaviour
     {
         [SerializeField] private Transform player;
+        [SerializeField] private Transform checkpoint;
         [SerializeField] private SceneFlowController flow;
         private GUIStyle labelStyle;
 
         private void Start()
         {
-            if (player == null || flow == null || GameManager.Instance == null)
+            if (player == null || checkpoint == null || flow == null || GameManager.Instance == null)
             {
                 return;
             }
 
-            flow.SaveChaseCheckpoint("Stage01_Chase", player.position, 3, string.Empty);
+            flow.SaveChaseCheckpoint("Stage01_Chase", checkpoint.position, 3, string.Empty);
             GameManager.Instance.SetStageState(StageState.Memory);
             GameManager.Instance.SetStageState(StageState.Chase);
         }

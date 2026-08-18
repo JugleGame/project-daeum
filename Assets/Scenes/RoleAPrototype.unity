@@ -2148,6 +2148,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Daeume.Prototype::Daeume.Prototype.PrototypeHarness
   player: {fileID: 308728345}
+  checkpoint: {fileID: 330692418}
   flow: {fileID: 1723203283}
 --- !u!114 &1723203283
 MonoBehaviour:
