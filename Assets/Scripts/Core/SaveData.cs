@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Daeume.Core
 {
@@ -11,6 +12,17 @@ namespace Daeume.Core
         public int SubtitleSize = 1;
         public bool ChaseSpeedAssist;
         public string BindingOverridesJson = string.Empty;
+
+        public AssistSettings Copy()
+        {
+            return new AssistSettings
+            {
+                CameraShakeStrength = CameraShakeStrength,
+                SubtitleSize = SubtitleSize,
+                ChaseSpeedAssist = ChaseSpeedAssist,
+                BindingOverridesJson = BindingOverridesJson ?? string.Empty
+            };
+        }
     }
 
     [Serializable]
@@ -21,6 +33,7 @@ namespace Daeume.Core
         public string CheckpointId = string.Empty;
         public Vector2 PlayerPosition;
         public int PlayerHealth = 1;
+        [FormerlySerializedAs("OpenedMemoryChest")]
         public List<string> CompletedMemoryAnchors = new();
         public List<string> CollectedMemoryFragments = new();
         public List<string> DefeatedEncounterState = new();
@@ -31,5 +44,27 @@ namespace Daeume.Core
         public int StageThirteenLoopCount;
         public bool WeaponLowered;
         public AssistSettings AssistSettings = new();
+
+        public SaveData Copy()
+        {
+            return new SaveData
+            {
+                SchemaVersion = SchemaVersion,
+                CurrentStageId = CurrentStageId,
+                CheckpointId = CheckpointId ?? string.Empty,
+                PlayerPosition = PlayerPosition,
+                PlayerHealth = PlayerHealth,
+                CompletedMemoryAnchors = new List<string>(CompletedMemoryAnchors ?? new List<string>()),
+                CollectedMemoryFragments = new List<string>(CollectedMemoryFragments ?? new List<string>()),
+                DefeatedEncounterState = new List<string>(DefeatedEncounterState ?? new List<string>()),
+                NarrativeRevealState = new List<string>(NarrativeRevealState ?? new List<string>()),
+                EndingCompleted = EndingCompleted,
+                ContaminationVariantId = ContaminationVariantId ?? string.Empty,
+                PressureStage = PressureStage ?? "Stable",
+                StageThirteenLoopCount = StageThirteenLoopCount,
+                WeaponLowered = WeaponLowered,
+                AssistSettings = (AssistSettings ?? new AssistSettings()).Copy()
+            };
+        }
     }
 }

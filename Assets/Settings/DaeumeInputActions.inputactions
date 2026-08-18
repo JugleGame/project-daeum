@@ -10,7 +10,7 @@
                     "name": "Move",
                     "type": "Value",
                     "id": "fca7ec51-2fa2-4f06-b46b-46477a10137e",
-                    "expectedControlType": "Axis",
+                    "expectedControlType": "Vector2",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
@@ -63,9 +63,9 @@
             ],
             "bindings": [
                 {
-                    "name": "1DAxis",
+                    "name": "2DVector",
                     "id": "df2486e9-fad2-42cf-9d2a-2b5aae5442df",
-                    "path": "1DAxis",
+                    "path": "2DVector",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -74,7 +74,7 @@
                     "isPartOfComposite": false
                 },
                 {
-                    "name": "Negative",
+                    "name": "Left",
                     "id": "c6181259-1613-492b-81ee-3f4f09376744",
                     "path": "<Keyboard>/a",
                     "interactions": "",
@@ -85,7 +85,7 @@
                     "isPartOfComposite": true
                 },
                 {
-                    "name": "Positive",
+                    "name": "Right",
                     "id": "a59e405d-d5ff-4897-8e72-ad078325af60",
                     "path": "<Keyboard>/d",
                     "interactions": "",
@@ -96,9 +96,31 @@
                     "isPartOfComposite": true
                 },
                 {
-                    "name": "1DAxis",
+                    "name": "Up",
+                    "id": "a4bdb287-18d5-43d1-890e-4d0abffbc125",
+                    "path": "<Keyboard>/w",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "Down",
+                    "id": "780cfa48-136a-4123-8813-c0d41fab0dc8",
+                    "path": "<Keyboard>/s",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "2DVector",
                     "id": "203c1acf-f4a1-445c-8ede-9fbe41f88d48",
-                    "path": "1DAxis",
+                    "path": "2DVector",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -107,7 +129,7 @@
                     "isPartOfComposite": false
                 },
                 {
-                    "name": "Negative",
+                    "name": "Left",
                     "id": "9bd2fd29-ccf7-45da-bbb1-e8b5f812587f",
                     "path": "<Keyboard>/leftArrow",
                     "interactions": "",
@@ -118,7 +140,7 @@
                     "isPartOfComposite": true
                 },
                 {
-                    "name": "Positive",
+                    "name": "Right",
                     "id": "a212e03c-e68a-4624-b0a0-5e0966c5c03b",
                     "path": "<Keyboard>/rightArrow",
                     "interactions": "",
@@ -129,9 +151,31 @@
                     "isPartOfComposite": true
                 },
                 {
+                    "name": "Up",
+                    "id": "1cc6898c-48fa-4bed-8c31-e1aecb11df0e",
+                    "path": "<Keyboard>/upArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "Down",
+                    "id": "2be0a589-6ad4-455a-97a5-c4d74dfae220",
+                    "path": "<Keyboard>/downArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
                     "name": "",
                     "id": "457d38b1-920a-47fd-8972-9acac8285422",
-                    "path": "<Gamepad>/leftStick/x",
+                    "path": "<Gamepad>/leftStick",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
