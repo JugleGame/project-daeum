@@ -1,1 +1,1 @@
-{"name":"Daeume.Interaction","rootNamespace":"Daeume.Interaction","references":["Daeume.Core"],"autoReferenced":true}
+{"name":"Daeume.Interaction","rootNamespace":"Daeume.Interaction","references":["Daeume.Core","Unity.InputSystem"],"autoReferenced":true}

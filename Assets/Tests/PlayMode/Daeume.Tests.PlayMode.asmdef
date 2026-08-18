@@ -1,0 +1,7 @@
+{
+  "name": "Daeume.Tests.PlayMode",
+  "rootNamespace": "Daeume.Tests.PlayMode",
+  "references": ["Daeume.Core", "Daeume.Player", "Daeume.Interaction"],
+  "optionalUnityReferences": ["TestAssemblies"],
+  "autoReferenced": false
+}

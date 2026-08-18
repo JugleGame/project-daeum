@@ -128,6 +128,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 850879231}
+  - component: {fileID: 850879232}
   m_Layer: 0
   m_Name: BootRoot
   m_TagString: Untagged
@@ -150,6 +151,20 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &850879232
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 850879230}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4190c92602bd9fe49bb79fc66ce1f513, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Daeume.Flow::Daeume.Flow.BootLoader
+  persistentScene: Persistent
+  titleScene: Title
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
