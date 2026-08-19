@@ -1,3 +1,5 @@
+using Daeume.Core;
+using Daeume.Flow;
 using UnityEngine;
 
 namespace Daeume.ContaminationRuntime
@@ -11,6 +13,16 @@ namespace Daeume.ContaminationRuntime
         public bool Enabled => enabledForDebug;
         public float SpeedMultiplier => speedMultiplier;
         public float ApproachPressure => approachPressure;
+
+        private void Start()
+        {
+            Apply(FindAnyObjectByType<SceneFlowController>()?.CurrentData?.AssistSettings);
+        }
+
+        public void Apply(AssistSettings settings)
+        {
+            if (settings != null) enabledForDebug = settings.ChaseSpeedAssist;
+        }
 
         public void Configure(bool enabled, float speedScale = 0.75f, float pressure = 0.5f)
         {

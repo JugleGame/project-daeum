@@ -58,6 +58,16 @@ namespace Daeume.Tests.PlayMode
         }
 
         [Test]
+        public void Test_Chase_SpeedAssistUsesSavedSetting()
+        {
+            var root = new GameObject("ChaseSpeedAssistTest");
+            var assist = root.AddComponent<ChaseSpeedAssistAdapter>();
+            assist.Apply(new AssistSettings { ChaseSpeedAssist = true });
+            Assert.That(assist.Enabled, Is.True);
+            Object.DestroyImmediate(root);
+        }
+
+        [Test]
         public void Test_Chase_MemoryToEscapeUsesRoleAStateContract()
         {
             var context = CreateContext(false, true);

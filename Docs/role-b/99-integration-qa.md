@@ -51,10 +51,10 @@ B1~B5 결과를 Issue #3의 하나의 독립적으로 검증 가능한 결과로
 - Console errors: 0
 - Windows build: Windows x64 Development `Succeeded`, errors 0, warnings 3, `Build/RoleA/Daeume.exe` (`Build/`은 gitignore)
 - 수동 QA: PASS (명시된 debug adapter 경로). 이동/점프/붙잡기/낙하 복구, Remnant 인지·예고·공격·피격·소멸, 2-wave Encounter 잠금/해제와 재진입 Spawn 0, `Stable → Echo → Intrusion`, base/overlay lifecycle, 정지 접근/dead-end 후퇴, Trauma 공격 무효·접촉 실패/checkpoint retry, assist 속도·압박 한정, escape 완료 flow를 확인했다.
-- 실제 contract 미연결 항목: 실제 `MemoryComplete`, 실제 `AssistSettings`. 각각 `MemoryCompletionAdapter`, `ChaseSpeedAssistAdapter` 입력만 교체한다.
-- 알려진 제한: 실제 contract가 없는 두 구간은 debug adapter로 검증했다. B-QA 중 Editor에서 `Persistent + Stage01_Base`를 함께 연 시작 순서에서 overlay loader 구독 누락을 발견해 `OnEnable/Start` 재연결과 late-manager 회귀 테스트를 추가했다. build warnings 3건은 script가 아직 없는 UI/Memory/Audio asmdef 경고다.
+- 실제 contract 미연결 항목: 실제 `MemoryComplete`. `MemoryCompletionAdapter` 입력만 교체한다. `AssistSettings.ChaseSpeedAssist`는 `SceneFlowController.CurrentData`의 저장값에 연결했다.
+- 알려진 제한: 실제 `MemoryComplete` contract가 없어 debug adapter로 검증했다. B-QA 중 Editor에서 `Persistent + Stage01_Base`를 함께 연 시작 순서에서 overlay loader 구독 누락을 발견해 `OnEnable/Start` 재연결과 late-manager 회귀 테스트를 추가했다. build warnings 3건은 script가 아직 없는 UI/Memory/Audio asmdef 경고다.
 - 소유권/diff: Role A/C 소유 파일 신규 변경 0, 공용 contract 변경 0, Role B Scene missing script 0, build/cache 산출물 commit 0. 기존 사용자 변경 5개는 stage/commit하지 않았다.
-- Issue #3 Acceptance Criteria: PARTIAL — Role B 기능과 회귀/build는 통과했지만 문서 규칙에 따라 실제 `MemoryComplete`/`AssistSettings` 연결 전 functional PASS로 판정하지 않는다.
+- Issue #3 Acceptance Criteria: PARTIAL — Role B 기능과 회귀/build는 통과했지만 문서 규칙에 따라 실제 `MemoryComplete` 연결 전 functional PASS로 판정하지 않는다.
 
 ## 재검증 효율 가이드
 
