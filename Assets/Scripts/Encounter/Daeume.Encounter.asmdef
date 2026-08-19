@@ -1,1 +1,1 @@
-{"name":"Daeume.Encounter","rootNamespace":"Daeume.Encounter","references":["Daeume.Core","Daeume.Contamination"],"autoReferenced":true}
+{"name":"Daeume.Encounter","rootNamespace":"Daeume.Encounter","references":["Daeume.Core","Daeume.Contamination","Daeume.Enemy","Daeume.Player"],"autoReferenced":true}

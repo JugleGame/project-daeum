@@ -17,10 +17,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Stage01_Base.unity
     guid: a222958d004b9544baf5f52085f9601a
-  - enabled: 0
+  - enabled: 1
     path: Assets/Scenes/Stage01_Overlay_Echo.unity
     guid: 6c8efe0c21f84a5468b194373416b7d6
-  - enabled: 0
+  - enabled: 1
     path: Assets/Scenes/Stage01_Overlay_Intrusion.unity
     guid: 81433ca01563a964faceae861984d2de
   - enabled: 1

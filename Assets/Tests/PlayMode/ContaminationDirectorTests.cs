@@ -1,0 +1,106 @@
+using Daeume.Contamination;
+using Daeume.ContaminationRuntime;
+using NUnit.Framework;
+using UnityEngine;
+
+namespace Daeume.Tests.PlayMode
+{
+    // B4 focused validation for Director-owned chase decisions.
+    public sealed class ContaminationDirectorTests
+    {
+        [Test]
+        public void Test_Chase_DirectorOwnsChaseLength()
+        {
+            var context = CreateContext(1f, 10f, 2f, 5f);
+            Assert.That(context.Director.BeginChase(), Is.True);
+            context.Director.Tick(0.75f);
+            Assert.That(context.Director.ChaseActive, Is.True);
+            context.Director.Tick(0.25f);
+            Assert.That(context.Director.ChaseActive, Is.False);
+            Assert.That(context.Director.ElapsedChaseSeconds, Is.EqualTo(1f));
+            context.Dispose();
+        }
+
+        [Test]
+        public void Test_Chase_DirectorKeepsDistanceBounds()
+        {
+            var context = CreateContext(10f, 10f, 2f, 5f);
+            context.Player.position = Vector3.zero;
+            context.Pursuer.position = new Vector3(-20f, 0f);
+            context.Director.BeginChase();
+            context.Director.Tick(2f);
+            Assert.That(Mathf.Abs(context.Player.position.x - context.Pursuer.position.x), Is.EqualTo(5f).Within(0.001f));
+
+            context.Pursuer.position = new Vector3(-0.5f, 0f);
+            context.Director.Tick(1f);
+            Assert.That(Mathf.Abs(context.Player.position.x - context.Pursuer.position.x), Is.EqualTo(2f).Within(0.001f));
+            context.Dispose();
+        }
+
+        [Test]
+        public void Test_Chase_DirectorNeverTeleportsOutsideDeclaredPoints()
+        {
+            var context = CreateContext(10f, 6f, 2f, 7f);
+            context.Pursuer.position = new Vector3(-20f, 0f);
+            context.Director.BeginChase();
+            var before = context.Pursuer.position;
+            context.Director.Tick(0.1f);
+            Assert.That(Vector3.Distance(before, context.Pursuer.position), Is.LessThanOrEqualTo(0.6001f));
+            Assert.That(context.Director.TeleportCount, Is.Zero);
+            Assert.That(context.Data.DeclaredTeleportMarkerIds, Is.Empty);
+            context.Dispose();
+        }
+
+        [Test]
+        public void Test_Contamination_RetryUsesSameVariant()
+        {
+            var context = CreateContext(10f, 6f, 2f, 7f);
+            context.Director.BeginChase();
+            var variant = context.Director.VariantId;
+            context.Director.Tick(3f);
+            context.Director.RetryChase();
+            Assert.That(context.Director.VariantId, Is.EqualTo(variant));
+            Assert.That(context.Director.Pressure, Is.EqualTo(PressureStage.Intrusion));
+            Assert.That(context.Director.ElapsedChaseSeconds, Is.Zero);
+            context.Dispose();
+        }
+
+        private static Context CreateContext(float targetSeconds, float speed, float minDistance, float maxDistance)
+        {
+            var data = ScriptableObject.CreateInstance<ContaminationVariantData>();
+            data.Configure("variant-stage01", "Stage01_Overlay_Echo", "Stage01_Overlay_Intrusion", targetSeconds, speed, minDistance, maxDistance);
+            var root = new GameObject("DirectorTestRoot");
+            var player = new GameObject("Player").transform;
+            player.SetParent(root.transform);
+            var pursuer = new GameObject("Trauma").transform;
+            pursuer.SetParent(root.transform);
+            var director = root.AddComponent<ContaminationDirector>();
+            director.Configure(data, player, pursuer);
+            return new Context(root, data, player, pursuer, director);
+        }
+
+        private readonly struct Context
+        {
+            public Context(GameObject root, ContaminationVariantData data, Transform player, Transform pursuer, ContaminationDirector director)
+            {
+                Root = root;
+                Data = data;
+                Player = player;
+                Pursuer = pursuer;
+                Director = director;
+            }
+
+            public GameObject Root { get; }
+            public ContaminationVariantData Data { get; }
+            public Transform Player { get; }
+            public Transform Pursuer { get; }
+            public ContaminationDirector Director { get; }
+
+            public void Dispose()
+            {
+                Object.DestroyImmediate(Root);
+                Object.DestroyImmediate(Data);
+            }
+        }
+    }
+}

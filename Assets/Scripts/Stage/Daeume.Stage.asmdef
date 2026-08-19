@@ -1,0 +1,6 @@
+{
+  "name": "Daeume.Stage",
+  "rootNamespace": "Daeume.Stage",
+  "references": ["Daeume.Player"],
+  "autoReferenced": true
+}

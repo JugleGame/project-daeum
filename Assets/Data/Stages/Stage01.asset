@@ -1,0 +1,43 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0567ce6f5126b5847ae6bf0323dfc8d5, type: 3}
+  m_Name: Stage01
+  m_EditorClassIdentifier: Daeume.Stage::Daeume.Stage.StageData
+  stageId: 1
+  location: "\uC624\uB798\uB41C \uACF5\uB3D9\uC8FC\uD0DD \uBCF5\uB3C4"
+  memoryId: memory-stage01-home
+  memoryTitle: "\uC7A0\uAE30\uC9C0 \uC54A\uC740 \uBB38"
+  memoryPresentationId: memory-presentation-stage01
+  emotionalRole: 0
+  encounterIds:
+  - encounter-stage01-hall
+  contaminationVariantId: Stage01_Overlay_Intrusion
+  primaryContaminationChannels: 000000000200000001000000
+  contaminationMeaning: "\uC775\uC219\uD55C \uC9D1\uC774 \uC548\uC804\uD55C \uC7A5\uC18C\uAC00
+    \uC544\uB2C8\uC5C8\uC74C\uC744 \uACF5\uAC04\uC758 \uB4A4\uD2C0\uB9BC\uC73C\uB85C
+    \uB4DC\uB7EC\uB0B8\uB2E4."
+  hospitalImageryDirectness: 0
+  chaseId: chase-stage01-left-escape
+  chaseMeaning: "\uAE30\uC5B5\uC744 \uC9C1\uBA74\uD55C \uB4A4 \uB418\uB3CC\uC544\uAC00\uB294
+    \uAE38\uC774 \uB3C4\uC8FC\uB85C\uB85C \uBCC0\uD55C\uB2E4."
+  targetChaseSeconds: 45
+  lengthCategory: 1
+  targetPlaytimeMinutes: 12
+  clueIds:
+  - clue-stage01-family-photo
+  - clue-stage01-door-chain
+  explorationIntensity: 1
+  memoryIntensity: 2
+  encounterIntensity: 2
+  contaminationIntensity: 2
+  chaseIntensity: 3
+  nextStageId: 2
