@@ -18,6 +18,21 @@
 
 새로 추가한 `SpriteRenderer`가 기본으로 `Sprite-Lit-Default`(URP 2D 라이트 셰이더) 머티리얼을 받았는데, 씬에 `Light2D`가 하나도 없어 완전히 검게 렌더링됐다. `Sprite-Unlit-Default`로 교체해 해결. **앞으로 이 프로젝트에서 새 SpriteRenderer를 코드로 추가할 때는 머티리얼을 명시적으로 지정할 것** — 프로젝트의 URP 2D 기본 머티리얼이 Lit이라 조명 없이는 검게 나온다.
 
+## 2-0. 실제 수동 플레이에서 발견된 버그 — 최우선 (2026-08-20 추가, 미해결)
+
+사용자가 Boot→New Game으로 실제 키 입력 플레이해서 다음을 확인했다:
+
+- 회상을 다 읽고 추격이 시작된 뒤, 화면(오염 전환)이 바뀌고 카메라는 흔들리는데 **아무것도 진행이 안 됨**.
+- **가만히 서 있는데도** 검은 트라우마 실체(오늘 세션에서 실루엣 스프라이트를 넣은 그 오브젝트)가 닿아서 죽음.
+- 탈출을 어떻게 해야 하는지 모르겠다고 함.
+
+### 조사 결과 (원인 미확정, 강한 가설만 세움 — 시간 부족으로 코드 수정 못 함)
+
+- `Signal_Exit_01`(`Assets/Scenes/Stage01_Base.unity`)은 디버그 라벨이 아니라 **진짜 게임 내 길찾기 신호**다(`ChaseRouteSignal.cs`, spec-006/013 요구사항: 색+모양+기호를 함께 갖는 방향 신호). 화면의 "◫ EXIT"는 오늘 세션이 숨긴 `B1_VisualGuide`(레벨 디자이너용 디버그 텍스트, 별도 부모 오브젝트)와는 다른 물건이다 — 실수로 같이 숨긴 건 아닌지 재확인 필요는 없지만, "이 텍스트가 뭔지 모르겠다"는 사용자 피드백은 **신호 자체가 최초 플레이어에게 안 읽힌다는 UX 문제**로 봐야 한다.
+- `TraumaContactHandler.cs`(`Assets/Scripts/Player/TraumaContactHandler.cs`)를 읽어 보면: 트라우마 접촉 → 1초 붙잡기 연출 → `GameManager.Fail()` → `ChaseCheckpointRestoreRequested` 발행 → 플레이어 위치/체력만 체크포인트로 복귀.
+- **`TraumaChaseActor.cs`(`Assets/Scripts/ContaminationRuntime/TraumaChaseActor.cs`)가 `ChaseCheckpointRestoreRequested`나 `PlayerRestoreRequested`를 구독해서 자기 위치를 초기화하는지 아직 확인 못 했다.** 만약 트라우마가 리셋 없이 계속 플레이어 근처에 남아 있다면: 복귀 직후 트라우마가 바로 다시 닿음 → 1초 연출 → 다시 Fail → 다시 복귀... 무한 루프가 되고, 이게 "카메라만 흔들리고 아무것도 진행 안 됨"으로 보일 가능성이 높다. **다음 세션에서 제일 먼저 `TraumaChaseActor.cs` 전체를 읽고 리스폰 시 위치 리셋 로직이 있는지부터 확인할 것.**
+- 재현 순서: Boot 씬 Play → New Game → 오른쪽 끝(x≈27)까지 이동 → Interact로 회상 시작 → Interact 3회로 문장 진행 → Chase 진입 → 제자리에 서서 트라우마가 닿을 때까지 대기 → 이후 상태(움직이는지, HP가 계속 줄어드는지, `Fail`이 반복 발행되는지) Console 로그로 확인.
+
 ## 2. 아직 안 한 것 — 최우선
 
 **사람이 실제 입력(키보드/마우스)으로 Title → 새 게임 → 이동 → 회상 상호작용 → 문장 진행/건너뛰기 → 추격 → 탈출까지 1회 완주한 기록이 없다.** 오늘 세션은 시간 제약상 `MemoryAnchor.Begin()/Advance()`를 리플렉션(Unity RunCommand)으로 직접 호출해 상태 전이(Explore→Memory→Chase)만 검증했다. 이건 로직이 도달 가능함을 증명하지만, 입력 바인딩·프롬프트 UI·카메라 추적 같은 "사람이 실제로 플레이했을 때 막히는 지점"은 검증하지 못한다.
