@@ -1,1 +1,1 @@
-{"name":"Daeume.UI","rootNamespace":"Daeume.UI","references":["Daeume.Core","Daeume.Flow","Daeume.ContaminationRuntime","Unity.ugui","Unity.InputSystem"],"autoReferenced":true}
+{"name":"Daeume.UI","rootNamespace":"Daeume.UI","references":["Daeume.Core","Daeume.Flow","Daeume.ContaminationRuntime","Daeume.Memory","Daeume.Stage","Unity.ugui","Unity.InputSystem"],"autoReferenced":true}

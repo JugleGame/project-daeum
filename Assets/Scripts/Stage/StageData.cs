@@ -5,6 +5,7 @@ using UnityEngine;
 
 namespace Daeume.Stage
 {
+    /// <summary>스테이지가 서사에서 맡는 감정 역할. Stage 1~3은 호기심·따뜻함으로 시작한다(spec-007).</summary>
     public enum EmotionalRole
     {
         Introduction,
@@ -21,6 +22,10 @@ namespace Daeume.Stage
         Long
     }
 
+    /// <summary>
+    /// 오염이 드러나는 통로. 각 스테이지는 이 중 2~3개만 전면에 사용한다(spec-006).
+    /// 모든 채널을 매번 다 쓰면 변화가 뭉개져 스테이지 구분이 사라지기 때문이다.
+    /// </summary>
     public enum ContaminationChannel
     {
         Visual,
@@ -30,6 +35,15 @@ namespace Daeume.Stage
         Narrative
     }
 
+    /// <summary>
+    /// 스테이지 1개의 모든 설정을 담는 데이터 에셋. (spec-007)
+    ///
+    /// 8일 슬라이스에서는 Stage 1 레코드 하나만 채우지만, 스키마는 13개 전부를 담을 수 있게 지금 확정한다.
+    /// 나중에 필드를 추가하면 이미 저장된 데이터와 어긋나 마이그레이션 비용이 크기 때문이다.
+    ///
+    /// 특히 HospitalImageryDirectness(0~4)는 "병원 이미지를 얼마나 직접적으로 드러내는가"를 뜻하며,
+    /// 스테이지가 진행될수록 값이 낮아지지 않아야 한다(역행 금지). 서사의 점진적 공개를 데이터로 강제하는 장치다.
+    /// </summary>
     [CreateAssetMenu(fileName = "StageData", menuName = "Daeume/Stage Data")]
     public sealed class StageData : ScriptableObject
     {
@@ -95,6 +109,11 @@ namespace Daeume.Stage
         public int ChaseIntensity => chaseIntensity;
         public int NextStageId => nextStageId;
 
+        /// <summary>
+        /// 데이터 오류 목록을 돌려준다(비어 있으면 정상). EditMode 테스트가 이 결과를 검사한다.
+        /// 잘못된 스테이지 데이터는 플레이 중에야 드러나고 원인 추적이 어려우므로,
+        /// 에디터 단계에서 걸러 내는 이 검사가 비용 대비 효과가 크다.
+        /// </summary>
         public IReadOnlyList<string> ValidateData()
         {
             var errors = new List<string>();

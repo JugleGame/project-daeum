@@ -142,6 +142,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dbcc5f0d91d8347729bc3b9b6b86bb58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Daeume.Audio::Daeume.Audio.PressurePresentationController
-  ambientSource: {fileID: 0}
+  ambientSource: {fileID: 4932600703079655893}
   targetCamera: {fileID: 0}
   maximumShake: 0.08

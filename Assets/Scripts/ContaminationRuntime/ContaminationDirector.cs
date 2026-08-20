@@ -6,6 +6,17 @@ using UnityEngine;
 
 namespace Daeume.ContaminationRuntime
 {
+    /// <summary>
+    /// 추격의 "길이와 압박"을 소유하는 연출 감독이다. (spec-006, 기획 결정 2번)
+    ///
+    /// 왜 감독이 따로 있나:
+    /// 추격자(트라우마)가 스스로 속도를 정하고 추격 종료까지 판단하면, 스테이지마다 페이싱이 제각각이 되고
+    /// 플레이어는 "언제 끝나는지 모르는 압박"만 받는다. 그래서 Alien: Isolation처럼
+    /// 감독이 목표 시간과 거리 한계를 정하고, 추격자는 지시만 실행하게 나눴다.
+    ///
+    /// 감독이 정하는 것: 압박 단계(오버레이 씬), 목표 추격 시간, 최소·최대 거리 유지, 막다른 길 후퇴
+    /// 감독이 하지 않는 것: 순간이동(선언된 지점 외), 실패 판정(그건 spec-003의 붙잡기 연출이 소유)
+    /// </summary>
     public sealed class ContaminationDirector : MonoBehaviour
     {
         [SerializeField] private ContaminationVariantData data;
@@ -43,6 +54,14 @@ namespace Daeume.ContaminationRuntime
             chaseId = id ?? string.Empty;
         }
 
+        /// <summary>
+        /// 압박 단계를 바꾸고, 필요한 오버레이 씬 교체를 요청한다.
+        /// </summary>
+        /// <remarks>
+        /// Collapse는 8일 슬라이스 범위 밖이라 거절한다(spec-006 Build scope). 의도된 동작이다.
+        /// 이전 오버레이를 먼저 내리고 새 오버레이를 올리는 순서를 지키므로 두 오염 공간이 겹치지 않는다.
+        /// (요청은 큐에 쌓여 OverlaySceneLoader가 한 번에 하나씩 처리한다.)
+        /// </remarks>
         public bool SetPressure(PressureStage value)
         {
             if (data == null || value == PressureStage.Collapse) return false;
@@ -55,6 +74,13 @@ namespace Daeume.ContaminationRuntime
             return true;
         }
 
+        /// <summary>
+        /// 추격을 시작한다. 압박을 Intrusion까지 올리고 경과 시간을 0부터 센다.
+        /// </summary>
+        /// <remarks>
+        /// 회상 완료 경로에서는 StageOneChaseController가 먼저 Echo를 켠 뒤 이 함수를 부른다
+        /// (spec-005의 "Echo 시작" 요구). 재시도 복귀처럼 회상을 건너뛰는 경로에서는 곧바로 Intrusion이 맞다.
+        /// </remarks>
         public bool BeginChase()
         {
             if (data == null || ChaseActive) return false;
@@ -76,6 +102,10 @@ namespace Daeume.ContaminationRuntime
 
         public void SetDeadEndBlocked(bool blocked) => deadEndBlocked = blocked;
 
+        /// <summary>
+        /// 매 프레임 추격을 진행한다. 목표 시간에 도달하면 추격을 끝낸다.
+        /// Update가 아니라 별도 함수로 분리해 두어 테스트가 시간을 직접 넣어 검증할 수 있다.
+        /// </summary>
         public void Tick(float deltaTime)
         {
             if (!ChaseActive || data == null) return;
@@ -100,6 +130,13 @@ namespace Daeume.ContaminationRuntime
             pursuer.position = new Vector3(player.position.x - Mathf.Max(0f, distance), player.position.y, pursuer.position.z);
         }
 
+        /// <summary>
+        /// 추격자와 플레이어 사이 거리를 규칙대로 유지한다. (spec-006의 핵심 공정성 장치)
+        ///
+        /// - 너무 가까우면(최소 거리 미만) 물러나게 한다 → 즉사 압박이 아니라 "쫓기는 느낌"을 유지
+        /// - 너무 멀어지면(최대 거리 초과) 다시 붙인다 → 멈춰 서 있는 것이 안전해지지 않게
+        /// - 막다른 길에서는 최대 거리를 유지한다 → 길이 막혔다고 즉시 실패시키지 않는다
+        /// </summary>
         private void KeepDistance(float deltaTime)
         {
             if (player == null || pursuer == null || deltaTime <= 0f) return;
@@ -151,6 +188,11 @@ namespace Daeume.ContaminationRuntime
             GameManager.Instance?.Events.Publish(new OverlaySceneLoadRequested(sceneName, load));
         }
 
+        /// <summary>
+        /// 플레이어와 추격자를 실행 중에 이름으로 찾는다.
+        /// 플레이어는 Persistent 씬에 있어 스테이지 씬에서 미리 연결해 둘 수 없기 때문이다.
+        /// 이름 의존이라 오브젝트 이름을 바꾸면 끊긴다 — 바꿀 때 함께 확인해야 하는 지점이다.
+        /// </summary>
         private void ResolveActors()
         {
             if (player == null)
