@@ -43,11 +43,18 @@ Scene YAML을 손으로 편집하는 대신, 기존 `StageVisualBootstrap` 패�
 
 - 코드 레벨 gap은 해소했다. PARTIAL → PASS 전환은 Editor Play Mode에서 실제 event 경로로 Stable → Echo → Intrusion 재생 확인 후 판정한다(다음 조치 참고).
 
+## 추가 발견 및 조치 — prefab 내부 미완성
+
+Play Mode로 `Stage01_Base` 실측 중 발견: 부트스트랩으로 spawn까지는 됐으나 (`Stage01_MemoryAnchor(Clone)`, `Stage01_Presentation(Clone)`, `Stage01_PressurePresentation(Clone)` Hierarchy 확인됨, Console 0/0/0) 화면에 HUD 텍스트가 전혀 안 보임.
+
+원인: `Stage01_Presentation.prefab`이 Canvas 루트 GameObject 1개뿐이고 자식 UI 요소(Text/Image)가 전혀 없었다. `StageHudPresenter`/`MemoryPanelPresenter`의 `healthText`/`promptText`/`chaseText`/`panel` 등 필드가 전부 `fileID: 0`(미할당)이었고, 이를 채워주는 `Bind()` 호출도 코드베이스 전체에 0건이었다. 즉 `a49a688`의 프레젠테이션 스크립트는 로직만 있고 실제 UI 마크업이 없는 빈 껍데기였다.
+
+조치: `Stage01_Presentation.prefab`에 `HealthText`, `PromptRoot/PromptText`, `ChaseRoot/ChaseText`, `MemoryPanel/TitleText/BodyText`를 legacy `UI.Text`로 추가하고 presenter 필드에 직접 연결했다. `Stage01_PressurePresentation.prefab`은 이미 있는 `AudioSource`를 `ambientSource`에 연결했다(`targetCamera`는 `Awake()`의 `Camera.main` fallback으로 이미 동작).
+
 ## 다음 조치
 
-1. Unity Editor Play Mode에서 `Stage01_Base` 진입 → Memory 완료 → 실제 `BeginChaseFromMemory` 호출 → Encounter/Chase 전환을 눈으로 확인.
-2. HUD/pressure presentation이 `Resources.Load` 경로로 정상 표시되는지 확인.
-3. 확인 후 Issue #3 Acceptance Criteria를 PARTIAL → PASS로 갱신하고 G4 실측 증거를 본 문서에 추가.
+1. Unity Editor Play Mode에서 `Stage01_Base` 진입 → Memory 완료 → 실제 `BeginChaseFromMemory` 호출 → Encounter/Chase 전환과 HUD 텍스트 표시를 눈으로 확인.
+2. 확인 후 Issue #3 Acceptance Criteria를 PARTIAL → PASS로 갱신하고 G4 실측 증거를 본 문서에 추가.
 
 ## 재검증 효율 가이드
 
