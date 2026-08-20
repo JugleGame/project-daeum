@@ -72,7 +72,7 @@ Role B QA 문서의 가이드를 그대로 따른다: focused fixture 우선, �
 
 ### 조치
 
-`Assets/Scripts/Memory/MemoryPlayback.cs` 신설(진행=Interact, 건너뛰기=Pause). 그 외 spec 위반 교정 13건은 [Docs/handoff/next-session-presentation-pass.md](../handoff/next-session-presentation-pass.md) 표 참고.
+`Assets/Scripts/Memory/MemoryPlayback.cs` 신설(진행=Interact, 건너뛰기=Pause). 그 외 spec 위반 교정 13건은 [Docs/handoff/2026-08-20-remaining-work.md](../handoff/2026-08-20-remaining-work.md) 참고.
 
 ### 검증 수치
 
@@ -85,3 +85,27 @@ Role B QA 문서의 가이드를 그대로 따른다: focused fixture 우선, �
 - **G3 (Memory → 오염 전환): PASS.** 실제 이벤트 경로로 회상 완료 → Echo → 추격 진입을 실측 확인했다.
 - **G4 (Vertical Slice): 여전히 PARTIAL.** 시스템 경로는 확인했으나 사람이 실제 입력으로 Title→탈출까지 완주한 기록은 없다. 프레젠테이션 P0 작업(투명한 회상 앵커, 플레이스홀더 스프라이트, 상시 노출되는 디버그 라벨) 이후 재판정한다.
 - **G5: 판정 불가.** G4 실측 완주 후 대상.
+
+## 프레젠테이션 P0 완료 기록 (2026-08-20, 이어서)
+
+프레젠테이션 P0(화면에서 무슨 일이 일어나는지 보이게) 5개 항목을 전부 처리했다. 상세 내용과 남은 작업(P1)은 [Docs/handoff/2026-08-20-remaining-work.md](../handoff/2026-08-20-remaining-work.md) 참고.
+
+### 처리 내역
+
+1. **회상 앵커 시각화** — `Stage01_MemoryAnchor.prefab`에 `SpriteRenderer`+`PrototypeVisual`(`#FFD98A`, sortingLayer `Object`) 추가. 최초 `Sprite-Lit-Default` 머티리얼로는 씬에 `Light2D`가 하나도 없어 완전히 검게 렌더링되는 문제를 발견해 `Sprite-Unlit-Default`로 교체.
+2. **트라우마 스프라이트 교체** — `Stage01_Base`는 B 소유 씬이라 파일을 직접 고치지 않고, `Stage01PresentationBootstrap.ReplaceTraumaVisual()`을 신설해 런타임에 `Knob` → 생성한 실루엣(`Assets/Resources/Trauma/TraumaBody.png`)으로, 색은 `#120e14`로 교체.
+3. **잔재 스프라이트 교체** — `Stage01_MeleeRemnant.prefab`의 `Body`/`AttackTelegraph`에서 `BlockoutWhite` 제거. Body는 인간형 실루엣, AttackTelegraph는 쐐기형(방향성 텔레그래프)으로 형태 자체를 다르게 해 spec-013 "색 외 형태로도 구분" 요구를 충족.
+4. **월드 디버그 라벨 기본 숨김** — `Stage01PresentationBootstrap.HideVisualGuideDebugLabels()` 신설. `B1_VisualGuide`를 코드로 `SetActive(false)`(씬 파일 미수정). Play Mode에서 `activeInHierarchy=False` 실측 확인.
+5. **HUD 목표 문구** — `StageHudPresenter`에 `objectiveText`/`objectiveRoot` 필드 추가, `Explore` 상태에서만 `hud.objective.memory` 표시하도록 `OnStageStateChanged`에 연결. `Stage01_Presentation.prefab`에 `ObjectiveRoot/ObjectiveText` UI 요소 신설.
+
+### 검증 수치 (2026-08-20)
+
+- EditMode 35/35 통과
+- PlayMode: 전체 스위트 1회차 52/53 (`Test_Stage01_PlayerMovesJumpsAndUsesGrabSurface` 실패), 해당 테스트만 격리 재실행 시 1/1 통과 → **flaky, 이번 변경과 무관** 판단(입력 이벤트 타이밍 경합으로 추정. PlayerController/InputSystem 코드는 이번 세션에서 건드리지 않음)
+- Console error 0
+- Play Mode 실측 로그: `anchor=... player=... stageState=Explore` → `Begin=True state=Memory` → `advance=True / advance=True / advance=False → state=Chase` → `chase controller found=True`
+- 회상 앵커 `#FFD98A` 렌더링, 트라우마 실루엣 렌더링, `B1_VisualGuide` 비활성 상태를 Scene 2D 캡처로 시각 확인
+
+### Gate 판정 갱신 (2차)
+
+- **G4 (Vertical Slice): PARTIAL 유지, 시각 blockout 문제는 해소.** 사람이 실제 키 입력(마우스/키보드)으로 완주한 기록은 여전히 없음 — 이번 세션은 리플렉션 기반 API 호출로 상태 전이만 검증했다. 다음 세션에서 실제 입력 시뮬레이션 또는 수동 QA로 Title→탈출 완주 필요.

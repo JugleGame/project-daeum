@@ -23,6 +23,8 @@ namespace Daeume.UI
         [SerializeField] private GameObject chaseRoot;
         [SerializeField] private Text failText;
         [SerializeField] private GameObject failRoot;
+        [SerializeField] private Text objectiveText;
+        [SerializeField] private GameObject objectiveRoot;
 
         public string HealthLabel { get; private set; } = string.Empty;
         public string PromptLabel { get; private set; } = string.Empty;
@@ -73,6 +75,11 @@ namespace Daeume.UI
             // 실패 문구는 상태가 실패에서 벗어나는 순간 자동으로 사라진다.
             // 지우는 책임을 별도 코드에 두지 않아, 문구가 화면에 남아 버리는 실수를 막는다.
             if (value.State != StageState.Failed && failRoot != null) failRoot.SetActive(false);
+
+            // 목표 문구는 탐색 중에만 보인다. 회상을 시작하거나 추격에 들어가면 자연히 사라진다.
+            var visible = value.State == StageState.Explore;
+            if (objectiveText != null) objectiveText.text = StringTable.Get("hud.objective.memory");
+            if (objectiveRoot != null) objectiveRoot.SetActive(visible);
         }
 
         private void OnHealth(PlayerHealthChanged value)
