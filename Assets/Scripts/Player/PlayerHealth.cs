@@ -7,6 +7,7 @@ namespace Daeume.Player
     {
         [SerializeField, Min(1)] private int maxHealth = 3;
         [SerializeField, Min(0f)] private float invulnerabilitySeconds = 0.5f;
+        [SerializeField, Min(0f)] private float respawnInvulnerabilitySeconds = 1.5f;
 
         private float invulnerableUntil;
 
@@ -42,7 +43,7 @@ namespace Daeume.Player
         public void Restore(int health)
         {
             CurrentHealth = Mathf.Clamp(health, 1, maxHealth);
-            invulnerableUntil = 0f;
+            invulnerableUntil = Time.time + respawnInvulnerabilitySeconds;
             GameManager.Instance?.Events.Publish(new PlayerHealthChanged(CurrentHealth, maxHealth));
         }
     }

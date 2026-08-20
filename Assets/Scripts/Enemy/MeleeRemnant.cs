@@ -239,9 +239,13 @@ namespace Daeume.Enemy
             Died?.Invoke(this);
         }
 
+        private const float MaxVerticalReach = 1.5f;
+
         private bool TargetInRange(float range)
         {
-            return target != null && Mathf.Abs(target.position.x - transform.position.x) <= range;
+            return target != null &&
+                Mathf.Abs(target.position.x - transform.position.x) <= range &&
+                Mathf.Abs(target.position.y - transform.position.y) <= MaxVerticalReach;
         }
 
         private void FaceTarget()
