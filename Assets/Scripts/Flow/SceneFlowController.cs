@@ -43,11 +43,35 @@ namespace Daeume.Flow
             saveSystem = new SaveSystem(new FileSaveStore(path), new FileSaveStore(settingsPath));
             currentData = saveSystem.Load(maxHealth).Data;
             GameManager.Instance?.Events.Subscribe<ChaseCheckpointRestoreRequested>(RestoreChaseCheckpoint);
+            GameManager.Instance?.Events.Subscribe<StageFailed>(OnStageFailed);
         }
 
         private void OnDestroy()
         {
             GameManager.Instance?.Events.Unsubscribe<ChaseCheckpointRestoreRequested>(RestoreChaseCheckpoint);
+            GameManager.Instance?.Events.Unsubscribe<StageFailed>(OnStageFailed);
+        }
+
+        private void OnStageFailed(StageFailed value) => StartCoroutine(RetryAfterDelay());
+
+        private IEnumerator RetryAfterDelay()
+        {
+            yield return new WaitForSeconds(1.2f);
+            RetryFromFailure();
+        }
+
+        public bool RetryFromFailure()
+        {
+            if (!plan.TryBeginTransition())
+            {
+                return false;
+            }
+
+            currentData = saveSystem.Load(maxHealth).Data;
+            currentData.PlayerHealth = SaveSystem.ResolveRespawnHealth(currentData, maxHealth, true, maxHealth);
+            var state = string.IsNullOrEmpty(currentData.CheckpointId) ? StageState.Explore : StageState.Chase;
+            StartCoroutine(LoadContent(SceneForStage(currentData.CurrentStageId), state, currentData));
+            return true;
         }
 
         public bool StartNewGame()

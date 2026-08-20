@@ -119,8 +119,9 @@ namespace Daeume.Interaction
             }
 
             var prompt = current.GetPrompt();
+            var keyLabel = interact != null ? interact.GetBindingDisplayString() : prompt.ActionName;
             GameManager.Instance?.Events.Publish(
-                new InteractionPromptChanged(true, prompt.ActionName, prompt.StringTableKey));
+                new InteractionPromptChanged(true, string.IsNullOrEmpty(keyLabel) ? prompt.ActionName : keyLabel, prompt.StringTableKey));
         }
 
         private static IInteractable FindInteractable(Collider2D collider)

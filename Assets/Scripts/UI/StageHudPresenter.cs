@@ -12,6 +12,8 @@ namespace Daeume.UI
         [SerializeField] private Text chaseText;
         [SerializeField] private GameObject promptRoot;
         [SerializeField] private GameObject chaseRoot;
+        [SerializeField] private Text failText;
+        [SerializeField] private GameObject failRoot;
 
         public string HealthLabel { get; private set; } = string.Empty;
         public string PromptLabel { get; private set; } = string.Empty;
@@ -32,6 +34,8 @@ namespace Daeume.UI
             GameManager.Instance.Events.Subscribe<PlayerHealthChanged>(OnHealth);
             GameManager.Instance.Events.Subscribe<InteractionPromptChanged>(OnPrompt);
             GameManager.Instance.Events.Subscribe<ChaseStateChanged>(OnChase);
+            GameManager.Instance.Events.Subscribe<StageFailed>(OnFailed);
+            GameManager.Instance.Events.Subscribe<StageStateChanged>(OnStageStateChanged);
         }
 
         private void Disconnect()
@@ -40,6 +44,19 @@ namespace Daeume.UI
             GameManager.Instance.Events.Unsubscribe<PlayerHealthChanged>(OnHealth);
             GameManager.Instance.Events.Unsubscribe<InteractionPromptChanged>(OnPrompt);
             GameManager.Instance.Events.Unsubscribe<ChaseStateChanged>(OnChase);
+            GameManager.Instance.Events.Unsubscribe<StageFailed>(OnFailed);
+            GameManager.Instance.Events.Unsubscribe<StageStateChanged>(OnStageStateChanged);
+        }
+
+        private void OnFailed(StageFailed value)
+        {
+            if (failText != null) failText.text = StringTable.Get("hud.failed");
+            if (failRoot != null) failRoot.SetActive(true);
+        }
+
+        private void OnStageStateChanged(StageStateChanged value)
+        {
+            if (value.State != StageState.Failed && failRoot != null) failRoot.SetActive(false);
         }
 
         private void OnHealth(PlayerHealthChanged value)

@@ -11,6 +11,7 @@ namespace Daeume.Core
             ["prompt.continue"] = "계속",
             ["hud.health"] = "체력",
             ["hud.chase"] = "도망치세요",
+            ["hud.failed"] = "쓰러졌습니다... 체크포인트에서 다시 시작합니다.",
             ["memory.stage01.title"] = "남겨진 기억",
             ["memory.stage01.01"] = "익숙한 목소리가 벽 너머에서 희미하게 들린다.",
             ["memory.stage01.02"] = "붙잡으려 할수록 풍경은 더 빠르게 일그러진다.",

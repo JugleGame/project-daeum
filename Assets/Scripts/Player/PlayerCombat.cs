@@ -18,6 +18,8 @@ namespace Daeume.Player
 
         private readonly HashSet<IDamageable> damaged = new();
         private InputAction attack;
+        private PlayerController controller;
+        private float attackOriginOffsetX;
 
         public bool PlayerAggression { get; private set; }
 
@@ -25,6 +27,8 @@ namespace Daeume.Player
         {
             var playerInput = GetComponentInParent<PlayerInput>();
             attack = attackAction == null ? playerInput?.actions?.FindAction(AttackActionName) : attackAction.action;
+            controller = GetComponentInParent<PlayerController>();
+            if (attackOrigin != null) attackOriginOffsetX = Mathf.Abs(attackOrigin.localPosition.x);
         }
 
         private void OnEnable() => attack?.Enable();
@@ -32,6 +36,13 @@ namespace Daeume.Player
 
         private void Update()
         {
+            if (attackOrigin != null && controller != null)
+            {
+                var position = attackOrigin.localPosition;
+                position.x = attackOriginOffsetX * controller.FacingDirection;
+                attackOrigin.localPosition = position;
+            }
+
             if (attack != null && attack.WasPressedThisFrame())
             {
                 Attack();
