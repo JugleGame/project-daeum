@@ -11,6 +11,16 @@ using UnityEngine.InputSystem;
 
 namespace Daeume.Editor
 {
+    /// <summary>
+    /// Boot/Persistent/프로토타입 씬을 코드로 구성해 주는 개발용 도구다(에디터 전용).
+    ///
+    /// 씬을 손으로 만들면 사람마다 구성이 달라지고, 씬 파일은 병합이 불가능해 되돌리기도 어렵다.
+    /// 그래서 "필요한 오브젝트와 컴포넌트를 코드로 다시 만들 수 있게" 해 둔 것이다.
+    /// 씬이 깨졌을 때 복구용으로도 쓰인다.
+    ///
+    /// 주의: 이 코드는 Assets/Editor 폴더에 있어 게임 빌드에는 포함되지 않는다.
+    /// 유니티는 Editor 폴더의 스크립트를 에디터 전용으로 취급한다.
+    /// </summary>
     public static class RoleASceneSetup
     {
         public static void Configure()

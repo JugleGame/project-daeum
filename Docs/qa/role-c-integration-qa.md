@@ -59,3 +59,29 @@ Play Mode로 `Stage01_Base` 실측 중 발견: 부트스트랩으로 spawn까지
 ## 재검증 효율 가이드
 
 Role B QA 문서의 가이드를 그대로 따른다: focused fixture 우선, 전체 EditMode/PlayMode는 diff 확정 후 1회.
+
+## 실측 검증 기록 (2026-08-20, spec 원문 대조 후)
+
+`Docs/var/handoffs/daeum/draft-v1/specs/` 원문 15건을 대조해 재검토했다. 결과: 시스템 골격은 spec대로 서 있었고, 진행 불가 버그 1건이 그 뒤 전부를 가리고 있었다.
+
+### 근본 원인
+
+- spec-010은 "Memory 상태에서 일반 상호작용을 비활성화한다"를 요구하고 `InteractionTargeter`는 그 규칙을 정확히 지키고 있었다.
+- 그런데 회상 문장 진행이 그 상호작용 경로에 의존하고 있었다. 결과적으로 회상 첫 문장에서 영구 정지 → `MemoryCompleted` 미발행 → 오염·추격·탈출 전 구간 도달 불가.
+- spec-005/폴더 구조가 지정한 `MemoryPlayback`(회상 재생 입력 소유자)이 아예 없었던 것이 원인이다.
+
+### 조치
+
+`Assets/Scripts/Memory/MemoryPlayback.cs` 신설(진행=Interact, 건너뛰기=Pause). 그 외 spec 위반 교정 13건은 [Docs/handoff/next-session-presentation-pass.md](../handoff/next-session-presentation-pass.md) 표 참고.
+
+### 검증 수치
+
+- EditMode 35/35, PlayMode 53/53, 실패 0, Console error 0
+- Play Mode 실측(Boot → New Game → 회상 → 추격):
+  `interact=True state=Memory inputEnabled=False` → `advance ×3` → `state=Chase` → `pressure=Intrusion chaseActive=True trauma=True` → `inputEnabled after chase=True`
+
+### Gate 판정 갱신
+
+- **G3 (Memory → 오염 전환): PASS.** 실제 이벤트 경로로 회상 완료 → Echo → 추격 진입을 실측 확인했다.
+- **G4 (Vertical Slice): 여전히 PARTIAL.** 시스템 경로는 확인했으나 사람이 실제 입력으로 Title→탈출까지 완주한 기록은 없다. 프레젠테이션 P0 작업(투명한 회상 앵커, 플레이스홀더 스프라이트, 상시 노출되는 디버그 라벨) 이후 재판정한다.
+- **G5: 판정 불가.** G4 실측 완주 후 대상.

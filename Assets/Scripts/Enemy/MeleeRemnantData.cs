@@ -6,6 +6,12 @@ using UnityEngine;
 
 namespace Daeume.Enemy
 {
+    /// <summary>
+    /// 압박 단계 하나에서 잔재가 어떻게 달라지는지를 담은 수치 묶음. (spec-004)
+    ///
+    /// 핵심: 압박이 올라도 "새로운 적"이 생기지 않는다. 같은 적의 선언된 수치만 바뀐다.
+    /// 그래서 이 값들이 코드 분기가 아니라 데이터로 존재한다.
+    /// </summary>
     [Serializable]
     public struct RemnantPressureProfile
     {
@@ -32,6 +38,13 @@ namespace Daeume.Enemy
         public bool WatchesTrauma => watchesTrauma;
     }
 
+    /// <summary>
+    /// 근접형 잔재의 모든 수치를 담는 데이터 에셋. (spec-004)
+    ///
+    /// 체력·피해·사거리 같은 기본값과, 압박 단계별 변화(pressureProfiles)를 함께 선언한다.
+    /// 기본 프로필 3종(Stable/Echo/Intrusion)이 미리 채워져 있어 에셋을 새로 만들어도 바로 동작한다.
+    /// Echo부터 WatchesTrauma가 true인 것이 "잔재가 트라우마 쪽을 본다"는 복선 연출을 만든다.
+    /// </summary>
     [CreateAssetMenu(fileName = "MeleeRemnantData", menuName = "Daeume/Enemy/Melee Remnant Data")]
     public sealed class MeleeRemnantData : ScriptableObject
     {
@@ -64,6 +77,10 @@ namespace Daeume.Enemy
         public float HitStunSeconds => hitStunSeconds;
         public IReadOnlyList<RemnantPressureProfile> PressureProfiles => pressureProfiles;
 
+        /// <summary>
+        /// 해당 압박 단계의 프로필을 찾는다. 선언돼 있지 않으면 "변화 없음(Stable 기본값)"을 돌려준다.
+        /// 데이터가 비어 있어도 게임이 멈추지 않게 하는 안전한 기본값 처리다.
+        /// </summary>
         public RemnantPressureProfile GetProfile(PressureStage stage)
         {
             if (pressureProfiles != null)
@@ -80,6 +97,14 @@ namespace Daeume.Enemy
             return new RemnantPressureProfile(PressureStage.Stable, 1f, 1f, false);
         }
 
+        /// <summary>
+        /// 데이터 오류 목록을 돌려준다(비어 있으면 정상).
+        /// </summary>
+        /// <remarks>
+        /// 가장 중요한 검사는 마지막의 "예고 시간이 0에 가까워지지 않는가"다.
+        /// 압박 단계 배수를 곱한 뒤에도 0.05초 이상 남아야 한다 — 예고 없는 공격을 금지하는
+        /// spec-004의 공정성 규칙(Test_Remnant_TelegraphNeverReachesZero)을 데이터 단계에서 지키는 장치다.
+        /// </remarks>
         public IReadOnlyList<string> ValidateData()
         {
             var errors = new List<string>();

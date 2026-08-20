@@ -3,6 +3,15 @@ using UnityEngine;
 
 namespace Daeume.Stage
 {
+    /// <summary>
+    /// 카메라가 플레이어를 따라가되 정해진 범위를 벗어나지 않게 한다. (spec-007 blockout 범위)
+    ///
+    /// 경계가 없으면 레벨 밖의 빈 공간이 화면에 들어와 "만들다 만" 인상을 준다.
+    /// followVertical이 꺼져 있으면 좌우로만 따라간다 — 2D 횡스크롤에서 세로 흔들림을 줄이는 흔한 선택이다.
+    ///
+    /// LateUpdate에서 움직이는 이유: 플레이어 이동이 끝난 뒤에 카메라를 옮겨야 한 프레임 늦게 따라오는
+    /// 떨림이 생기지 않는다.
+    /// </summary>
     public sealed class StageCameraBounds : MonoBehaviour
     {
         [SerializeField] private Vector2 minimum = new(-2f, -2f);

@@ -4,54 +4,82 @@ using UnityEngine.InputSystem;
 
 namespace Daeume.Player
 {
+    /// <summary>
+    /// 플레이어의 이동·점프·붙잡기(매달리기)를 담당한다. (spec-002)
+    ///
+    /// [RequireComponent(typeof(Rigidbody2D))]:
+    /// 이 스크립트를 붙이면 유니티가 Rigidbody2D(물리 몸체)를 자동으로 함께 붙이고, 지우지 못하게 막는다.
+    /// 물리 몸체 없이 이 코드가 돌면 즉시 오류가 나므로 아주 적절한 안전장치다.
+    ///
+    /// 이 게임의 시그니처 동사는 "붙잡기"다. 친구가 잡아 준 기억 → 혼자 붙드는 행동 →
+    /// 마지막에 내려놓기로 이어지는 주제와 연결돼 있어(design-decisions 4번) 잘라낼 수 없는 기능이다.
+    /// </summary>
     [RequireComponent(typeof(Rigidbody2D))]
     public sealed class PlayerController : MonoBehaviour
     {
+        // 입력을 물리 키(W/A/S/D)가 아니라 "액션 이름"으로 찾는다.
+        // 그래야 키 재설정(리매핑)을 해도 코드를 고칠 필요가 없다. spec-002/013의 필수 요구사항이다.
         public const string MoveActionName = "Move";
         public const string JumpActionName = "Jump";
         public const string GrabActionName = "Grab";
 
+        // [SerializeField]: private이지만 유니티 인스펙터 창에 노출돼 값을 조정할 수 있게 한다.
+        // 튜닝 값을 코드 수정 없이 바꾸기 위한 표준 방식이다.
         [SerializeField] private InputActionReference moveAction;
         [SerializeField] private InputActionReference jumpAction;
         [SerializeField] private InputActionReference grabAction;
         [SerializeField, Min(0f)] private float moveSpeed = 5f;
         [SerializeField, Min(0f)] private float jumpVelocity = 8f;
-        [SerializeField, Range(0f, 1f)] private float airControl = 0.75f;
-        [SerializeField, Min(0.01f)] private float grabHoldSeconds = 1.5f;
-        [SerializeField] private Transform groundProbe;
+        [SerializeField, Range(0f, 1f)] private float airControl = 0.75f;   // 공중에서의 조작 비율(1이면 지상과 동일)
+        [SerializeField, Min(0.01f)] private float grabHoldSeconds = 1.5f;  // spec-002의 GrabHoldSeconds
+        [SerializeField] private Transform groundProbe;                     // 발밑 검사 위치(자식 오브젝트)
         [SerializeField, Min(0.01f)] private float groundProbeRadius = 0.08f;
-        [SerializeField] private LayerMask groundMask = ~0;
+        [SerializeField] private LayerMask groundMask = ~0;                 // 어떤 레이어를 "땅"으로 볼지
 
         private Rigidbody2D body;
         private InputAction move;
         private InputAction jump;
         private InputAction grab;
-        private GrabbableSurface grabCandidate;
+        private GrabbableSurface grabCandidate;   // 지금 붙잡을 수 있는 표면(범위 안에 들어온 것)
         private Vector2 moveInput;
-        private float grabRemaining;
+        private float grabRemaining;              // 남은 매달리기 시간
         private bool grounded;
+        private float defaultGravityScale = 1f;   // 붙잡기 해제 시 되돌릴 원래 중력 배율
 
         public bool IsGrounded => grounded;
         public bool IsGrabbing { get; private set; }
         public float GrabHoldSeconds => grabHoldSeconds;
-        public float FacingDirection { get; private set; } = 1f;
+        public float FacingDirection { get; private set; } = 1f;  // 1=오른쪽, -1=왼쪽. 상호작용 대상 선택에도 쓰인다.
+
+        /// <summary>연출 중 조작을 잠글 때 사용한다(붙잡히는 연출, 회상 재생 등).</summary>
         public bool InputEnabled { get; set; } = true;
 
         private void Awake()
         {
             body = GetComponent<Rigidbody2D>();
+
+            // 수정: 예전에는 붙잡기 해제 시 중력 배율을 1로 "고정 대입"했다.
+            // 프리팹이 중력 배율을 1이 아닌 값(예: 3)으로 쓰면 붙잡기 한 번에 낙하 감각이 영구히 바뀌는 버그가 된다.
+            // 그래서 시작 시점의 값을 기억해 두고 해제 때 그 값으로 되돌린다.
+            defaultGravityScale = body.gravityScale;
+
+            // 인스펙터에서 액션을 직접 지정하지 않았으면 PlayerInput이 들고 있는 액션 맵에서 이름으로 찾는다.
+            // 둘 다 지원하므로 테스트에서는 액션을 주입하고, 실제 씬에서는 PlayerInput을 쓰는 식으로 유연하다.
             var playerInput = GetComponentInParent<PlayerInput>();
             move = moveAction == null ? playerInput?.actions?.FindAction(MoveActionName) : moveAction.action;
             jump = jumpAction == null ? playerInput?.actions?.FindAction(JumpActionName) : jumpAction.action;
             grab = grabAction == null ? playerInput?.actions?.FindAction(GrabActionName) : grabAction.action;
         }
 
+        // OnEnable/OnDisable: 오브젝트가 켜지고 꺼질 때 호출된다.
+        // 입력 활성화와 이벤트 구독을 여기서 짝을 맞춰 처리해야 죽은 구독이 남지 않는다.
         private void OnEnable()
         {
             move?.Enable();
             jump?.Enable();
             grab?.Enable();
             GameManager.Instance?.Events.Subscribe<PlayerRestoreRequested>(Restore);
+            GameManager.Instance?.Events.Subscribe<StageStateChanged>(OnStageStateChanged);
         }
 
         private void OnDisable()
@@ -60,12 +88,43 @@ namespace Daeume.Player
             jump?.Disable();
             grab?.Disable();
             GameManager.Instance?.Events.Unsubscribe<PlayerRestoreRequested>(Restore);
+            GameManager.Instance?.Events.Unsubscribe<StageStateChanged>(OnStageStateChanged);
         }
 
+        /// <summary>
+        /// 회상(Memory) 중에는 이동을 멈춘다. (spec-005: "회상 중 일반 이동·전투 피해를 중지한다")
+        /// </summary>
+        /// <remarks>
+        /// 회상 쪽 코드가 플레이어를 직접 붙잡아 잠그게 하면 Memory 모듈이 Player 모듈을 알아야 해서
+        /// 역할 간 의존이 늘어난다. 대신 플레이어가 "상태 변경 소식"만 듣고 스스로 잠그게 했다.
+        /// 덕분에 회상뿐 아니라 나중에 다른 연출이 Memory 상태를 써도 같은 규칙이 자동 적용된다.
+        ///
+        /// 붙잡히는 연출(TraumaContactHandler)도 InputEnabled를 쓰지만, 그쪽은 Failed 상태로 넘어가며
+        /// 자체적으로 다시 켜 주므로 이 처리와 충돌하지 않는다.
+        /// </remarks>
+        private void OnStageStateChanged(StageStateChanged message)
+        {
+            if (message.State == StageState.Memory)
+            {
+                InputEnabled = false;
+                SetMoveInput(0f);
+                return;
+            }
+
+            // 회상이 끝나 추격/탐색으로 돌아오면 조작을 되돌려 준다.
+            if (message.State == StageState.Explore || message.State == StageState.Chase)
+            {
+                InputEnabled = true;
+            }
+        }
+
+        // Update: 매 화면 프레임 실행된다. 입력은 프레임 단위로 읽어야 눌림을 놓치지 않는다.
         private void Update()
         {
             if (!InputEnabled)
             {
+                // 조작이 잠긴 동안에는 입력을 0으로 눌러 둔다.
+                // 이렇게 하지 않으면 잠기기 직전 방향키 값이 남아 캐릭터가 혼자 걸어간다.
                 SetMoveInput(0f);
                 return;
             }
@@ -86,16 +145,21 @@ namespace Daeume.Player
             }
         }
 
+        // FixedUpdate: 물리 계산 주기에 맞춰 일정 간격으로 실행된다.
+        // 속도(velocity)를 다루는 코드는 반드시 여기에 둬야 프레임 수에 따라 이동 거리가 달라지지 않는다.
         private void FixedUpdate()
         {
             RefreshGrounded();
             if (IsGrabbing)
             {
+                // 매달린 동안에는 일반 이동을 하지 않는다.
+                // spec-002가 허용한 행동은 "점프로 이탈 / 아래 입력으로 낙하 / 시간 만료 자동 낙하" 뿐이다.
                 TickGrab(Time.fixedDeltaTime, moveInput.y < -0.5f);
                 return;
             }
 
             var control = grounded ? 1f : airControl;
+            // y 속도는 건드리지 않는다. 중력이 만든 낙하 속도를 덮어쓰면 점프가 이상해진다.
             body.linearVelocity = new Vector2(moveInput.x * moveSpeed * control, body.linearVelocity.y);
         }
 
@@ -104,15 +168,19 @@ namespace Daeume.Player
             SetMoveInput(new Vector2(value, 0f));
         }
 
+        /// <summary>이동 입력을 넣는다. 테스트에서 키보드 없이 조작을 흉내 낼 때도 쓴다.</summary>
         public void SetMoveInput(Vector2 value)
         {
+            // ClampMagnitude: 대각선 입력이 1보다 커져 더 빨라지는 현상을 막는다.
             moveInput = Vector2.ClampMagnitude(value, 1f);
             if (!Mathf.Approximately(moveInput.x, 0f))
             {
+                // 입력이 0일 때는 방향을 유지한다. 멈춰 섰다고 정면이 바뀌면 상호작용 대상이 튄다.
                 FacingDirection = Mathf.Sign(moveInput.x);
             }
         }
 
+        /// <summary>점프. 매달린 상태에서는 "이탈 점프"가 된다(spec-002가 허용한 탈출 경로).</summary>
         public bool TryJump()
         {
             if (!InputEnabled)
@@ -129,14 +197,17 @@ namespace Daeume.Player
 
             if (!grounded)
             {
+                // 공중 2단 점프 금지. spec-002의 Test_Player_NoDoubleJump가 이 규칙을 검사한다.
                 return false;
             }
 
             body.linearVelocity = new Vector2(body.linearVelocity.x, jumpVelocity);
+            // 같은 프레임에 점프가 두 번 처리되는 것을 막기 위해 즉시 접지 상태를 내린다.
             grounded = false;
             return true;
         }
 
+        /// <summary>지정된 붙잡기 표면에 매달린다. 땅에 서 있을 때는 매달리지 않는다.</summary>
         public bool TryBeginGrab(GrabbableSurface surface)
         {
             if (!InputEnabled || surface == null || grounded)
@@ -146,11 +217,12 @@ namespace Daeume.Player
 
             IsGrabbing = true;
             grabRemaining = grabHoldSeconds;
-            body.gravityScale = 0f;
+            body.gravityScale = 0f;        // 중력을 잠시 꺼서 그 자리에 머물게 한다.
             body.linearVelocity = Vector2.zero;
             return true;
         }
 
+        /// <summary>매달린 시간을 줄이고, 시간이 다하거나 아래 입력이 오면 놓는다.</summary>
         public void TickGrab(float deltaTime, bool dropRequested)
         {
             if (!IsGrabbing)
@@ -166,14 +238,23 @@ namespace Daeume.Player
             }
         }
 
+        /// <summary>테스트에서 접지 상태를 강제로 지정한다. 실게임 코드에서는 호출하지 않는다.</summary>
         public void SetGroundedForTest(bool value) => grounded = value;
 
         private void ReleaseGrab()
         {
             IsGrabbing = false;
-            body.gravityScale = 1f;
+            body.gravityScale = defaultGravityScale;
         }
 
+        /// <summary>발밑에 땅이 있는지 검사한다.</summary>
+        /// <remarks>
+        /// 자기 자신의 콜라이더를 땅으로 착각하지 않도록 IsChildOf로 걸러 낸다. 꼭 필요한 처리다.
+        ///
+        /// 검토 메모: OverlapCircleAll은 호출할 때마다 배열을 새로 만들어 쓰레기(GC)를 만든다.
+        /// 지금은 플레이어 1명뿐이라 체감 부담이 없지만, 성능 문제가 보이면
+        /// Physics2D.OverlapCircle(비할당 버전)로 바꾸면 된다.
+        /// </remarks>
         private void RefreshGrounded()
         {
             var probePosition = groundProbe == null ? transform.position : groundProbe.position;
@@ -188,6 +269,7 @@ namespace Daeume.Player
             }
         }
 
+        // 붙잡기 가능한 표면에 몸이 닿아 있는 동안 후보로 기억해 둔다.
         private void OnTriggerStay2D(Collider2D other)
         {
             var surface = other.GetComponentInParent<GrabbableSurface>();
@@ -199,20 +281,31 @@ namespace Daeume.Player
 
         private void OnTriggerExit2D(Collider2D other)
         {
+            // 지금 기억 중인 후보에서 벗어났을 때만 지운다.
+            // 다른 표면에서 빠져나온 것 때문에 유효한 후보가 사라지는 일을 막는다.
             if (grabCandidate != null && other.GetComponentInParent<GrabbableSurface>() == grabCandidate)
             {
                 grabCandidate = null;
             }
         }
 
+        /// <summary>체크포인트 복귀 요청을 받아 위치·속도·체력을 되돌린다.</summary>
         private void Restore(PlayerRestoreRequested request)
         {
             transform.position = request.Position;
+            // Rigidbody2D는 자체 위치를 따로 들고 있어, transform만 바꾸면 한 프레임 뒤 원래 자리로 끌려간다.
+            // 그래서 body.position도 함께 맞춘다.
             body.position = request.Position;
-            body.linearVelocity = Vector2.zero;
+            body.linearVelocity = Vector2.zero;   // 낙하 속도를 안 지우면 부활 직후 그대로 떨어진다.
+
+            // 붙잡기 도중 사망했을 수 있으므로 매달림 상태와 중력도 원상 복구한다.
+            if (IsGrabbing)
+            {
+                ReleaseGrab();
+            }
+
             InputEnabled = true;
             GetComponent<PlayerHealth>()?.Restore(request.Health);
         }
-
     }
 }

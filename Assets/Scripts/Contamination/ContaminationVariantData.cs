@@ -4,27 +4,51 @@ using UnityEngine;
 
 namespace Daeume.Contamination
 {
+    /// <summary>
+    /// 한 스테이지의 오염 공간 설정을 담는 데이터 에셋. (spec-006)
+    ///
+    /// 어떤 오버레이 씬을 쓸지, 목표 추격 시간은 몇 초인지, 추격자 속도와 거리 한계는 얼마인지를 선언한다.
+    /// 이 값들이 코드가 아니라 에셋에 있는 이유는, 스테이지마다 다르게 저작해야 하고
+    /// 기획자가 코드를 만지지 않고 조정할 수 있어야 하기 때문이다.
+    ///
+    /// [CreateAssetMenu]: 유니티 에디터의 Assets > Create 메뉴에 항목을 추가해 준다.
+    /// 이 속성이 있어야 데이터 파일을 마우스로 만들 수 있다.
+    /// </summary>
     [CreateAssetMenu(fileName = "ContaminationVariant", menuName = "Daeume/Contamination Variant")]
     public sealed class ContaminationVariantData : ScriptableObject
     {
         [SerializeField] private string variantId = string.Empty;
         [SerializeField] private string echoOverlayScene = string.Empty;
         [SerializeField] private string intrusionOverlayScene = string.Empty;
-        [SerializeField, Min(0.1f)] private float targetChaseSeconds = 30f;
+        [SerializeField, Min(0.1f)] private float targetChaseSeconds = 30f;  // director가 목표로 삼는 추격 길이
         [SerializeField, Min(0.1f)] private float chaseSpeed = 6f;
-        [SerializeField, Min(0.1f)] private float minDistance = 2f;
-        [SerializeField, Min(0.2f)] private float maxDistance = 7f;
+        [SerializeField, Min(0.1f)] private float minDistance = 2f;          // 이보다 가까워지면 추격자를 물린다
+        [SerializeField, Min(0.2f)] private float maxDistance = 7f;          // 이보다 멀어지면 다시 붙인다
         [SerializeField] private List<string> declaredTeleportMarkerIds = new();
 
         public string VariantId => variantId;
         public string EchoOverlayScene => echoOverlayScene;
         public string IntrusionOverlayScene => intrusionOverlayScene;
+
+        // 읽을 때도 한 번 더 하한을 건다.
+        // 인스펙터의 Min 속성은 에디터 입력만 막을 뿐, 코드로 잘못된 값이 들어오는 것은 막지 못하기 때문이다.
         public float TargetChaseSeconds => Mathf.Max(0.1f, targetChaseSeconds);
         public float ChaseSpeed => Mathf.Max(0.1f, chaseSpeed);
         public float MinDistance => Mathf.Max(0.1f, minDistance);
+
+        // 최대 거리는 항상 최소 거리보다 크게 강제한다. 뒤집히면 추격자가 붙었다 떨어졌다를 무한 반복한다.
         public float MaxDistance => Mathf.Max(MinDistance + 0.1f, maxDistance);
+
+        /// <summary>
+        /// 연출 목적의 순간이동이 허용된 지점 목록.
+        /// </summary>
+        /// <remarks>
+        /// spec-006은 "director는 트라우마를 순간이동시키지 않는다. 예외는 선언된 지점뿐"이라고 규정한다.
+        /// 목록을 데이터로 두면 "선언되지 않은 순간이동 0회"를 테스트로 검증할 수 있다.
+        /// </remarks>
         public IReadOnlyList<string> DeclaredTeleportMarkerIds => declaredTeleportMarkerIds;
 
+        /// <summary>테스트나 툴에서 값을 한 번에 채워 넣는다.</summary>
         public void Configure(
             string id,
             string echoScene,
@@ -47,6 +71,13 @@ namespace Daeume.Contamination
                 : new List<string>(teleportMarkerIds);
         }
 
+        /// <summary>
+        /// 데이터가 온전한지 검사하고, 문제가 있으면 이유를 문자열로 돌려준다.
+        /// </summary>
+        /// <remarks>
+        /// 예외를 던지지 않고 결과+메시지를 돌려주는 형태라 EditMode 테스트에서 그대로 쓰기 좋다.
+        /// 잘못된 데이터를 플레이 중에 발견하면 원인을 찾기 어렵기 때문에, 이런 사전 검사는 비용 대비 효과가 크다.
+        /// </remarks>
         public bool ValidateData(out string error)
         {
             if (string.IsNullOrWhiteSpace(variantId)) return Fail("VariantId is required.", out error);
@@ -61,6 +92,7 @@ namespace Daeume.Contamination
             return true;
         }
 
+        /// <summary>압박 단계에 해당하는 오버레이 씬 이름. Stable에는 오버레이가 없다.</summary>
         public string OverlayFor(PressureStage stage)
         {
             return stage switch

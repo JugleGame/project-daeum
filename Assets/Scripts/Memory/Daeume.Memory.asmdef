@@ -1,1 +1,1 @@
-{"name":"Daeume.Memory","rootNamespace":"Daeume.Memory","references":["Daeume.Core","Daeume.Interaction","Daeume.ContaminationRuntime"],"autoReferenced":true}
+{"name": "Daeume.Memory", "rootNamespace": "Daeume.Memory", "references": ["Daeume.Core", "Daeume.Interaction", "Daeume.ContaminationRuntime", "Unity.InputSystem"], "autoReferenced": true}
