@@ -64,3 +64,7 @@ B1~B5 결과를 Issue #3의 하나의 독립적으로 검증 가능한 결과로
 - Windows build는 full warning stream 대신 `result/errors/warnings/outputPath` summary를 기록한다.
 
 기능 증거가 없거나 실제 contract가 필요한 구간이 mock 상태라면 functional PASS로 판정하지 않는다.
+
+## 재검증 기록 (Role C 통합, Issue #5)
+
+`a49a688 feat-Role-C`가 실제 `MemoryComplete` 발행/구독 코드를 추가했으나 `Stage01_MemoryAnchor.prefab`이 Scene에 미배치되어 PARTIAL 판정은 유지된다. 상세: [Docs/qa/role-c-integration-qa.md](../qa/role-c-integration-qa.md).
