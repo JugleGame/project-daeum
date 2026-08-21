@@ -164,7 +164,13 @@ namespace Daeume.Interaction
 
             // 실제로 지금 어떤 키에 묶여 있는지를 입력 시스템에서 조회해 표시한다(예: "E").
             // 키를 재설정하면 표시도 자동으로 따라간다 — spec-013의 Test_UI_PromptReflectsRebinding 요구사항.
-            var keyLabel = interact != null ? interact.GetBindingDisplayString() : prompt.ActionName;
+            //
+            // 주의: GetBindingDisplayString()을 인자 없이 부르면 연결 여부와 상관없이 모든 바인딩을
+            // "E | Y" 식으로 합쳐서 반환한다(예: 키보드 E + 미연결 게임패드 buttonNorth=Y).
+            // 실제로 입력 가능한 컨트롤(현재 연결된 기기)만 표시해야 눌리지 않는 키가 뜨지 않는다.
+            var keyLabel = interact != null && interact.controls.Count > 0
+                ? interact.controls[0].displayName
+                : prompt.ActionName;
             GameManager.Instance?.Events.Publish(
                 new InteractionPromptChanged(true, string.IsNullOrEmpty(keyLabel) ? prompt.ActionName : keyLabel, prompt.StringTableKey));
         }

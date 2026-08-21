@@ -68,12 +68,15 @@ namespace Daeume.Flow
             GameManager.Instance?.Events.Unsubscribe<StageFailed>(OnStageFailed);
         }
 
-        private void OnStageFailed(StageFailed value) => StartCoroutine(RetryAfterDelay());
+        private Coroutine pendingRetry;
+
+        private void OnStageFailed(StageFailed value) => pendingRetry = StartCoroutine(RetryAfterDelay());
 
         /// <summary>실패 후 잠깐 기다렸다가 재시작한다. 실패 화면을 볼 시간을 주기 위한 지연이다.</summary>
         private IEnumerator RetryAfterDelay()
         {
             yield return new WaitForSeconds(1.2f);
+            pendingRetry = null;
             RetryFromFailure();
         }
 
@@ -212,6 +215,17 @@ namespace Daeume.Flow
                 // 요청한 체크포인트와 저장된 체크포인트가 다르면 복귀하지 않는다.
                 // 다른 스테이지의 체크포인트로 잘못 되돌아가는 것을 막는 검사다.
                 return;
+            }
+
+            // 이 함수가 실패를 이미 제자리에서 처리했으므로, OnStageFailed가 예약해 둔 전체 씬 재로드
+            // 재시도(RetryAfterDelay)는 취소한다. 취소하지 않으면 1.2초 뒤 Stage01_Base가 통째로 다시
+            // 로드되면서 트라우마(추격자)가 씬에 저장된 원래 위치로 되돌아가 버린다. 그러면 방금 이
+            // 함수가 ContaminationDirector를 통해 벌려 둔 안전 거리가 사라지고, 부활하자마자 다시 붙잡혀
+            // 죽고 부활하는 무한 루프가 생긴다.
+            if (pendingRetry != null)
+            {
+                StopCoroutine(pendingRetry);
+                pendingRetry = null;
             }
 
             var health = SaveSystem.ResolveRespawnHealth(currentData, maxHealth, true, maxHealth);
