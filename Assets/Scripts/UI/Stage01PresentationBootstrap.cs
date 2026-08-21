@@ -22,8 +22,6 @@ namespace Daeume.UI
         private const string StageSceneName = "Stage01_Base";
         private const string MemoryAnchorMarkerId = "stage01.memory.anchor.01";
         private const string VisualGuideObjectName = "B1_VisualGuide";
-        private const string TraumaObjectName = "Trauma";
-        private const string TraumaSpriteResourcePath = "Trauma/TraumaBody";
 
         /// <summary>월드 디버그 라벨(B1_VisualGuide)을 게임 화면에 보일지 여부. 기본은 숨김이다.</summary>
         public static bool ShowVisualGuideDebugLabels = false;
@@ -63,7 +61,6 @@ namespace Daeume.UI
             SpawnMemoryAnchor(scene);
             SpawnPersistentPresentation();
             HideVisualGuideDebugLabels(scene);
-            ReplaceTraumaVisual(scene);
         }
 
         /// <summary>
@@ -78,26 +75,6 @@ namespace Daeume.UI
             {
                 var guide = FindDescendant(root.transform, VisualGuideObjectName);
                 if (guide != null) guide.gameObject.SetActive(false);
-            }
-        }
-
-        /// <summary>
-        /// Trauma는 씬에 유니티 기본 스프라이트(Knob)로 blockout돼 있다.
-        /// 씬을 직접 못 고치니, 실행 시점에 SpriteRenderer만 교체한다(프리팹화 없이 최소 변경).
-        /// </summary>
-        private static void ReplaceTraumaVisual(Scene scene)
-        {
-            var sprite = Resources.Load<Sprite>(TraumaSpriteResourcePath);
-            if (sprite == null) return;
-
-            foreach (var root in scene.GetRootGameObjects())
-            {
-                var trauma = FindDescendant(root.transform, TraumaObjectName);
-                var renderer = trauma != null ? trauma.GetComponent<SpriteRenderer>() : null;
-                if (renderer == null) continue;
-
-                renderer.sprite = sprite;
-                renderer.color = new Color(0.07f, 0.055f, 0.078f, 1f); // #120e14
             }
         }
 

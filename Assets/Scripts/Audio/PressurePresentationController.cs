@@ -21,7 +21,6 @@ namespace Daeume.Audio
         [SerializeField] private Camera targetCamera;
         [SerializeField, Range(0f, 0.25f)] private float maximumShake = 0.08f;
 
-        private Vector3 cameraOrigin;    // 흔들기 전의 원래 카메라 위치
         private float pressureAmount;    // 0~1로 정규화한 압박 강도
         private float shakeAssist = 1f;  // 접근성 옵션(0이면 흔들림 완전 차단)
 
@@ -30,10 +29,6 @@ namespace Daeume.Audio
         private void Awake()
         {
             if (targetCamera == null) targetCamera = Camera.main;
-
-            // 원래 위치를 기억해 둔다. 흔들림은 항상 이 값을 기준으로 오프셋만 더하는 방식이라
-            // 카메라의 실제 위치(추적 결과)를 망가뜨리지 않는다.
-            if (targetCamera != null) cameraOrigin = targetCamera.transform.localPosition;
         }
 
         private void OnEnable() => Connect();
@@ -48,28 +43,25 @@ namespace Daeume.Audio
             ApplyAssist(FindAnyObjectByType<SceneFlowController>()?.CurrentData?.AssistSettings);
         }
 
-        private void OnDisable()
-        {
-            GameManager.Instance?.Events.Unsubscribe<ContaminationPressureChanged>(OnPressure);
-
-            // 꺼질 때 카메라를 원위치시킨다. 흔들린 상태로 남으면 화면이 미묘하게 틀어진 채 고정된다.
-            RestoreCamera();
-        }
+        private void OnDisable() => GameManager.Instance?.Events.Unsubscribe<ContaminationPressureChanged>(OnPressure);
 
         /// <summary>
         /// LateUpdate에서 흔든다. 카메라 추적(StageCameraBounds)이 LateUpdate에서 위치를 정하므로,
-        /// 그 뒤에 오프셋을 더해야 흔들림이 추적 결과에 덮어써지지 않는다.
+        /// 그 뒤에 오프셋을 "더해야" 흔들림이 추적 결과 위에 얹힌다.
         /// </summary>
+        /// <remarks>
+        /// 예전에는 Awake 시점에 캐시해 둔 위치를 기준으로 매 프레임 덮어썼다. 압박이 켜져 있는 동안
+        /// 내내 그 캐시된 좌표로 되돌아가 버려서, 추격 중 카메라가 압박이 시작된 순간의 위치(대개
+        /// 회상을 막 끝낸 탈출구 근처)에 고정된 것처럼 보이고 플레이어를 따라가지 않는 버그가 있었다.
+        /// 고정 기준점 없이 "이번 프레임 위치"에 오프셋만 더하면, StageCameraBounds가 매 프레임 다시
+        /// 계산해 주는 추적 위치를 지우지 않는다.
+        /// </remarks>
         private void LateUpdate()
         {
             if (targetCamera == null || pressureAmount <= 0f || shakeAssist <= 0f) return;
 
             var offset = Random.insideUnitCircle * maximumShake * pressureAmount * shakeAssist;
-
-            // 월드 위치가 아니라 로컬 오프셋만 바꾼다.
-            // spec-014는 "흔들림이 월드 위치를 바꾸지 않는다"를 요구한다 — 흔들림이 게임플레이(충돌·판정)에
-            // 영향을 주면 안 되기 때문이다.
-            targetCamera.transform.localPosition = cameraOrigin + new Vector3(offset.x, offset.y, 0f);
+            targetCamera.transform.localPosition += new Vector3(offset.x, offset.y, 0f);
         }
 
         /// <summary>접근성 설정을 반영한다. 강도 0이면 흔들림이 완전히 사라진다.</summary>
@@ -79,7 +71,6 @@ namespace Daeume.Audio
         {
             ambientSource = source;
             targetCamera = camera;
-            if (camera != null) cameraOrigin = camera.transform.localPosition;
         }
 
         private void Connect()
@@ -104,13 +95,6 @@ namespace Daeume.Audio
 
             // 환경음 볼륨도 압박에 따라 올린다. Lerp는 두 값 사이를 비율로 섞는 함수다.
             if (ambientSource != null) ambientSource.volume = Mathf.Lerp(0.25f, 0.8f, pressureAmount);
-
-            if (pressureAmount <= 0f) RestoreCamera();
-        }
-
-        private void RestoreCamera()
-        {
-            if (targetCamera != null) targetCamera.transform.localPosition = cameraOrigin;
         }
     }
 }
