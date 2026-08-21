@@ -68,6 +68,24 @@ namespace Daeume.Tests.PlayMode
         }
 
         [Test]
+        public void Test_Chase_CheckpointRestoreRepositionsPursuerAwayFromPlayer()
+        {
+            // #7: checkpoint restore must move the pursuer too, or it stays adjacent
+            // to the respawned player and immediately re-triggers Fail -> restore -> Fail.
+            var context = CreateContext(false, true);
+            context.Director.BeginChase();
+            context.Pursuer.position = new Vector3(-1f, 0f);
+            var restorePosition = new Vector2(10f, 0f);
+
+            GameManager.Instance.Events.Publish(new PlayerRestoreRequested(restorePosition, 3));
+
+            var expectedX = restorePosition.x - context.Data.MaxDistance;
+            Assert.That(context.Pursuer.position.x, Is.EqualTo(expectedX).Within(0.001f));
+            Assert.That(context.Pursuer.position.x - restorePosition.x, Is.LessThanOrEqualTo(-context.Data.MinDistance));
+            context.Dispose();
+        }
+
+        [Test]
         public void Test_Chase_MemoryToEscapeUsesRoleAStateContract()
         {
             var context = CreateContext(false, true);

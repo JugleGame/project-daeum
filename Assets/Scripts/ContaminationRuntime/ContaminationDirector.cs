@@ -40,10 +40,37 @@ namespace Daeume.ContaminationRuntime
         public bool DeadEndBlocked => deadEndBlocked;
         public event Action<string, bool> OverlayRequested;
 
+        private void OnEnable()
+        {
+            GameManager.Instance?.Events.Subscribe<PlayerRestoreRequested>(OnPlayerRestoreRequested);
+        }
+
+        private void OnDisable()
+        {
+            GameManager.Instance?.Events.Unsubscribe<PlayerRestoreRequested>(OnPlayerRestoreRequested);
+        }
+
         private void Update()
         {
             ResolveActors();
             Tick(Time.deltaTime);
+        }
+
+        /// <summary>
+        /// 체크포인트 복귀로 플레이어가 순간이동하면 추격자도 안전 거리로 함께 되돌린다. (#7)
+        ///
+        /// 그렇지 않으면 붙잡힌 자리에 남은 추격자가 복귀 직후 다시 닿아 Fail→복귀→Fail이 무한 반복된다.
+        /// KeepDistance는 프레임당 이동 속도 제한이 있어 이 상황을 스스로 벗어나지 못하므로,
+        /// 체크포인트 복귀는 "선언된 지점"으로 취급해 순간이동으로 처리한다.
+        /// </summary>
+        private void OnPlayerRestoreRequested(PlayerRestoreRequested request)
+        {
+            ResolveActors();
+            if (!ChaseActive || pursuer == null || data == null) return;
+
+            var offset = pursuer.position.x - request.Position.x;
+            var direction = Mathf.Approximately(offset, 0f) ? 1f : Mathf.Sign(offset);
+            pursuer.position = new Vector3(request.Position.x + direction * data.MaxDistance, request.Position.y, pursuer.position.z);
         }
 
         public void Configure(ContaminationVariantData variantData, Transform playerTransform, Transform pursuerTransform, string id = "chase-stage01-left-escape")
