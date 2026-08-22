@@ -4,6 +4,7 @@ using Daeume.Contamination;
 using Daeume.ContaminationRuntime;
 using Daeume.Enemy;
 using NUnit.Framework;
+using UnityEditor;
 using UnityEngine;
 
 namespace Daeume.Tests.EditMode
@@ -133,6 +134,36 @@ namespace Daeume.Tests.EditMode
                 UnityEngine.Object.DestroyImmediate(root);
                 UnityEngine.Object.DestroyImmediate(variantData);
             }
+        }
+
+        [Test]
+        public void Test_Remnant_DashAndRangedPrefabsAreWiredForReuse()
+        {
+            var dash = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Enemy/DashRemnant.prefab");
+            var ranged = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Enemy/RangedRemnant.prefab");
+            Assert.That(dash, Is.Not.Null, "DashRemnant.prefab is missing.");
+            Assert.That(ranged, Is.Not.Null, "RangedRemnant.prefab is missing.");
+
+            AssertWired<DashRemnant>(dash);
+            AssertWired<RangedRemnant>(ranged);
+        }
+
+        private static void AssertWired<T>(GameObject prefab) where T : Component
+        {
+            var actor = prefab.GetComponent<T>();
+            Assert.That(actor, Is.Not.Null, prefab.name);
+            Assert.That(prefab.GetComponent<Collider2D>(), Is.Not.Null, prefab.name);
+
+            var telegraph = prefab.transform.Find("AttackTelegraph")?.GetComponent<SpriteRenderer>();
+            Assert.That(telegraph, Is.Not.Null, prefab.name);
+            Assert.That(telegraph.enabled, Is.False, prefab.name);
+
+            var serialized = new SerializedObject(actor);
+            Assert.That(serialized.FindProperty("bodyRenderer").objectReferenceValue, Is.Not.Null, prefab.name);
+            Assert.That(serialized.FindProperty("telegraphRenderer").objectReferenceValue, Is.SameAs(telegraph), prefab.name);
+
+            // 데이터는 스테이지 이슈가 붙인다 — 지금은 뼈대만 검증한다.
+            Assert.That(serialized.FindProperty("data").objectReferenceValue, Is.Null, prefab.name);
         }
 
         private static void Configure(RemnantDataBase instance, int stageNumber, VisualTraitTag tags) =>
