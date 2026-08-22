@@ -1,8 +1,7 @@
 # 《다음에》 기획 패키지 draft-v1
 
-이 디렉터리는 《다음에》의 현재 기획 원본이다. `var/`는 Git에 포함되지 않는 로컬
-작업 영역이므로 초기화될 수 있으며, 이 패키지는 Research MCP에 publish된 hand-off가
-아니다.
+이 디렉터리는 《다음에》의 현재 기획 원본이다. 이 패키지는 Research MCP에 publish된
+hand-off가 아니다.
 
 ## 문서
 
@@ -12,6 +11,10 @@
 4. `adversarial-review.md` — 적대적 검토 결과와 착수 전 해결 항목 (리서치 카드 근거 포함)
 5. `design-decisions.md` — 검토가 제기한 판단 항목 14건의 확정 결정과 spec 수정 지시
 6. `collaboration-setup.md` — 픽셀 규격·팔레트, Unity 구조, 저장소, 3인 분업과 8일 일정
+7. `stage-design/00-overview.md`, `stage-design/01~13-stageNN-level-design.md` —
+   Game-Planning-RAG 근거 카드 기반 Stage 1~13 레벨디자인 초안. 각 Stage 이슈(#11~23)가
+   저작 시 참고하는 단일 원본. `00-overview.md`는 파생 요약이며, 개별 문서와 어긋나면
+   개별 문서가 우선.
 
 ## 현재 빌드 범위
 
