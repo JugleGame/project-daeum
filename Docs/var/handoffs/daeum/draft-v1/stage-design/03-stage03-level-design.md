@@ -42,4 +42,5 @@
 ## Role B 앞 확인 요청
 
 - `DashRemnant`/`DashRemnantData`(현재 core 브랜치 작업 중) 완성 시 이 스테이지가 첫 소비처.
-- Zone B 선반 hazard는 즉사 없음·시각 신호 필수(spec-012 Acceptance criteria 준수 확인 요청)
+- Zone B 선반 hazard 제안값(실측 시 조정): 접촉 시 넉백 0.5~1m, 활성 전 텔레그래프 0.3초(선반
+  흔들림 애니메이션) + 삐걱임 음향, 접촉 자체는 피해 0(spec-012 "단독 즉사 없음" 충족).

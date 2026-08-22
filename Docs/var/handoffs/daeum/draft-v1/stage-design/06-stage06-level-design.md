@@ -45,4 +45,5 @@
 ## Role B 앞 확인 요청
 
 - `RangedRemnant`/`RangedRemnantData`(core 브랜치 작업 중) 완성 시 이 스테이지가 첫 소비처.
-- Zone A 엄폐용 파라솔이 `TerrainHazardIds`로 등록될지, 단순 시각 엄폐물(비-hazard)로 둘지 결정 요청.
+- 결정: Zone A 파라솔은 **비-hazard 엄폐물**로 확정 — 원거리형 사거리·시야만 차단하고
+  접촉 판정은 없음(단순 정적 Collider, `TerrainHazardIds` 미등록).

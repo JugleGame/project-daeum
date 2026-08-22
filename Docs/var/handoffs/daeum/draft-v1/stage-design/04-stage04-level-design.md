@@ -43,5 +43,6 @@
 
 ## Role B 앞 확인 요청
 
-- 밝은 톤 유지가 기존 Contamination Overlay 팔레트 교체 로직과 충돌하지 않는지 확인 필요
-  (`daeume__spec-014-audio-presentation` 오버레이 강도 기본값이 스테이지 일괄 적용이면 예외 처리 요청).
+- 제안 결정: Stage4~6은 Overlay 강도 상한을 기본값(전 스테이지 균일 적용 시)의 약 30%로
+  캡하는 스테이지별 예외값을 둔다(Stage7부터 캡 해제, 기본값 그대로). 정확한 캡 수치는
+  Contamination Overlay 구현 담당이 톤 원칙(§ 톤 원칙)만 보고 확정.
