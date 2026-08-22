@@ -156,7 +156,13 @@ namespace Daeume.UI
                 var action = actions.FindAction(actionName);
                 if (action == null || action.bindings.Count == 0) continue;
 
-                var keys = action.GetBindingDisplayString(InputBinding.DisplayStringOptions.DontIncludeInteractions);
+                // 첫 번째 바인딩만 읽는다. 인자 없이 부르면 연결 여부와 상관없이 모든 바인딩을
+                // "E | Y"처럼 합쳐 줘서, 패드를 꽂지 않은 플레이어에게 눌리지 않는 키가 보인다
+                // (InteractionTargeter에도 같은 경고가 있다). 0번은 키보드 바인딩이고,
+                // 접근성 화면의 키 재설정도 0번을 고치므로 재설정 결과가 그대로 따라온다.
+                // ponytail: 패드만 연결된 경우에도 키보드 키가 보인다. 패드 지원을 정식으로 다룰 때
+                // PlayerInput.currentControlScheme으로 InputBinding.MaskByGroup을 걸면 된다.
+                var keys = action.GetBindingDisplayString(0, InputBinding.DisplayStringOptions.DontIncludeInteractions);
                 if (string.IsNullOrWhiteSpace(keys)) continue;
 
                 parts.Add($"[{keys}] {StringTable.Get(labelKey)}");
