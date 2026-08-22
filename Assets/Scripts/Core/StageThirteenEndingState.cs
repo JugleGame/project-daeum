@@ -3,6 +3,16 @@ using UnityEngine;
 
 namespace Daeume.Core
 {
+    /// <summary>도주 루프가 보여 줄 힌트의 의미다. 실제 문구는 Stage 13 콘텐츠가 소유하며 방향을 직접 지시하지 않는다.</summary>
+    public enum StageThirteenHint
+    {
+        None = 0,
+        EmptyPathFraming = 1,
+        DirectionalMusic = 2,
+        InnerMonologue = 3,
+        TraumaWaits = 4
+    }
+
     /// <summary>
     /// Stage 13의 수용 엔딩 규칙을 보관하는 순수 상태 기계다.
     /// 씬/입력/연출은 이 값을 소비할 뿐, 도주 횟수·무기 상태·완료 조건을 각자 계산하지 않는다.
@@ -19,6 +29,10 @@ namespace Daeume.Core
         public bool TraumaWaiting => LoopCount >= HintStageCount;
         public bool CombatAllowed => false;
         public bool TraumaContactFailsStage => false;
+        public bool HasEscapeExit => false;
+        public bool EnemiesAreNonHostile => true;
+        public int FinalEnemyCount => 0;
+        public StageThirteenHint Hint => (StageThirteenHint)HintStage;
 
         /// <summary>저장된 진행 상태를 복원한다. 음수 루프는 손상 데이터이므로 0으로 보정한다.</summary>
         public void Restore(int loopCount, bool weaponLowered, bool endingCompleted)

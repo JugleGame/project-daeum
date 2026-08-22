@@ -15,6 +15,20 @@ namespace Daeume.Tests.EditMode
         }
 
         [Test]
+        public void Test_Ending_NoEscapeExitExists()
+        {
+            Assert.That(new StageThirteenEndingState().HasEscapeExit, Is.False);
+        }
+
+        [Test]
+        public void Test_Ending_EnemyProgressionBecomesNonHostileAndEmpty()
+        {
+            var state = new StageThirteenEndingState();
+            Assert.That(state.EnemiesAreNonHostile, Is.True);
+            Assert.That(state.FinalEnemyCount, Is.Zero);
+        }
+
+        [Test]
         public void Test_Ending_HintEscalatesAcrossFourLoops()
         {
             var state = new StageThirteenEndingState();
@@ -22,6 +36,17 @@ namespace Daeume.Tests.EditMode
             Assert.That(state.RegisterRunawayLoop(), Is.EqualTo(2));
             Assert.That(state.RegisterRunawayLoop(), Is.EqualTo(3));
             Assert.That(state.RegisterRunawayLoop(), Is.EqualTo(4));
+            Assert.That(state.Hint, Is.EqualTo(StageThirteenHint.TraumaWaits));
+        }
+
+        [Test]
+        public void Test_Ending_HintNeverStatesDirection()
+        {
+            var state = new StageThirteenEndingState();
+            Assert.That(state.Hint, Is.EqualTo(StageThirteenHint.None));
+            state.RegisterRunawayLoop();
+            Assert.That(state.Hint, Is.EqualTo(StageThirteenHint.EmptyPathFraming));
+            Assert.That(state.Hint.ToString(), Does.Not.Contain("Left").And.Not.Contain("Right").And.Not.Contain("Back"));
         }
 
         [Test]
