@@ -24,6 +24,7 @@ namespace Daeume.Contamination
         [SerializeField, Min(0.1f)] private float chaseSpeed = 6f;
         [SerializeField, Min(0.1f)] private float minDistance = 2f;          // 이보다 가까워지면 추격자를 물린다
         [SerializeField, Min(0.2f)] private float maxDistance = 7f;          // 이보다 멀어지면 다시 붙인다
+        [SerializeField, Min(0f)] private float chaseLookaheadUnits = 3f;    // spec-014: 추격 카메라 선행 시야 거리
         [SerializeField] private List<string> declaredTeleportMarkerIds = new();
 
         public string VariantId => variantId;
@@ -38,6 +39,13 @@ namespace Daeume.Contamination
 
         // 최대 거리는 항상 최소 거리보다 크게 강제한다. 뒤집히면 추격자가 붙었다 떨어졌다를 무한 반복한다.
         public float MaxDistance => Mathf.Max(MinDistance + 0.1f, maxDistance);
+
+        /// <summary>
+        /// 추격 카메라가 진행 방향(좌향 도주라면 왼쪽)으로 미리 보여 줘야 하는 거리. (spec-014)
+        /// 이 거리보다 가까운 곳에 생존 경로 장애물을 처음 등장시키면 안 된다 — 여기서는 값만 선언하고
+        /// 그 배치 규칙 준수는 레벨 저작(B)의 몫이다.
+        /// </summary>
+        public float ChaseLookaheadUnits => Mathf.Max(0f, chaseLookaheadUnits);
 
         /// <summary>
         /// 연출 목적의 순간이동이 허용된 지점 목록.
@@ -57,7 +65,8 @@ namespace Daeume.Contamination
             float speed,
             float minimumDistance,
             float maximumDistance,
-            IEnumerable<string> teleportMarkerIds = null)
+            IEnumerable<string> teleportMarkerIds = null,
+            float lookaheadUnits = 3f)
         {
             variantId = id ?? string.Empty;
             echoOverlayScene = echoScene ?? string.Empty;
@@ -66,6 +75,7 @@ namespace Daeume.Contamination
             chaseSpeed = Mathf.Max(0.1f, speed);
             minDistance = Mathf.Max(0.1f, minimumDistance);
             maxDistance = Mathf.Max(minDistance + 0.1f, maximumDistance);
+            chaseLookaheadUnits = Mathf.Max(0f, lookaheadUnits);
             declaredTeleportMarkerIds = teleportMarkerIds == null
                 ? new List<string>()
                 : new List<string>(teleportMarkerIds);

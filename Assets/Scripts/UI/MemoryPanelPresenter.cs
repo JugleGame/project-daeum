@@ -1,4 +1,5 @@
 using Daeume.Core;
+using Daeume.Flow;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -20,6 +21,10 @@ namespace Daeume.UI
         public string Title { get; private set; } = string.Empty;
         public string Body { get; private set; } = string.Empty;
 
+        // spec-013 자막 크기 3단계. 씬에 디자인된 원래 크기를 기준(1단계)으로 배율만 곱한다.
+        private bool baseFontSizesCaptured;
+        private int titleBaseSize, bodyBaseSize;
+
         // 생성 순서 문제를 피하기 위해 OnEnable과 Start 양쪽에서 연결을 시도한다.
         private void OnEnable() => Connect();
         private void Start() => Connect();
@@ -32,6 +37,22 @@ namespace Daeume.UI
             if (GameManager.Instance == null) return;
             GameManager.Instance.Events.Unsubscribe<MemoryPresentationChanged>(Present);
             GameManager.Instance.Events.Subscribe<MemoryPresentationChanged>(Present);
+            ApplySubtitleSize();
+        }
+
+        private void ApplySubtitleSize()
+        {
+            if (!baseFontSizesCaptured)
+            {
+                if (titleText != null) titleBaseSize = titleText.fontSize;
+                if (bodyText != null) bodyBaseSize = bodyText.fontSize;
+                baseFontSizesCaptured = true;
+            }
+
+            var tier = FindAnyObjectByType<SceneFlowController>()?.CurrentData?.AssistSettings?.SubtitleSize ?? 1;
+            var scale = SubtitleScale.Resolve(tier);
+            if (titleText != null) titleText.fontSize = Mathf.RoundToInt(titleBaseSize * scale);
+            if (bodyText != null) bodyText.fontSize = Mathf.RoundToInt(bodyBaseSize * scale);
         }
 
         private void Present(MemoryPresentationChanged value)

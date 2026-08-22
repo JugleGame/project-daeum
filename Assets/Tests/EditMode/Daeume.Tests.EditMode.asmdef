@@ -3,7 +3,7 @@
   "rootNamespace": "Daeume.Tests.EditMode",
   "references": [
     "Daeume.Core", "Daeume.Flow", "Daeume.Player", "Daeume.Interaction", "Daeume.Prototype",
-    "Daeume.Contamination", "Daeume.ContaminationRuntime", "Daeume.Encounter", "Daeume.Enemy", "Daeume.Stage", "Unity.InputSystem"
+    "Daeume.Contamination", "Daeume.ContaminationRuntime", "Daeume.Encounter", "Daeume.Enemy", "Daeume.Stage", "Daeume.Audio", "Unity.InputSystem"
   ],
   "includePlatforms": ["Editor"],
   "optionalUnityReferences": ["TestAssemblies"],

@@ -20,6 +20,7 @@ namespace Daeume.UI
     internal static class Stage01PresentationBootstrap
     {
         private const string StageSceneName = "Stage01_Base";
+        private const string TitleSceneName = "Title";
         private const string MemoryAnchorMarkerId = "stage01.memory.anchor.01";
         private const string VisualGuideObjectName = "B1_VisualGuide";
 
@@ -52,8 +53,27 @@ namespace Daeume.UI
 
         private static void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         {
+            if (scene.name == TitleSceneName)
+            {
+                DespawnPersistentPresentation();
+                return;
+            }
+
             if (scene.name != StageSceneName) return;
             ApplyToStageScene(scene);
+        }
+
+        /// <summary>
+        /// Title로 돌아가면 DontDestroyOnLoad로 남아 있던 HUD·압박 연출을 정리한다.
+        /// 다음에 스테이지에 들어갈 때 SpawnPersistentPresentation이 새로 만들 수 있도록 참조도 비운다.
+        /// </summary>
+        private static void DespawnPersistentPresentation()
+        {
+            if (hudInstance != null) Object.Destroy(hudInstance);
+            hudInstance = null;
+
+            if (pressureInstance != null) Object.Destroy(pressureInstance);
+            pressureInstance = null;
         }
 
         private static void ApplyToStageScene(Scene scene)
@@ -145,7 +165,7 @@ namespace Daeume.UI
                 {
                     hudInstance = Object.Instantiate(hudPrefab);
                     // DontDestroyOnLoad: 씬이 바뀌어도 파괴되지 않게 한다.
-                    // 주의: 그래서 Title로 돌아가도 HUD가 남는다. 결과 화면 흐름을 붙일 때 정리 규칙이 필요하다.
+                    // Title로 돌아갈 때는 OnSceneLoaded가 DespawnPersistentPresentation으로 정리한다.
                     Object.DontDestroyOnLoad(hudInstance);
                 }
             }

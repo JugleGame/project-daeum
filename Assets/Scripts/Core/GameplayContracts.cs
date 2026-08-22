@@ -87,6 +87,21 @@ namespace Daeume.Core
         public string EncounterId { get; }
     }
 
+    /// <summary>
+    /// Encounter가 Cleared 상태가 될 때 발행한다. (spec-003)
+    /// Daeume.Player가 Daeume.Encounter를 직접 참조하면 asmdef 순환 참조(Encounter가 이미 Player를 참조)가
+    /// 생기므로, 공용 계약인 여기(Daeume.Core)를 거쳐 PlayerCombat이 선공 여부를 스스로 초기화한다.
+    /// </summary>
+    public readonly struct EncounterCleared
+    {
+        public EncounterCleared(string encounterId)
+        {
+            EncounterId = encounterId ?? string.Empty;
+        }
+
+        public string EncounterId { get; }
+    }
+
     /// <summary>추격 중 사망 후 체크포인트 복귀를 요청하는 메시지. (spec-011)</summary>
     public readonly struct ChaseCheckpointRestoreRequested
     {

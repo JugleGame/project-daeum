@@ -1564,6 +1564,7 @@ MonoBehaviour:
   signal: {fileID: 588779025}
   doorVisual: {fileID: 211437002}
   signVisual: {fileID: 2056608373}
+  symbolText: {fileID: 588779023}
 --- !u!1 &595189030
 GameObject:
   m_ObjectHideFlags: 0
@@ -2559,6 +2560,38 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 2, y: 4}
   m_EdgeRadius: 0
+--- !u!114 &900000001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1011986975}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f7da7c1f3c90c984db6188d68bec571c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Daeume.ContaminationRuntime::Daeume.ContaminationRuntime.ChaseRouteSignalPresenter
+  signal: {fileID: 1011986979}
+  doorVisual: {fileID: 0}
+  signVisual: {fileID: 0}
+  symbolText: {fileID: 1011986977}
+--- !u!114 &900000002
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2040046313}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f7da7c1f3c90c984db6188d68bec571c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Daeume.ContaminationRuntime::Daeume.ContaminationRuntime.ChaseRouteSignalPresenter
+  signal: {fileID: 2040046317}
+  doorVisual: {fileID: 0}
+  signVisual: {fileID: 0}
+  symbolText: {fileID: 2040046315}
 --- !u!1 &967356214
 GameObject:
   m_ObjectHideFlags: 0
@@ -2814,6 +2847,7 @@ GameObject:
   - component: {fileID: 1011986979}
   - component: {fileID: 1011986978}
   - component: {fileID: 1011986977}
+  - component: {fileID: 900000001}
   m_Layer: 0
   m_Name: Signal_Left_01
   m_TagString: Untagged
@@ -5304,6 +5338,7 @@ GameObject:
   - component: {fileID: 2040046317}
   - component: {fileID: 2040046316}
   - component: {fileID: 2040046315}
+  - component: {fileID: 900000002}
   m_Layer: 0
   m_Name: Signal_DeadEnd_01
   m_TagString: Untagged

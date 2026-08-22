@@ -1,1 +1,1 @@
-{"name":"Daeume.Player","rootNamespace":"Daeume.Player","references":["Daeume.Core","Unity.InputSystem"],"autoReferenced":true}
+{"name":"Daeume.Player","rootNamespace":"Daeume.Player","references":["Daeume.Core","Daeume.Flow","Unity.InputSystem"],"autoReferenced":true}

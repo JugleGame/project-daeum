@@ -23,9 +23,16 @@ namespace Daeume.UI
         [SerializeField, Range(0f, 1f)] private float cameraShakeStrength = 0.5f;
         [SerializeField, Range(0, 2)] private int subtitleSize = 1;
         [SerializeField] private bool chaseSpeedAssist;
+        private string bindingOverridesJson = string.Empty;
 
         /// <summary>현재 값을 저장 가능한 형태로 만들어 돌려준다.</summary>
-        public AssistSettings Current => new() { CameraShakeStrength = cameraShakeStrength, SubtitleSize = subtitleSize, ChaseSpeedAssist = chaseSpeedAssist };
+        public AssistSettings Current => new()
+        {
+            CameraShakeStrength = cameraShakeStrength,
+            SubtitleSize = subtitleSize,
+            ChaseSpeedAssist = chaseSpeedAssist,
+            BindingOverridesJson = bindingOverridesJson
+        };
 
         /// <summary>저장된 설정을 화면 값에 반영한다. 범위를 벗어난 값은 안전하게 잘라 낸다.</summary>
         public void Apply(AssistSettings settings)
@@ -34,12 +41,14 @@ namespace Daeume.UI
             cameraShakeStrength = Mathf.Clamp01(settings.CameraShakeStrength);
             subtitleSize = Mathf.Clamp(settings.SubtitleSize, 0, 2);
             chaseSpeedAssist = settings.ChaseSpeedAssist;
+            bindingOverridesJson = settings.BindingOverridesJson ?? string.Empty;
         }
 
-        // 아래 세 함수는 옵션 화면의 슬라이더·토글이 호출할 진입점이다.
+        // 아래 네 함수는 옵션 화면의 슬라이더·토글·리매핑이 호출할 진입점이다.
         // 값 보정을 이 안에서 하므로, UI 쪽에서 범위를 다시 검사할 필요가 없다.
         public void SetCameraShake(float value) => cameraShakeStrength = Mathf.Clamp01(value);
         public void SetSubtitleSize(int value) => subtitleSize = Mathf.Clamp(value, 0, 2);
         public void SetChaseAssist(bool value) => chaseSpeedAssist = value;
+        public void SetBindingOverrides(string json) => bindingOverridesJson = json ?? string.Empty;
     }
 }

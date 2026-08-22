@@ -12,6 +12,7 @@ namespace Daeume.ContaminationRuntime
         [SerializeField] private ChaseRouteSignal signal;
         [SerializeField] private SpriteRenderer doorVisual;
         [SerializeField] private SpriteRenderer signVisual;
+        [SerializeField] private TextMesh symbolText;
 
         private static Sprite placeholderSquare;
         private static Material unlitMaterial;
@@ -19,14 +20,16 @@ namespace Daeume.ContaminationRuntime
         private void Awake()
         {
             if (signal == null) signal = GetComponent<ChaseRouteSignal>();
+            if (symbolText == null) symbolText = GetComponent<TextMesh>();
             Present();
         }
 
-        public void Configure(ChaseRouteSignal targetSignal, SpriteRenderer door, SpriteRenderer sign)
+        public void Configure(ChaseRouteSignal targetSignal, SpriteRenderer door, SpriteRenderer sign, TextMesh text = null)
         {
             signal = targetSignal;
             doorVisual = door;
             signVisual = sign;
+            if (text != null) symbolText = text;
         }
 
         public void Present()
@@ -46,6 +49,15 @@ namespace Daeume.ContaminationRuntime
                 ApplyUnlitMaterial(signVisual);
                 signVisual.color = signal.Color;
                 signVisual.enabled = showExitDoor;
+            }
+
+            // 예전에는 씬에 박힌 TextMesh 문구·색이 ChaseRouteSignal 데이터와 따로 놀았다
+            // (기호가 두 곳에 중복돼 하나만 고치면 어긋나고, 글자 색은 spec-013이 요구하는
+            // "색 신호"를 전혀 반영하지 않았다). 여기서 signal 데이터를 유일한 출처로 만든다.
+            if (symbolText != null)
+            {
+                symbolText.text = signal.Symbol;
+                symbolText.color = signal.Color;
             }
         }
 

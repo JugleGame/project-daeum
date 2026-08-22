@@ -17,6 +17,10 @@ namespace Daeume.UI
         [SerializeField] private Button newGameButton;
         [SerializeField] private Button continueButton;
         [SerializeField] private Text statusText;
+        [SerializeField] private Text headingText;   // spec-013: 씬에 직접 박아 두지 않고 여기서 채운다
+        [SerializeField] private Text subtitleText;
+        [SerializeField] private Button settingsButton;
+        [SerializeField] private GameObject settingsPanel;
         private SceneFlowController flow;
 
         private void Awake()
@@ -24,6 +28,29 @@ namespace Daeume.UI
             // 버튼 클릭 시 호출할 함수를 등록한다. ?.는 "값이 없으면 건너뛴다"는 뜻이다.
             newGameButton?.onClick.AddListener(StartNewGame);
             continueButton?.onClick.AddListener(ContinueGame);
+            settingsButton?.onClick.AddListener(OpenSettings);
+
+            // spec-013: 씬에 원고를 직접 박지 않는다. 버튼 글자·제목·부제·안내 문구를 전부 StringTable에서 채운다.
+            if (headingText != null) headingText.text = StringTable.Get("title.heading");
+            if (subtitleText != null) subtitleText.text = StringTable.Get("title.subtitle");
+            if (statusText != null) statusText.text = StringTable.Get("title.hint");
+            SetButtonLabel(newGameButton, "title.new_game");
+            SetButtonLabel(continueButton, "title.continue");
+            SetButtonLabel(settingsButton, "title.settings");
+
+            // 접근성 옵션 화면은 기본적으로 닫혀 있다.
+            if (settingsPanel != null) settingsPanel.SetActive(false);
+        }
+
+        public void OpenSettings()
+        {
+            if (settingsPanel != null) settingsPanel.SetActive(true);
+        }
+
+        private static void SetButtonLabel(Button button, string key)
+        {
+            var label = button == null ? null : button.GetComponentInChildren<Text>();
+            if (label != null) label.text = StringTable.Get(key);
         }
 
         private void Start()
@@ -41,6 +68,7 @@ namespace Daeume.UI
             // 등록한 리스너는 반드시 해제한다. 남겨 두면 파괴된 객체의 함수가 호출돼 오류가 난다.
             newGameButton?.onClick.RemoveListener(StartNewGame);
             continueButton?.onClick.RemoveListener(ContinueGame);
+            settingsButton?.onClick.RemoveListener(OpenSettings);
         }
 
         public void Bind(Button newGame, Button continueGame, Text status)

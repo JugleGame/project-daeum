@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using Daeume.Core;
 using UnityEngine;
@@ -23,6 +24,8 @@ namespace Daeume.Player
         [SerializeField, Min(0)] private int damage = 1;
         [SerializeField] private LayerMask targetMask = ~0;
         [SerializeField] private string encounterId = "Stage01_Encounter01";
+        [SerializeField] private SpriteRenderer swipeVisual;              // 공격 판정 범위를 잠깐 보여 주는 블록아웃 표시
+        [SerializeField, Min(0f)] private float swipeVisibleSeconds = 0.12f;
 
         // 한 번의 공격에서 같은 대상을 두 번 때리지 않게 기록해 두는 집합.
         // 적의 몸에 콜라이더가 여러 개면(몸통+예고 표시) 같은 적이 두 번 검출되기 때문에 꼭 필요하다.
@@ -30,6 +33,7 @@ namespace Daeume.Player
         private InputAction attack;
         private PlayerController controller;
         private float attackOriginOffsetX;   // 공격 원점의 좌우 거리(절댓값). 바라보는 방향에 따라 부호만 바꾼다.
+        private Coroutine swipeRoutine;
 
         public bool PlayerAggression { get; private set; }
 
@@ -41,8 +45,26 @@ namespace Daeume.Player
             if (attackOrigin != null) attackOriginOffsetX = Mathf.Abs(attackOrigin.localPosition.x);
         }
 
-        private void OnEnable() => attack?.Enable();
-        private void OnDisable() => attack?.Disable();
+        private void OnEnable()
+        {
+            attack?.Enable();
+            GameManager.Instance?.Events.Subscribe<EncounterCleared>(OnEncounterCleared);
+        }
+
+        private void OnDisable()
+        {
+            attack?.Disable();
+            GameManager.Instance?.Events.Unsubscribe<EncounterCleared>(OnEncounterCleared);
+        }
+
+        /// <summary>spec-003: Encounter가 Cleared되면 선공 여부를 초기화한다. 이 Encounter가 낸 신호만 반영한다.</summary>
+        private void OnEncounterCleared(EncounterCleared value)
+        {
+            if (value.EncounterId == encounterId)
+            {
+                ResetAggression();
+            }
+        }
 
         private void Update()
         {
@@ -77,8 +99,25 @@ namespace Daeume.Player
             var hits = Physics2D.OverlapCircleAll(center, attackRadius, targetMask);
             var appliedCount = 0;
 
+            // 맞았든 헛스윙이든 공격을 시도했다는 사실 자체는 보여야 한다.
+            // 예전에는 아무 시각 효과가 없어서 플레이어가 공격이 나가는지 알 수 없었다.
+            if (swipeVisual != null)
+            {
+                if (swipeRoutine != null) StopCoroutine(swipeRoutine);
+                swipeRoutine = StartCoroutine(FlashSwipe());
+            }
+
             for (var index = 0; index < hits.Length; index++)
             {
+                // 공격 판정 원이 attackOrigin을 중심으로 하다 보니 플레이어 자신의 콜라이더(캡슐)나
+                // AttackOrigin/Visual 같은 자식 오브젝트까지 겹칠 수 있다. 그걸 걸러내지 않으면
+                // FindDamageable이 부모를 타고 올라가 플레이어 자신의 PlayerHealth를 찾아내
+                // 스스로를 공격해 체력이 깎이는 실제 버그가 된다(이동·점프 중 특히 자주 겹쳤다).
+                if (hits[index].transform.IsChildOf(transform))
+                {
+                    continue;
+                }
+
                 var target = FindDamageable(hits[index]);
                 // damaged.Add가 false면 이미 이번 공격에서 처리한 대상이라는 뜻이다.
                 if (target == null || !damaged.Add(target))
@@ -109,6 +148,14 @@ namespace Daeume.Player
 
         /// <summary>Encounter가 끝나거나 리셋될 때 선공 여부를 초기화한다.</summary>
         public void ResetAggression() => PlayerAggression = false;
+
+        private IEnumerator FlashSwipe()
+        {
+            swipeVisual.enabled = true;
+            yield return new WaitForSeconds(swipeVisibleSeconds);
+            swipeVisual.enabled = false;
+            swipeRoutine = null;
+        }
 
         private static bool IsCombatAllowed()
         {
