@@ -20,7 +20,7 @@ MonoBehaviour:
   - stage01.remnant.spawn.01
   - stage01.remnant.spawn.02
   spawnCount: 1
-  waveCount: 2
+  waveCount: 1
   clearCondition: 0
   lockExit: 1
   exitMarkerId: stage01.encounter.01.exit

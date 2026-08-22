@@ -15,7 +15,7 @@ MonoBehaviour:
   variantId: Stage01_Overlay_Intrusion
   echoOverlayScene: Stage01_Overlay_Echo
   intrusionOverlayScene: Stage01_Overlay_Intrusion
-  targetChaseSeconds: 45
+  targetChaseSeconds: 30
   chaseSpeed: 6
   minDistance: 0.75
   maxDistance: 7
