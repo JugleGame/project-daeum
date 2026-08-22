@@ -1,0 +1,177 @@
+{
+  "schemaVersion": 1,
+  "gameId": "daeume",
+  "title": "다음에",
+  "status": "draft",
+  "visualDimension": "2D",
+  "genre": "2D 내러티브 횡스크롤 액션·추격 어드벤처",
+  "platform": "PC",
+  "playerPromise": "잔재를 쓰러뜨리며 행복했던 기억을 되찾고, 그 기억이 불러낸 트라우마에게서 열두 번 도망치다가, 마지막에는 처음으로 뒤돌아 트라우마를 향해 걷는다.",
+  "logline": "세상을 떠난 친구와의 기억을 되찾을 때마다 과거 공간으로 병원의 현실이 역류하는 가운데, 한 사람은 기억의 파편과 싸우고 트라우마에게서 도망치다가 마지막 기억에서 무기를 내려놓고 상실을 받아들인다.",
+  "themes": ["상실", "미뤄 둔 약속", "후회", "기억", "트라우마", "수용"],
+  "designPillars": [
+    "기억 획득은 서사 보상이면서 현재 세계를 오염시키는 위험이다.",
+    "탐색한 같은 길을 추격에서 되짚으며 장소의 의미가 바뀐다.",
+    "잔재와는 싸울 수 있지만 트라우마 본체에는 전투가 통하지 않는다.",
+    "기억 역류는 공간·적·사운드·카메라·규칙을 저작된 방식으로 연결하되 입력을 불공정하게 방해하지 않는다.",
+    "열두 번의 도주는 회피를 학습시키고 Stage 13의 접근 입력이 수용으로 의미를 바꾼다."
+  ],
+  "coreRule": "기억의 매개체를 열면 행복했던 기억이 돌아오지만, 억눌린 현실도 함께 역류한다.",
+  "coreLoop": ["전진", "플랫폼 통과", "잔재 전투", "MemoryInteractable 발견", "회상", "기억 역류", "트라우마 출현", "도주", "탈출"],
+  "playerVerbs": {
+    "movement": ["좌우 이동", "지상 점프 1회", "낙하", "통과형 플랫폼", "붙잡기/매달리기"],
+    "signatureVerb": "붙잡기",
+    "signatureVerbMeaning": "친구가 잡아 준 기억 → 혼자 붙드는 행동 → Stage 13의 내려놓기로 의미가 이어진다.",
+    "combat": ["기본 공격", "피격", "체력", "무적 시간"]
+  },
+  "chaseFailure": {
+    "traumaContactDamage": 0,
+    "onContact": "붙잡기 연출 후 ChaseCheckpoint 복귀",
+    "rule": "트라우마 접촉은 피해를 주지 않고 보이는 실패 연출로 처리한다. 회상은 재생하지 않는다."
+  },
+  "accessibility": {
+    "required": [
+      "필수 정보를 색 단독으로 전달하지 않는다",
+      "컨트롤 리매핑",
+      "카메라 흔들림 강도 0 지원",
+      "자막 크기 조절",
+      "추격 속도 저하 토글"
+    ],
+    "rule": "앞의 두 항목은 업계 기준선이므로 선택 옵션이 아니다. 공정성 신호를 저작하는 시점에 함께 만든다.",
+    "promptRule": "프롬프트는 물리 키가 아니라 입력 액션과 문자열 키를 참조한다."
+  },
+  "localization": {
+    "shipLanguages": ["ko"],
+    "rule": "출시는 한국어 단독이지만 모든 대사와 프롬프트를 처음부터 키 기반 문자열 테이블로 분리한다."
+  },
+  "contentWarnings": ["상실", "죽음", "중환자실과 의료 현장", "트라우마와 자책"],
+  "medicalDepictionRule": "확정 병명을 사용하지 않고 '급성 의료 사건'으로만 지칭한다. 의료진 설명은 시간선과 불가역성만 전달하며 선정적 묘사를 하지 않는다.",
+  "characterNaming": {
+    "protagonist": null,
+    "friend": null,
+    "rule": "두 인물에게 고유 이름을 주지 않고 호칭으로만 지칭한다."
+  },
+  "postEndingContent": ["기억 열람 목록"],
+  "memoryAnchor": {
+    "systemType": "MemoryInteractable",
+    "dataRole": "MemoryAnchor",
+    "presentationRule": "공통 상호작용·회상 흐름을 사용하되 Stage마다 장소와 기억에 맞는 외형을 사용한다."
+  },
+  "signatureSystem": {
+    "name": "기억 역류",
+    "englishName": "Memory Contamination",
+    "terminologyRule": "한국어 기획 표기는 '기억 역류'를 유지하고, 모든 식별자·필드·enum·테스트명 등 기계 표면은 Contamination 계열로 통일한다.",
+    "summary": "회상으로 열린 행복한 과거에 억눌린 현실이 역류해 같은 공간의 의미와 플레이를 바꾼다. 각 Stage는 전체 채널이 아니라 PrimaryContaminationChannels 2~3개만 전면에 사용한다.",
+    "pressureStages": ["Stable", "Echo", "Intrusion", "Collapse"],
+    "pressureOwner": "ContaminationDirector가 추격 길이와 압박의 상승·후퇴를 소유한다. 추격자는 실행만 하며 Stage마다 목표 추격 시간을 선언한다.",
+    "fairnessRules": [
+      "플레이어 이동 입력을 반전하지 않는다.",
+      "생존에 필요한 길 변화는 발생 전에 시청각 신호를 준다.",
+      "오염 변화는 기억 내용 또는 병원 현실과 의미상 연결된다.",
+      "무작위 미로 대신 스테이지별 저작 변형 세트를 사용한다."
+    ],
+    "hospitalForeshadowingEscalation": [
+      "Stage 1~4: 출처를 알 수 없는 반복음, 비정상 비율과 호흡 같은 움직임",
+      "Stage 5~6: 의료 장비를 연상할 수 있으나 확정할 수 없는 규칙적 전자음과 패턴",
+      "Stage 7~8: 의료적 공간일 가능성을 처음 의심할 수 있는 형태와 용어",
+      "Stage 9: 병원 이미지가 명확하게 겹치기 시작",
+      "Stage 10: 목적지가 병원임을 확정",
+      "Stage 11~12: 실제 병원 공간과 사건 공개",
+      "Stage 13: 새로운 사실 공개 없이 역류를 감산하고 수용"
+    ]
+  },
+  "truths": [
+    {"truthId": "Truth_HappyMemoriesWereReal", "revealStage": 1, "truthState": "implicit"},
+    {"truthId": "Truth_RemnantsReflectProtagonist", "revealStage": 11, "truthState": "hidden"},
+    {"truthId": "Truth_HospitalIncident", "revealStage": 12, "truthState": "hidden"},
+    {"truthId": "Truth_RemnantsAreMemoryFragments", "revealStage": 13, "truthState": "hidden"},
+    {"truthId": "Truth_DelayDidNotCauseLoss", "revealStage": 12, "truthState": "hidden"}
+  ],
+  "structureOverview": "Stage 1~12는 전진·전투·기억·기억 역류·추격·탈출을 반복하되 각 기억의 의미가 고유한 공간 변형과 추격 규칙을 만든다. Stage 13은 반복 공간으로 도주를 무효화하고 접근과 무장 해제로 수용을 완성한다.",
+  "stageCount": 13,
+  "verticalSlice": "Stage 1 버스정류장/거리: 탐색한 길의 의미가 기억 역류로 바뀌고 되돌아 달리는 전체 루프",
+  "artDirection": {
+    "style": "픽셀 아트",
+    "reason": "제작비와 파이프라인 요구를 낮춰 13 Stage x (Stable + Variant) = 최소 26개 공간 상태를 소규모 인력으로 감당한다. 병원 오버레이는 팔레트 교체를 우선 사용한다.",
+    "internalResolution": "480x270",
+    "upscale": "1920x1080 정수 4배",
+    "pixelsPerUnit": 32,
+    "characterHeightPixels": 32,
+    "tileSizePixels": 16,
+    "cameraOrthographicSize": 4.21875,
+    "paletteDirection": "Stable 노을 호박 8색과 Contamination 병원 시안 8색이 같은 인덱스로 대응한다. 오염 상태는 스프라이트 재작화가 아니라 인덱스 교체로 만든다.",
+    "characterColorsNeverContaminate": true,
+    "assetPipelineStyleKey": "pixel art hospital corridor",
+    "assetPipelineStyleNote": "Asset MCP 팔레트는 gameId + artStyle 에서 결정적으로 유도된다. 이 문자열을 바꾸면 팔레트 전체가 바뀐다.",
+    "detail": "collaboration-setup.md 가 픽셀 규칙과 팔레트의 단일 원본이다."
+  },
+  "productionPremise": {
+    "team": "개발자 3인 + AI 파이프라인",
+    "deadlineDays": 8,
+    "effectiveHours": "평일 1인 2시간, 주말 1인 10시간",
+    "estimatedPersonHours": "96-120"
+  },
+  "buildScope": {
+    "current": "Stage 1 버티컬 슬라이스만 구현한다",
+    "reason": "가용 공수 약 96 person-hour로 13 Stage는 불가능하다. 13 Stage 설계 계약은 축소하지 않고 그대로 보존하며 구현만 미룬다.",
+    "includedStageIds": [1],
+    "includedPressureStages": ["Stable", "Echo", "Intrusion"],
+    "includedEnemyArchetypes": 1,
+    "perSpecScopeSource": "각 spec의 '## Build scope' 절이 시스템별 포함·제외의 단일 원본이다."
+  },
+  "combatVariationAxes": [
+    "압박 단계가 기존 적의 행동을 바꾼다",
+    "Contamination Overlay가 전투 공간을 바꾼다"
+  ],
+  "stageThirteenHintEscalation": [
+    "1회차: 카메라가 트라우마와 플레이어 사이 빈 길을 보여준다",
+    "2회차: 음악이 접근 방향에만 반응한다",
+    "3회차: 주인공 독백 1줄",
+    "4회차 이후: 트라우마가 추격을 멈추고 서서 기다린다"
+  ],
+  "targetScope": {
+    "playtimeHours": "4-5",
+    "authoredContaminationVariantsPerStage": "1 primary chase variant; late stages may reuse modular overlays",
+    "enemyArchetypes": 3,
+    "endingCount": 1,
+    "stageLengthMinutes": {
+      "short": "15-20",
+      "medium": "20-25",
+      "long": "25-30",
+      "climax": "30-35",
+      "ending": "25-30"
+    }
+  },
+  "nonGoals": [
+    "모든 Stage에서 모든 Backflow 채널을 동시에 사용하는 것",
+    "입력 반전·무작위 조작 방해·보이지 않는 즉사로 공포를 만드는 것",
+    "친구의 건강 이상을 초반부터 반복 노출해 죽음을 예고하는 것",
+    "정확한 적 수열을 상징 규칙이나 Acceptance Criteria로 고정하는 것",
+    "행복한 기억을 거짓으로 뒤집거나 친구를 비극의 조작자로 만드는 것",
+    "분기 엔딩, 절차 생성, 풀 보이스, Stage마다 완전히 별도인 시스템"
+  ],
+  "specIds": [
+    "daeume__spec-001-core-loop",
+    "daeume__spec-002-movement-platforming",
+    "daeume__spec-003-player-combat",
+    "daeume__spec-004-remnant-enemies",
+    "daeume__spec-005-memory-chest",
+    "daeume__spec-006-trauma-chase",
+    "daeume__spec-007-stage-progression",
+    "daeume__spec-008-narrative-reveal",
+    "daeume__spec-009-acceptance-ending",
+    "daeume__spec-010-interaction-system",
+    "daeume__spec-011-checkpoint-save",
+    "daeume__spec-012-combat-encounters",
+    "daeume__spec-013-ui-feedback",
+    "daeume__spec-014-audio-presentation",
+    "daeume__spec-015-scene-flow"
+  ],
+  "openDecisions": [
+    "전투 무기의 외형 실루엣",
+    "최종 대사 원고와 크레딧 구성",
+    "Stage 1의 목표 추격 시간 — ContaminationDirector의 첫 튜닝 값",
+    "성능 예산 — 기본값 1920x1080 / 60fps, Stage 9와 12 결합 구간 구현 시점에 재검토"
+  ],
+  "resolvedDecisions": "adversarial-review.md의 판단 항목 14건을 design-decisions.md에서 확정했다."
+}

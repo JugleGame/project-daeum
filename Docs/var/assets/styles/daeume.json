@@ -1,0 +1,21 @@
+{
+  "game_id": "daeume",
+  "art_style": "pixel art hospital corridor",
+  "seed": 11913313107687357979,
+  "palette": {
+    "background": "#b9cdef",
+    "terrain_base": "#d37245",
+    "terrain_accent": "#b2982a",
+    "prop_primary": "#ca2f4c",
+    "prop_secondary": "#dd766e",
+    "character_primary": "#45a6d3",
+    "character_secondary": "#8fb0e5",
+    "outline": "#392a23",
+    "ui_surface": "#d2e9f4",
+    "ui_text": "#362b25",
+    "accent": "#73c6ed"
+  },
+  "pixel_grid": 32,
+  "outline": true,
+  "camera_view": "side"
+}

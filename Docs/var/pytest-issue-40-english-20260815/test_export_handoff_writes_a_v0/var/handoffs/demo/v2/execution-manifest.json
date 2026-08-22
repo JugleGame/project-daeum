@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "gameId": "demo",
+  "blueprintVersion": 2,
+  "featurePrompts": [
+    {
+      "feature_id": "demo__spec-001",
+      "dependencies": []
+    }
+  ],
+  "files": [
+    {
+      "path": "blueprint.json",
+      "sha256": "96572e5ec69513d76bdc03d183dd6144ec68fdd5277e7e5d8dc51dca30132620"
+    },
+    {
+      "path": "specs/demo__spec-001.md",
+      "sha256": "551577d8d6f991559393f99bb7c01907b1ed51ba78387e7c1868650257e99d79"
+    }
+  ]
+}

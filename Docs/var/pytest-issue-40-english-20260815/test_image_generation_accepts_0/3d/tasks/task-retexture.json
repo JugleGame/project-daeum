@@ -1,0 +1,56 @@
+{
+  "provider": "meshy",
+  "taskId": "task-retexture",
+  "phase": "retexture",
+  "method": "retexture",
+  "modelFormat": "fbx",
+  "outputFormat": "glb",
+  "gameId": "default",
+  "featureId": "slime-art",
+  "assetId": "prop-green",
+  "requestPath": "C:\\Users\\jyp\\Documents\\GitHub\\Game-Develop-Orchestration\\var\\pytest-issue-40-english-20260815\\test_image_generation_accepts_0\\3d\\requests\\default\\prop-green__06e84ba2ae42.json",
+  "sourceSpecSha256": "06e84ba2ae423ed7559a24e51a362bc5be4eaaa743d12d8ed4c6b4198db3fd7a",
+  "animationRequired": false,
+  "textureRequired": true,
+  "texturePrompt": "matte stylized surface with readable color separation; colors: leaf green, cream; materials: soft matte body",
+  "textureStrategy": {
+    "mode": "generated_texture",
+    "reason": "multiple appearance regions, unique details, or no numeric material are declared"
+  },
+  "textureMaterial": null,
+  "normalPolicy": "explicit_hard",
+  "maxTriangles": 2500,
+  "referenceProvenance": {
+    "source": "gpt_image_api",
+    "humanApproved": true
+  },
+  "referenceImageCount": 3,
+  "createdAt": "2026-08-15T11:28:32.661908+00:00",
+  "referenceSetSha256": "1a8161017a603120d47bc1bdaded3d5367edfd1f6c31549b50ddff3b68608b20",
+  "providerMethod": "retexture",
+  "topology": "triangle",
+  "estimatedCredits": 10,
+  "creditEstimate": {
+    "credits": 10,
+    "operation": "retexture_2k",
+    "source": "https://docs.meshy.ai/en/api/pricing"
+  },
+  "balanceBefore": {
+    "balance": 1000
+  },
+  "geometryReview": {
+    "humanApproved": true,
+    "note": "",
+    "reviewedAt": "2026-08-15T11:28:32.656835+00:00"
+  },
+  "sourceTaskId": "task-image",
+  "postprocessedPath": "C:\\Users\\jyp\\Documents\\GitHub\\Game-Develop-Orchestration\\var\\pytest-issue-40-english-20260815\\test_image_generation_accepts_0\\3d\\models\\default\\task-image-clean.fbx",
+  "postprocessInspection": {
+    "meshes": 1,
+    "textures": 0,
+    "rigs": 0,
+    "vertices": 100,
+    "triangles": 100,
+    "triangleBudgetPassed": true
+  }
+}

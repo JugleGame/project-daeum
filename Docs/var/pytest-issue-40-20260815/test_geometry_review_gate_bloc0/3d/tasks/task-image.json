@@ -1,0 +1,6 @@
+{
+  "provider": "meshy",
+  "taskId": "task-image",
+  "method": "image_to_3d",
+  "phase": "generation"
+}

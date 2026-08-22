@@ -1,0 +1,76 @@
+{
+  "provider": "meshy",
+  "taskId": "task-image",
+  "phase": "material_review",
+  "method": "image_to_3d",
+  "modelFormat": "glb",
+  "outputFormat": "fbx",
+  "gameId": "default",
+  "featureId": "laptop-art",
+  "assetId": "prop-green",
+  "requestPath": "C:\\Users\\jyp\\Documents\\GitHub\\Game-Develop-Orchestration\\var\\pytest-issue-40-20260815\\test_material_only_strategy_sk0\\3d\\requests\\default\\prop-green__a70b8dfa3b64.json",
+  "sourceSpecSha256": "a70b8dfa3b64ec36cee9221c02134471da21219598af01f539c02872978153c6",
+  "animationRequired": false,
+  "textureRequired": true,
+  "texturePrompt": "matte stylized surface with readable color separation; colors: matte black; materials: matte plastic",
+  "textureStrategy": {
+    "mode": "material_only",
+    "reason": "one color and material are declared with no unique surface details"
+  },
+  "textureMaterial": {
+    "baseColor": "#111111",
+    "metallic": 0.15,
+    "roughness": 0.65
+  },
+  "normalPolicy": "explicit_hard",
+  "maxTriangles": 2500,
+  "referenceProvenance": {
+    "source": "gpt_image_api",
+    "humanApproved": true
+  },
+  "referenceImageCount": 3,
+  "createdAt": "2026-08-15T11:17:00.628922+00:00",
+  "referenceSetSha256": "1a8161017a603120d47bc1bdaded3d5367edfd1f6c31549b50ddff3b68608b20",
+  "providerMethod": "multi_image_to_3d",
+  "topology": "triangle",
+  "estimatedCredits": 20,
+  "creditEstimate": {
+    "credits": 20,
+    "operation": "multi_image_meshy_6_untextured",
+    "source": "https://docs.meshy.ai/en/api/pricing"
+  },
+  "balanceBefore": {
+    "balance": 1000
+  },
+  "geometryReview": {
+    "humanApproved": true,
+    "note": "",
+    "reviewedAt": "2026-08-15T11:17:00.641543+00:00"
+  },
+  "status": "AWAITING_FINAL_REVIEW",
+  "assetPath": "C:\\Users\\jyp\\Documents\\GitHub\\Game-Develop-Orchestration\\var\\pytest-issue-40-20260815\\test_material_only_strategy_sk0\\3d\\models\\default\\task-image.glb",
+  "inspection": {
+    "meshes": 1,
+    "textures": 0,
+    "rigs": 0,
+    "vertices": 100,
+    "triangles": 100,
+    "triangleBudgetPassed": true
+  },
+  "provenance": {
+    "license": "generated",
+    "provider": "meshy",
+    "taskId": "task-image",
+    "estimatedCredits": 20,
+    "consumedCredits": 0,
+    "balanceBefore": {
+      "balance": 1000
+    },
+    "balanceAfter": {
+      "balance": 1000
+    },
+    "downloadedAt": "2026-08-15T11:17:00.644904+00:00",
+    "sha256": "26d485632e69aa292a498281b39cd1f3d9a57c3a527ef0bda7ad51978c1a1589",
+    "gameReadySha256": "26d485632e69aa292a498281b39cd1f3d9a57c3a527ef0bda7ad51978c1a1589"
+  }
+}

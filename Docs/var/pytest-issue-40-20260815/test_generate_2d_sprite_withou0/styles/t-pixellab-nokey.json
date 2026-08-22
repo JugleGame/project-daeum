@@ -1,0 +1,21 @@
+{
+  "game_id": "t-pixellab-nokey",
+  "art_style": "pixel art",
+  "seed": 1112951002506134242,
+  "palette": {
+    "background": "#efddb9",
+    "terrain_base": "#459fd3",
+    "terrain_accent": "#2a3cb2",
+    "prop_primary": "#2fcab6",
+    "prop_secondary": "#6ed0dd",
+    "character_primary": "#d37945",
+    "character_secondary": "#e5c88f",
+    "outline": "#233139",
+    "ui_surface": "#f4ded2",
+    "ui_text": "#253036",
+    "accent": "#eda073"
+  },
+  "pixel_grid": 32,
+  "outline": true,
+  "camera_view": "side"
+}
