@@ -1,0 +1,44 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0567ce6f5126b5847ae6bf0323dfc8d5, type: 3}
+  m_Name: Stage12
+  m_EditorClassIdentifier: Daeume.Stage::Daeume.Stage.StageData
+  stageId: 12
+  location: "\uC911\uD658\uC790\uC2E4"
+  memoryId: memory-stage12-intensive-care
+  memoryTitle: "\uC911\uD658\uC790\uC2E4\uC758 \uC9C4\uC2E4"
+  memoryPresentationId: memory-presentation-stage12-intensive-care
+  emotionalRole: 4
+  encounterIds:
+  - stage12.encounter.01
+  - stage12.encounter.02
+  - stage12.encounter.03
+  contaminationVariantId: Stage12_Overlay_Intrusion
+  primaryContaminationChannels: 000000000100000002000000
+  contaminationMeaning: "\uC911\uD658\uC790\uC2E4\uC758 \uC9C4\uC2E4\uACFC \uC644\uC804\uD55C
+    \uD2B8\uB77C\uC6B0\uB9C8\uAC00 \uCD5C\uC7A5 \uCD94\uACA9\uC73C\uB85C \uB4DC\uB7EC\uB09C\uB2E4."
+  hospitalImageryDirectness: 4
+  chaseId: stage12.chase-intensive-care
+  chaseMeaning: "\uCEA0\uD398\uC778 \uCD5C\uC7A5 \uACBD\uB85C\uC5D0\uC11C \uC644\uC804\uD55C
+    \uD615\uD0DC\uC758 \uD2B8\uB77C\uC6B0\uB9C8\uB97C \uD53C\uD55C\uB2E4."
+  targetChaseSeconds: 90
+  lengthCategory: 2
+  targetPlaytimeMinutes: 20
+  clueIds:
+  - clue-stage12-icu
+  - clue-stage12-truth
+  explorationIntensity: 4
+  memoryIntensity: 4
+  encounterIntensity: 4
+  contaminationIntensity: 4
+  chaseIntensity: 4
+  nextStageId: 13
