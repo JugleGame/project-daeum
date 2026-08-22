@@ -144,6 +144,15 @@ namespace Daeume.Core
         public float DurationSeconds { get; }
     }
 
+    /// <summary>
+    /// 플레이어가 발판 밖(낙사 구간)으로 벗어났음을 알린다. (spec-007)
+    /// spec-001은 낙사·함정으로 인한 "보이지 않는 즉사"를 금지한다. 그래서 이 메시지는
+    /// StageFailureCause를 태우지 않고 씬 흐름(A)이 곧바로 체크포인트 위치로 되돌리게 한다.
+    /// </summary>
+    public readonly struct PlayerFellOutOfBounds
+    {
+    }
+
     /// <summary>저장 데이터로부터 플레이어 위치·체력을 복원해 달라는 요청. 씬 흐름(A)이 발행한다.</summary>
     public readonly struct PlayerRestoreRequested
     {

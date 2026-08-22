@@ -84,10 +84,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e295e19f6b114ad2ad30228333554dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Daeume.Memory::Daeume.Memory.MemoryAnchor
-  memoryId: memory-stage01
+  memoryId: memory-stage01-fragment-01
   titleKey: memory.stage01.title
   narrativeFlag: stage01-memory-revealed
-  promptKey: prompt.memory
+  promptKey: prompt.memory.stage01
   lineKeys:
   - memory.stage01.01
   - memory.stage01.02

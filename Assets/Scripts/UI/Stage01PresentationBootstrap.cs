@@ -53,9 +53,15 @@ namespace Daeume.UI
 
         private static void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         {
+            // Title이 올라와도 스테이지 씬이 아직 열려 있으면 정리하지 않는다.
+            // 정상 흐름에서는 SceneFlowController.ReplaceContent가 스테이지를 먼저 내린 뒤 Title을 올리므로
+            // 이 조건은 걸리지 않는다. 반대로 에디터에서 Stage01_Base를 직접 열고 Play를 누르면
+            // 스테이지가 이미 열린 채로 Boot가 Title을 추가 적재해서, 방금 만든 HUD가 곧바로 파괴됐다.
+            // 그 뒤에는 Stage01_Base의 sceneLoaded가 다시 오지 않아 HUD가 영원히 복구되지 않는다
+            // (= 상자를 열면 이동만 잠기고 자막이 없어 멈춘 것처럼 보이는 증상).
             if (scene.name == TitleSceneName)
             {
-                DespawnPersistentPresentation();
+                if (!IsStageSceneLoaded()) DespawnPersistentPresentation();
                 return;
             }
 
@@ -67,6 +73,17 @@ namespace Daeume.UI
         /// Title로 돌아가면 DontDestroyOnLoad로 남아 있던 HUD·압박 연출을 정리한다.
         /// 다음에 스테이지에 들어갈 때 SpawnPersistentPresentation이 새로 만들 수 있도록 참조도 비운다.
         /// </summary>
+        private static bool IsStageSceneLoaded()
+        {
+            for (var index = 0; index < SceneManager.sceneCount; index++)
+            {
+                var scene = SceneManager.GetSceneAt(index);
+                if (scene.isLoaded && scene.name == StageSceneName) return true;
+            }
+
+            return false;
+        }
+
         private static void DespawnPersistentPresentation()
         {
             if (hudInstance != null) Object.Destroy(hudInstance);

@@ -21,6 +21,8 @@ namespace Daeume.Core
         {
             // 상호작용 프롬프트 — 실제 화면에는 "[키] 문장" 형태로 조합된다(StageHudPresenter 참고).
             ["prompt.memory"] = "기억 살펴보기",
+            // Stage 1 전용 InteractionVerb (spec-005: Stage마다 매개체 외형과 동사가 다르다).
+            ["prompt.memory.stage01"] = "정류장 보관함 열기",
             ["prompt.continue"] = "계속",
             ["prompt.memory.skip"] = "건너뛰기",
 
@@ -29,6 +31,9 @@ namespace Daeume.Core
             ["hud.chase"] = "도망치세요",
             ["hud.failed"] = "쓰러졌습니다... 체크포인트에서 다시 시작합니다.",
             ["hud.objective.memory"] = "오른쪽 끝의 기억을 찾아라",
+
+            // Stage 1 튜토리얼 조작 안내. 키 이름은 실제 바인딩에서 읽어 오고, 여기에는 동작 이름만 둔다.
+            ["hud.tutorial.hint"] = "조작",
 
             // 타이틀 화면
             ["title.loading"] = "불러오는 중…",
@@ -46,6 +51,7 @@ namespace Daeume.Core
             ["options.shake"] = "카메라 흔들림",
             ["options.subtitle_size"] = "자막 크기",
             ["options.chase_assist"] = "추격 속도 저하",
+            ["options.rebind.move"] = "이동",
             ["options.rebind.jump"] = "점프",
             ["options.rebind.attack"] = "공격",
             ["options.rebind.grab"] = "붙잡기",
@@ -53,10 +59,10 @@ namespace Daeume.Core
             ["options.rebind.waiting"] = "키 입력 대기 중… (Esc로 취소)",
 
             // Stage 1 회상 원고 (spec-008: 인물 고유 이름 금지, 확정 병명 금지 규칙을 지킨 문장)
-            ["memory.stage01.title"] = "남겨진 기억",
-            ["memory.stage01.01"] = "익숙한 목소리가 벽 너머에서 희미하게 들린다.",
-            ["memory.stage01.02"] = "붙잡으려 할수록 풍경은 더 빠르게 일그러진다.",
-            ["memory.stage01.03"] = "이 기억은 나를 기다린 것이 아니라 붙들고 있었다."
+            ["memory.stage01.title"] = "기억의 조각 #1 — 정류장",
+            ["memory.stage01.01"] = "보관함 안에 낡은 버스표 한 장. 돌아오는 편도, 여기서 끊었다.",
+            ["memory.stage01.02"] = "누군가 이 자리에 오래 서서 나를 기다렸다. 그 온기가 잠깐 돌아온다.",
+            ["memory.stage01.03"] = "기억을 손에 쥔 순간, 거리 끝에서 무언가 이쪽으로 걸어오기 시작한다."
         };
 
         /// <summary>

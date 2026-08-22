@@ -1,6 +1,9 @@
 using System.Collections;
+using Daeume.Core;
+using Daeume.Flow;
 using Daeume.Player;
 using Daeume.Stage;
+using Daeume.UI;
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -80,6 +83,56 @@ namespace Daeume.Tests.PlayMode
             yield return new WaitForFixedUpdate();
             yield return null;
             Assert.That(camera.transform.position.x, Is.EqualTo(bounds.Minimum.x).Within(.01f));
+            LogAssert.NoUnexpectedReceived();
+        }
+
+        [UnityTest]
+        public IEnumerator Test_Stage01_FallingIntoVoidRespawnsPlayerWithoutFailingStage()
+        {
+            yield return LoadStage();
+            var manager = GameManager.Instance;
+            var flow = Object.FindAnyObjectByType<SceneFlowController>();
+            var player = Object.FindAnyObjectByType<PlayerController>();
+            var body = player.GetComponent<Rigidbody2D>();
+            var startPosition = flow.CurrentData.PlayerPosition;
+
+            // 발판(blockout 바닥, minY ~= -4.5) 아래 VoidZone(#11) 안으로 완전히 벗어난다.
+            body.position = new Vector2(15f, -15f);
+            body.linearVelocity = new Vector2(0f, -20f);
+            Physics2D.SyncTransforms();
+
+            for (var frame = 0; frame < 10 && body.position.y < -5f; frame++)
+            {
+                yield return new WaitForFixedUpdate();
+            }
+
+            // spec-001: 낙사는 두 허용된 실패 원인(HealthDepleted/TraumaGrabCompleted)에 없으므로
+            // 스테이지를 Failed로 만들지 않는다 — "보이지 않는 즉사" 금지 규칙.
+            Assert.That(manager.StageState, Is.Not.EqualTo(StageState.Failed));
+            Assert.That(body.position.y, Is.GreaterThan(-5f), "Player should have been teleported back onto the playable floor.");
+            Assert.That(Vector2.Distance(body.position, startPosition), Is.LessThan(0.05f),
+                "Player should be restored to the last saved checkpoint position (SaveSystem.ResolveRespawnHealth path).");
+            LogAssert.NoUnexpectedReceived();
+        }
+
+        [UnityTest]
+        public IEnumerator Test_Stage01_TutorialHudShowsControlHints()
+        {
+            yield return LoadStage();
+
+            var hud = Object.FindAnyObjectByType<StageHudPresenter>();
+            Assert.That(hud, Is.Not.Null, "Stage01PresentationBootstrap should have spawned the HUD.");
+
+            // HUD는 방금 생성됐을 수 있다. Start()가 구독을 마칠 한 프레임을 준 뒤에 상태 변화를 알린다
+            // (구독 전에 알리면 목표/조작 문구가 비어 있는 채로 남는다).
+            yield return null;
+            GameManager.Instance.ResetStage();
+            yield return null;
+
+            // 튜토리얼 스테이지라 목표 문구만으로는 조작을 알 수 없다(#11).
+            Assert.That(hud.ObjectiveLabel, Does.Contain(StringTable.Get("options.rebind.jump")));
+            Assert.That(hud.ObjectiveLabel, Does.Contain(StringTable.Get("options.rebind.interact")));
+            Assert.That(hud.ObjectiveLabel, Does.Contain(StringTable.Get("hud.objective.memory")));
             LogAssert.NoUnexpectedReceived();
         }
 

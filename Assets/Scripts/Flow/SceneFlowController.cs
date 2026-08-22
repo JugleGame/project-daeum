@@ -39,6 +39,9 @@ namespace Daeume.Flow
         [SerializeField] private string stageOneScene = "Stage01_Base";
         [SerializeField, Min(1)] private int maxHealth = 3;
 
+        /// <summary>스테이지 번호의 상한(spec-007). StageData.MaximumStageId와 같은 값이다.</summary>
+        private const int MaximumStageId = 13;
+
         private readonly SceneFlowPlan plan = new();   // 순서·중복 방지 규칙
         private SaveSystem saveSystem;
         private SaveData currentData;
@@ -59,6 +62,7 @@ namespace Daeume.Flow
 
             GameManager.Instance?.Events.Subscribe<ChaseCheckpointRestoreRequested>(RestoreChaseCheckpoint);
             GameManager.Instance?.Events.Subscribe<StageFailed>(OnStageFailed);
+            GameManager.Instance?.Events.Subscribe<PlayerFellOutOfBounds>(OnPlayerFellOutOfBounds);
         }
 
         private void OnDestroy()
@@ -66,6 +70,7 @@ namespace Daeume.Flow
             // 구독 해제를 빼먹으면 씬을 다시 로드했을 때 죽은 객체가 이벤트를 받아 오류가 난다.
             GameManager.Instance?.Events.Unsubscribe<ChaseCheckpointRestoreRequested>(RestoreChaseCheckpoint);
             GameManager.Instance?.Events.Unsubscribe<StageFailed>(OnStageFailed);
+            GameManager.Instance?.Events.Unsubscribe<PlayerFellOutOfBounds>(OnPlayerFellOutOfBounds);
         }
 
         private Coroutine pendingRetry;
@@ -135,7 +140,7 @@ namespace Daeume.Flow
                 return false;
             }
 
-            StartCoroutine(StageOneResultToTitle());
+            StartCoroutine(AdvanceAfterStageClear());
             return true;
         }
 
@@ -168,9 +173,20 @@ namespace Daeume.Flow
             GameManager.Instance?.Events.Publish(new OverlaySceneLoadRequested(sceneName, load));
         }
 
-        /// <summary>스테이지 클리어 → 저장 → 타이틀 복귀까지의 정해진 순서를 실행한다.</summary>
-        private IEnumerator StageOneResultToTitle()
+        /// <summary>
+        /// 스테이지 클리어 → 저장 → 다음 스테이지(없으면 타이틀)까지의 정해진 순서를 실행한다.
+        /// </summary>
+        /// <remarks>
+        /// 다음 스테이지 콘텐츠가 아직 없으면 진행도를 올리지 않고 타이틀로 보낸다.
+        /// 올려 버리면 "이어하기"가 존재하지 않는 스테이지를 가리켜 곧바로 타이틀로 튕기는,
+        /// 저장 파일만 망가진 상태가 된다.
+        /// </remarks>
+        private IEnumerator AdvanceAfterStageClear()
         {
+            var nextStageId = currentData.CurrentStageId + 1;
+            var nextScene = PlayableStageScene(nextStageId);
+            var hasNextStage = !string.IsNullOrEmpty(nextScene);
+
             foreach (var step in plan.GetStageClearOrder())
             {
                 // 각 단계 진입을 알린다. 연출(C)은 이 신호로 페이드와 클리어 화면을 맞춘다.
@@ -179,15 +195,23 @@ namespace Daeume.Flow
                 {
                     case SceneFlowStep.StageCleared:
                         GameManager.Instance?.SetStageState(StageState.Cleared);
+                        if (hasNextStage) EnterStage(nextStageId);
                         break;
                     case SceneFlowStep.Save:
                         // 저장은 씬 교체(SceneLoad)보다 항상 먼저다. 순서가 뒤바뀌면 진행이 날아간다.
                         saveSystem.Save(currentData, maxHealth);
                         break;
                     case SceneFlowStep.SceneLoad:
-                        yield return ReplaceContent(titleScene);
+                        yield return ReplaceContent(hasNextStage ? nextScene : titleScene);
                         break;
                     case SceneFlowStep.Explore:
+                        // 씬이 올라온 뒤에 복원을 요청한다(LoadContent와 같은 순서 규칙).
+                        if (hasNextStage)
+                        {
+                            GameManager.Instance?.Events.Publish(
+                                new PlayerRestoreRequested(currentData.PlayerPosition, currentData.PlayerHealth));
+                        }
+
                         GameManager.Instance?.ResetStage();
                         break;
                     default:
@@ -252,6 +276,18 @@ namespace Daeume.Flow
             GameManager.Instance?.ResetStage(StageState.Chase);
         }
 
+        /// <summary>
+        /// 낙사 구간(void) 접촉 처리. (#11)
+        /// 스테이지를 실패시키지 않고, 체력도 깎지 않는다 — spec-001이 낙사로 인한 즉사를 금지하기
+        /// 때문이다. 대신 SaveSystem.ResolveRespawnHealth(deathRestore: false)로 마지막 저장 위치·체력을
+        /// 그대로 복원해 되돌린다(전체 씬 리로드도 하지 않는다. 사망 재시도보다 가벼운 경로다).
+        /// </summary>
+        private void OnPlayerFellOutOfBounds(PlayerFellOutOfBounds _)
+        {
+            var health = SaveSystem.ResolveRespawnHealth(currentData, maxHealth, false, 0);
+            GameManager.Instance?.Events.Publish(new PlayerRestoreRequested(currentData.PlayerPosition, health));
+        }
+
         /// <summary>내용 씬만 갈아 끼운다. Persistent와 Boot는 절대 내리지 않는다.</summary>
         private IEnumerator ReplaceContent(string sceneName)
         {
@@ -281,12 +317,68 @@ namespace Daeume.Flow
         }
 
         /// <summary>
-        /// 스테이지 번호 → 씬 이름. 지금은 Stage 1만 존재하므로 그 외에는 타이틀로 보낸다.
+        /// 다음 스테이지로 진행할 때 저장 데이터에서 "이전 스테이지에만 의미가 있던 값"을 털어 낸다.
+        /// 새 게임 시작(SaveSystem.CreateNewGame)과 같은 출발 조건으로 맞추는 것이 목적이다.
+        /// 특히 CheckpointId를 남기면 다음 스테이지에 들어가자마자 추격 상태로 복귀해 버린다.
+        /// </summary>
+        private void EnterStage(int stageId)
+        {
+            currentData.CurrentStageId = stageId;
+            currentData.CheckpointId = string.Empty;
+            currentData.ContaminationVariantId = string.Empty;
+            currentData.PressureStage = "Stable";
+            currentData.PlayerPosition = Vector2.zero;
+            currentData.PlayerHealth = maxHealth;
+        }
+
+        /// <summary>
+        /// 스테이지 번호 → 씬 이름. 빌드에 아직 없는 스테이지면 빈 문자열을 돌려준다.
         /// </summary>
         /// <remarks>
-        /// Stage 2~13이 추가되면 이 자리를 StageData의 NextStageId 기반 조회로 바꿔야 한다.
-        /// 8일 슬라이스 범위(spec-015)에서는 Stage 1만 연결하는 것이 맞다.
+        /// 씬 이름 규칙("Stage01_Base")으로 푸는 이유: StageData(NextStageId)를 읽으려면 Daeume.Flow가
+        /// Daeume.Stage를 참조해야 하는데, Stage → ContaminationRuntime → Flow 참조가 이미 있어서
+        /// 어셈블리 순환이 된다. 규칙은 Stage 1~13 전부 동일하므로 여기서는 규칙으로 충분하다.
+        ///
+        /// 이름 규칙만 계산하고 씬이 실제로 있는지는 보지 않는다(순수 함수라 테스트가 쉽다).
+        /// 존재 확인은 PlayableStageScene이 한다.
         /// </remarks>
-        private string SceneForStage(int stageId) => stageId == 1 ? stageOneScene : titleScene;
+        public static string StageSceneName(int stageId)
+        {
+            return stageId < 1 || stageId > MaximumStageId ? string.Empty : $"Stage{stageId:00}_Base";
+        }
+
+        /// <summary>
+        /// 실제로 열 수 있는 스테이지 씬 이름. 아직 만들지 않은 스테이지면 빈 문자열이다.
+        /// </summary>
+        /// <remarks>
+        /// 존재 확인을 하지 않으면 아직 만들지 않은 스테이지로 넘어가려다 씬 로드가 실패한다.
+        /// 확인은 빌드 설정 목록을 직접 훑는다(Application.CanStreamedLevelBeLoaded는 에디터에서
+        /// 빌드 설정에 들어 있는 씬에도 false를 돌려준다).
+        /// </remarks>
+        public static string PlayableStageScene(int stageId)
+        {
+            var sceneName = StageSceneName(stageId);
+            return !string.IsNullOrEmpty(sceneName) && IsSceneInBuild(sceneName) ? sceneName : string.Empty;
+        }
+
+        private static bool IsSceneInBuild(string sceneName)
+        {
+            for (var index = 0; index < SceneManager.sceneCountInBuildSettings; index++)
+            {
+                var path = SceneUtility.GetScenePathByBuildIndex(index);
+                if (string.Equals(System.IO.Path.GetFileNameWithoutExtension(path), sceneName, System.StringComparison.Ordinal))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private string SceneForStage(int stageId)
+        {
+            var sceneName = PlayableStageScene(stageId);
+            return string.IsNullOrEmpty(sceneName) ? titleScene : sceneName;
+        }
     }
 }
