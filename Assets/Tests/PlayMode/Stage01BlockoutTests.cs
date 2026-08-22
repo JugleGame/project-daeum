@@ -1,4 +1,6 @@
 using System.Collections;
+using Daeume.Core;
+using Daeume.Flow;
 using Daeume.Player;
 using Daeume.Stage;
 using NUnit.Framework;
@@ -80,6 +82,35 @@ namespace Daeume.Tests.PlayMode
             yield return new WaitForFixedUpdate();
             yield return null;
             Assert.That(camera.transform.position.x, Is.EqualTo(bounds.Minimum.x).Within(.01f));
+            LogAssert.NoUnexpectedReceived();
+        }
+
+        [UnityTest]
+        public IEnumerator Test_Stage01_FallingIntoVoidRespawnsPlayerWithoutFailingStage()
+        {
+            yield return LoadStage();
+            var manager = GameManager.Instance;
+            var flow = Object.FindAnyObjectByType<SceneFlowController>();
+            var player = Object.FindAnyObjectByType<PlayerController>();
+            var body = player.GetComponent<Rigidbody2D>();
+            var startPosition = flow.CurrentData.PlayerPosition;
+
+            // 발판(blockout 바닥, minY ~= -4.5) 아래 VoidZone(#11) 안으로 완전히 벗어난다.
+            body.position = new Vector2(15f, -15f);
+            body.linearVelocity = new Vector2(0f, -20f);
+            Physics2D.SyncTransforms();
+
+            for (var frame = 0; frame < 10 && body.position.y < -5f; frame++)
+            {
+                yield return new WaitForFixedUpdate();
+            }
+
+            // spec-001: 낙사는 두 허용된 실패 원인(HealthDepleted/TraumaGrabCompleted)에 없으므로
+            // 스테이지를 Failed로 만들지 않는다 — "보이지 않는 즉사" 금지 규칙.
+            Assert.That(manager.StageState, Is.Not.EqualTo(StageState.Failed));
+            Assert.That(body.position.y, Is.GreaterThan(-5f), "Player should have been teleported back onto the playable floor.");
+            Assert.That(Vector2.Distance(body.position, startPosition), Is.LessThan(0.05f),
+                "Player should be restored to the last saved checkpoint position (SaveSystem.ResolveRespawnHealth path).");
             LogAssert.NoUnexpectedReceived();
         }
 
