@@ -1,0 +1,46 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0567ce6f5126b5847ae6bf0323dfc8d5, type: 3}
+  m_Name: Stage08
+  m_EditorClassIdentifier: Daeume.Stage::Daeume.Stage.StageData
+  stageId: 8
+  location: "\uC791\uC5C5\uC2E4 / \uC0AC\uBB34\uC2E4"
+  memoryId: memory-stage08-workshop-office
+  memoryTitle: "\uB2E4\uC74C\uC5D0 \uD558\uC790"
+  memoryPresentationId: memory-presentation-stage08-workshop-office
+  emotionalRole: 2
+  encounterIds:
+  - stage08.encounter.01
+  - stage08.encounter.02
+  - stage08.encounter.03
+  contaminationVariantId: Stage08_Overlay_Intrusion
+  primaryContaminationChannels: 000000000100000003000000
+  contaminationMeaning: "\uBBF8\uC644\uC131 \uD504\uB85C\uC81D\uD2B8\uC640 \uC9C0\uD0A4\uC9C0
+    \uBABB\uD55C \uC57D\uC18D\uC774 \uC154\uD130 \uBB38\uACFC \uBC18\uBCF5\uB418\uB294
+    \uD6C4\uD68C\uC758 \uC555\uBC15\uC73C\uB85C \uB0A8\uB294\uB2E4."
+  hospitalImageryDirectness: 2
+  chaseId: stage08.chase-shutter-regret
+  chaseMeaning: "\uC154\uD130 \uBB38\uC774 \uB4F1 \uB4A4\uC5D0\uC11C \uC21C\uCC28\uB85C
+    \uB2EB\uD600 \uB3CC\uC544\uAC08 \uC218 \uC5C6\uB294 \uD6C4\uD68C\uB97C \uCCB4\uAC10\uD55C\uB2E4."
+  targetChaseSeconds: 50
+  lengthCategory: 1
+  targetPlaytimeMinutes: 15
+  clueIds:
+  - "\uB2E4\uC74C\uC5D0 \uD558\uC790"
+  - "\uB098\uC911\uC5D0 \uAC00\uC790"
+  - "\uB2E4\uC74C\uC5D0 \uBCF4\uC790"
+  explorationIntensity: 3
+  memoryIntensity: 3
+  encounterIntensity: 4
+  contaminationIntensity: 3
+  chaseIntensity: 4
+  nextStageId: 9
