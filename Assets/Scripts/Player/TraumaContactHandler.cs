@@ -20,6 +20,7 @@ namespace Daeume.Player
 
         public bool GrabInProgress { get; private set; }
         public float TraumaGrabSeconds => traumaGrabSeconds;
+        public bool ContactFailureEnabled { get; private set; } = true;
 
         private void OnTriggerEnter2D(Collider2D other)
         {
@@ -27,7 +28,7 @@ namespace Daeume.Player
 
             // IsOnScreen 검사가 핵심이다.
             // 화면 밖에서 몰래 따라온 트라우마에 닿아 실패하면 "보이지 않는 즉사"가 되어 기획이 금지한 경험이 된다.
-            if (source != null && IsOnScreen(source.transform, Camera.main))
+            if (ContactFailureEnabled && source != null && IsOnScreen(source.transform, Camera.main))
             {
                 BeginGrab();
             }
@@ -36,6 +37,11 @@ namespace Daeume.Player
         /// <summary>붙잡기 연출을 시작한다. 이미 진행 중이면 무시한다.</summary>
         public bool BeginGrab()
         {
+            if (!ContactFailureEnabled)
+            {
+                return false;
+            }
+
             if (GrabInProgress)
             {
                 // 콜라이더가 여러 번 겹치면 이 함수가 연속 호출된다.
@@ -46,6 +52,9 @@ namespace Daeume.Player
             StartCoroutine(GrabSequence());
             return true;
         }
+
+        /// <summary>Stage 13에서는 접촉해도 붙잡기·실패를 발생시키지 않는다.</summary>
+        public void SetContactFailureEnabled(bool enabled) => ContactFailureEnabled = enabled;
 
         /// <summary>
         /// 코루틴: "시간이 흐르는 동안 기다렸다가 이어서 실행"하는 유니티 문법이다.

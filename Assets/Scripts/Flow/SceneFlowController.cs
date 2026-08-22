@@ -162,6 +162,21 @@ namespace Daeume.Flow
             saveSystem.Save(currentData, maxHealth);
         }
 
+        /// <summary>Stage 13의 무벌점 도주 횟수와 무기 상태를 즉시 보존한다.</summary>
+        public void SaveStageThirteenProgress(int loopCount, bool weaponLowered)
+        {
+            currentData.StageThirteenLoopCount = Mathf.Max(0, loopCount);
+            currentData.WeaponLowered = weaponLowered;
+            saveSystem.Save(currentData, maxHealth);
+        }
+
+        /// <summary>작별 대사와 버스 탑승이 끝난 뒤의 엔딩 완료 상태를 저장한다.</summary>
+        public void SaveEndingCompleted()
+        {
+            currentData.EndingCompleted = true;
+            saveSystem.Save(currentData, maxHealth);
+        }
+
         /// <summary>오버레이 적재/해제를 "요청"만 한다. 실제 씬 조작은 로더가 순서대로 처리한다.</summary>
         public void RequestOverlay(string sceneName, bool load)
         {

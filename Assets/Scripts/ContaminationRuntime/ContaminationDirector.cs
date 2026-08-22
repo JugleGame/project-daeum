@@ -44,6 +44,7 @@ namespace Daeume.ContaminationRuntime
         public float EffectiveChaseSpeed => speedAssist == null ? data?.ChaseSpeed ?? 0f : speedAssist.ResolveSpeed(data?.ChaseSpeed ?? 0f);
         public float EffectiveMinDistance => speedAssist == null ? data?.MinDistance ?? 0f : speedAssist.ResolveApproachDistance(data?.MinDistance ?? 0f, data?.MaxDistance ?? 0f);
         public bool DeadEndBlocked => deadEndBlocked;
+        public bool MovementSuppressed { get; private set; }
         public event Action<string, bool> OverlayRequested;
 
         private void OnEnable()
@@ -136,6 +137,9 @@ namespace Daeume.ContaminationRuntime
 
         public void SetDeadEndBlocked(bool blocked) => deadEndBlocked = blocked;
 
+        /// <summary>Stage 13의 네 번째 루프부터 트라우마를 제자리에서 기다리게 한다.</summary>
+        public void SetMovementSuppressed(bool suppressed) => MovementSuppressed = suppressed;
+
         /// <summary>
         /// 매 프레임 추격을 진행한다. 목표 시간에 도달하면 추격을 끝낸다.
         /// Update가 아니라 별도 함수로 분리해 두어 테스트가 시간을 직접 넣어 검증할 수 있다.
@@ -145,7 +149,7 @@ namespace Daeume.ContaminationRuntime
             if (!ChaseActive || data == null) return;
             var step = Mathf.Max(0f, deltaTime);
             ElapsedChaseSeconds = Mathf.Min(data.TargetChaseSeconds, ElapsedChaseSeconds + step);
-            KeepDistance(step);
+            if (!MovementSuppressed) KeepDistance(step);
             PublishDirective();
             if (ElapsedChaseSeconds < data.TargetChaseSeconds) return;
             ChaseActive = false;
