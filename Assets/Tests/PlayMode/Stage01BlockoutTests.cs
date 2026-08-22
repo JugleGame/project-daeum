@@ -27,7 +27,12 @@ namespace Daeume.Tests.PlayMode
             var startX = body.position.x;
             InputSystem.QueueStateEvent(keyboard, new KeyboardState(Key.D));
             InputSystem.Update();
-            for (var frame = 0; frame < 20; frame++)
+
+            // Update()가 큐에 쌓인 키 상태를 읽을 기회를 최소 한 번 보장한다.
+            // 이게 없으면 첫 WaitForFixedUpdate가 Update보다 먼저 걸려 이번 프레임의 입력을 놓치고 flaky해진다.
+            yield return null;
+
+            for (var frame = 0; frame < 30; frame++)
             {
                 yield return new WaitForFixedUpdate();
             }

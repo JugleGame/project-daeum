@@ -23,14 +23,22 @@ namespace Daeume.Tests.EditMode
                 sign.transform.SetParent(root.transform);
                 sign.enabled = false;
 
+                var text = root.AddComponent<TextMesh>();
+                text.text = "stale";
+                text.color = Color.black;
+
                 var presenter = root.AddComponent<ChaseRouteSignalPresenter>();
-                presenter.Configure(signal, door, sign);
+                presenter.Configure(signal, door, sign, text);
 
                 presenter.Present();
 
                 Assert.That(door.enabled, Is.True);
                 Assert.That(sign.enabled, Is.True);
                 Assert.That(sign.color, Is.EqualTo(Color.yellow));
+
+                // 씬에 박혀 있던 TextMesh 문구·색이 ChaseRouteSignal 데이터와 따로 놀던 버그(이슈 #7)의 회귀 방지.
+                Assert.That(text.text, Is.EqualTo("◫ EXIT"));
+                Assert.That(text.color, Is.EqualTo(Color.yellow));
             }
             finally
             {

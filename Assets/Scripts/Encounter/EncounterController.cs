@@ -119,10 +119,9 @@ namespace Daeume.Encounter
             exitLock?.SetLocked(false);
             PublishState();
 
-            // 검토 메모(미구현): spec-003은 Encounter가 Cleared되면 PlayerAggression을 초기화하라고 한다.
-            // 지금은 초기화 호출부가 없다. Encounter 모듈이 Player 모듈을 참조하지 않기 때문인데,
-            // 슬라이스에서는 Stage 11의 비선공 통과가 범위 밖이라 실피해는 없다.
-            // 해결하려면 "EncounterCleared" 이벤트를 PlayerCombat이 구독해 스스로 초기화하는 방식이 적절하다.
+            // spec-003: PlayerCombat이 이 신호를 구독해 스스로 선공 여부를 초기화한다.
+            // EncounterStateChanged가 아니라 별도 이벤트인 이유는 Daeume.Core.EncounterCleared 문서 참고(asmdef 순환 참조 회피).
+            GameManager.Instance?.Events.Publish(new EncounterCleared(data.EncounterId));
         }
 
         private void PublishState()

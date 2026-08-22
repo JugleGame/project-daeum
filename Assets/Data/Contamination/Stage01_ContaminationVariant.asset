@@ -17,6 +17,7 @@ MonoBehaviour:
   intrusionOverlayScene: Stage01_Overlay_Intrusion
   targetChaseSeconds: 45
   chaseSpeed: 6
-  minDistance: 2
+  minDistance: 0.75
   maxDistance: 7
+  chaseLookaheadUnits: 3
   declaredTeleportMarkerIds: []

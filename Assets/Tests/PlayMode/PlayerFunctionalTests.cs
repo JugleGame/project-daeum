@@ -89,6 +89,32 @@ namespace Daeume.Tests.PlayMode
             Object.Destroy(player);
         }
 
+        [UnityTest]
+        public IEnumerator Test_Movement_TriggerCollidersDoNotCountAsGround()
+        {
+            // 실제로 겪은 버그: GrabbableSurface 같은 트리거 존이 발밑 검사 반경과 겹치면
+            // "땅에 서 있다"고 오판해서 붙잡기의 grounded 가드에 걸려 시작조차 안 됐다.
+            var player = CreatePlayer(out var controller);
+
+            var triggerZone = new GameObject("TriggerZone");
+            var triggerCollider = triggerZone.AddComponent<CircleCollider2D>();
+            triggerCollider.isTrigger = true;
+            triggerCollider.radius = 1f;
+            triggerZone.transform.position = player.transform.position;
+            yield return new WaitForFixedUpdate();
+            Assert.That(controller.IsGrounded, Is.False, "트리거 콜라이더는 땅으로 치면 안 된다.");
+
+            var solidGround = new GameObject("SolidGround");
+            solidGround.AddComponent<CircleCollider2D>().radius = 1f;
+            solidGround.transform.position = player.transform.position;
+            yield return new WaitForFixedUpdate();
+            Assert.That(controller.IsGrounded, Is.True, "솔리드 콜라이더는 여전히 땅으로 인식해야 한다.");
+
+            Object.Destroy(triggerZone);
+            Object.Destroy(solidGround);
+            Object.Destroy(player);
+        }
+
         [Test]
         public void Test_Movement_InputBoundToActionNames()
         {
@@ -189,6 +215,26 @@ namespace Daeume.Tests.PlayMode
             Object.Destroy(player);
             Object.Destroy(target);
             yield return null;
+        }
+
+        [UnityTest]
+        public IEnumerator Test_Combat_AttackNeverDamagesSelf()
+        {
+            // 실제로 겪은 버그: 공격 판정 원이 attackOrigin을 중심으로 넓게 잡히면서 플레이어
+            // 자신의 콜라이더까지 겹쳐, FindDamageable이 부모를 타고 올라가 자기 PlayerHealth를
+            // 찾아내 스스로를 때렸다(이동·점프 중 attackOrigin이 플레이어 쪽으로 가까워질 때 특히).
+            var player = new GameObject("Player");
+            player.AddComponent<CircleCollider2D>().radius = 1f;
+            var health = player.AddComponent<PlayerHealth>();
+            var combat = player.AddComponent<PlayerCombat>();
+            Physics2D.SyncTransforms();
+
+            var startHealth = health.CurrentHealth;
+            combat.Attack();
+            yield return null;
+
+            Assert.That(health.CurrentHealth, Is.EqualTo(startHealth), "공격이 스스로에게 피해를 주면 안 된다.");
+            Object.Destroy(player);
         }
 
         [UnityTest]

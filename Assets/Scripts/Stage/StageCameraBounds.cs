@@ -1,3 +1,4 @@
+using Daeume.ContaminationRuntime;
 using Daeume.Player;
 using UnityEngine;
 
@@ -20,6 +21,7 @@ namespace Daeume.Stage
 
         private Transform target;
         private Camera targetCamera;
+        private ContaminationDirector director;
 
         public Vector2 Minimum => minimum;
         public Vector2 Maximum => maximum;
@@ -38,8 +40,18 @@ namespace Daeume.Stage
                 return;
             }
 
+            director ??= FindAnyObjectByType<ContaminationDirector>();
+
             var position = targetCamera.transform.position;
-            position.x = Mathf.Clamp(target.position.x, minimum.x, maximum.x);
+            var lookaheadX = target.position.x;
+            if (director != null && director.ChaseActive && director.Data != null)
+            {
+                // spec-014: 좌향 도주 중에는 카메라가 진행 방향(왼쪽)을 미리 보여 준다.
+                // 플레이어가 화면 중앙보다 오른쪽에 있어야 왼쪽에 더 넓은 시야가 생긴다.
+                lookaheadX -= director.Data.ChaseLookaheadUnits;
+            }
+
+            position.x = Mathf.Clamp(lookaheadX, minimum.x, maximum.x);
             if (followVertical)
             {
                 position.y = Mathf.Clamp(target.position.y, minimum.y, maximum.y);

@@ -151,6 +151,17 @@ namespace Daeume.Flow
             saveSystem.Save(currentData, maxHealth);
         }
 
+        /// <summary>
+        /// 접근성 설정을 저장한다. (spec-013)
+        /// 설정은 SaveSystem이 진행 슬롯과 별개 파일로 관리하므로, 새 게임을 시작하기 전(타이틀)에도
+        /// 안전하게 호출할 수 있다 — 진행 데이터는 그대로 두고 설정 파일만 갱신된다.
+        /// </summary>
+        public void SaveAssistSettings(AssistSettings settings)
+        {
+            currentData.AssistSettings = (settings ?? new AssistSettings()).Copy();
+            saveSystem.Save(currentData, maxHealth);
+        }
+
         /// <summary>오버레이 적재/해제를 "요청"만 한다. 실제 씬 조작은 로더가 순서대로 처리한다.</summary>
         public void RequestOverlay(string sceneName, bool load)
         {

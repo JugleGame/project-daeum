@@ -12,10 +12,6 @@ namespace Daeume.Core
     /// spec-013의 검수 항목 Test_UI_NoHardcodedStrings가 바로 이 규칙을 확인한다.
     ///
     /// static 클래스인 이유: 씬에 올릴 필요가 없는 순수한 조회 기능이라, 어디서든 StringTable.Get(...)으로 부른다.
-    ///
-    /// 알려진 미준수(작업 필요):
-    /// Title 씬의 버튼 글자("새 게임", "이어하기" 등)가 아직 씬에 직접 박혀 있어 이 테이블을 거치지 않는다.
-    /// Title은 Role C 소유 씬이므로 소유자가 키 참조로 바꿔야 spec-013을 충족한다.
     /// </summary>
     public static class StringTable
     {
@@ -37,6 +33,24 @@ namespace Daeume.Core
             // 타이틀 화면
             ["title.loading"] = "불러오는 중…",
             ["title.retry"] = "잠시 후 다시 시도해 주세요.",
+            ["title.heading"] = "다음에",
+            ["title.subtitle"] = "기억은 사라지지 않고, 모양을 바꾼다",
+            ["title.new_game"] = "새 게임",
+            ["title.continue"] = "이어하기",
+            ["title.hint"] = "Enter 또는 클릭으로 선택",
+            ["title.settings"] = "설정",
+
+            // 접근성 옵션 화면 (spec-013)
+            ["options.heading"] = "접근성 옵션",
+            ["options.close"] = "닫기",
+            ["options.shake"] = "카메라 흔들림",
+            ["options.subtitle_size"] = "자막 크기",
+            ["options.chase_assist"] = "추격 속도 저하",
+            ["options.rebind.jump"] = "점프",
+            ["options.rebind.attack"] = "공격",
+            ["options.rebind.grab"] = "붙잡기",
+            ["options.rebind.interact"] = "상호작용",
+            ["options.rebind.waiting"] = "키 입력 대기 중… (Esc로 취소)",
 
             // Stage 1 회상 원고 (spec-008: 인물 고유 이름 금지, 확정 병명 금지 규칙을 지킨 문장)
             ["memory.stage01.title"] = "남겨진 기억",

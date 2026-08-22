@@ -25,6 +25,12 @@ namespace Daeume.ContaminationRuntime
         [SerializeField] private Transform pursuer;
         [SerializeField] private ChaseSpeedAssistAdapter speedAssist;
 
+        // 실제 접촉 거리(대략 트라우마 반지름 + 플레이어 반폭). 목표를 정확히 0으로 두면
+        // 두 중심 좌표가 완전히 겹치도록 계속 밀어붙이는데, 그러면 트라우마 콜라이더가
+        // 플레이어를 사방에서 감싸는 꼴이 되어 "부딪히면 어느 방향으로도 못 움직이는" 벽처럼 느껴진다.
+        // 접촉 판정(TraumaContactHandler)은 이 값보다 먼저 트리거로 감지되므로 붙잡기에는 영향이 없다.
+        private const float ContactDistance = 0.9f;
+
         private string loadedOverlay = string.Empty;
         private bool deadEndBlocked;
 
@@ -159,11 +165,12 @@ namespace Daeume.ContaminationRuntime
         }
 
         /// <summary>
-        /// 추격자와 플레이어 사이 거리를 규칙대로 유지한다. (spec-006의 핵심 공정성 장치)
+        /// 추격자를 플레이어 쪽으로 붙인다. (spec-006)
         ///
-        /// - 너무 가까우면(최소 거리 미만) 물러나게 한다 → 즉사 압박이 아니라 "쫓기는 느낌"을 유지
-        /// - 너무 멀어지면(최대 거리 초과) 다시 붙인다 → 멈춰 서 있는 것이 안전해지지 않게
-        /// - 막다른 길에서는 최대 거리를 유지한다 → 길이 막혔다고 즉시 실패시키지 않는다
+        /// 수정: 예전에는 최소 거리를 두고 "그 이상은 다가오지 않는" 공정성 장치가 있었는데,
+        /// 그러면 추격자가 절대 플레이어를 붙잡지 못해 죽음이라는 결과 자체가 나올 수 없었다.
+        /// 그래서 최소 거리 유지를 없애고, 항상 접촉(ContactDistance)을 목표로 다가오게 한다.
+        /// 막다른 길에서만 예외로 최대 거리를 유지한다 → 길이 막혔다고 즉시 실패시키지 않는다.
         /// </summary>
         private void KeepDistance(float deltaTime)
         {
@@ -171,9 +178,7 @@ namespace Daeume.ContaminationRuntime
             var offset = pursuer.position.x - player.position.x;
             var direction = Mathf.Approximately(offset, 0f) ? -1f : Mathf.Sign(offset);
             var distance = Mathf.Abs(offset);
-            float targetDistance;
-            if (distance > data.MaxDistance || deadEndBlocked) targetDistance = data.MaxDistance;
-            else targetDistance = EffectiveMinDistance;
+            var targetDistance = deadEndBlocked ? data.MaxDistance : ContactDistance;
 
             if (Mathf.Approximately(distance, targetDistance)) return;
 

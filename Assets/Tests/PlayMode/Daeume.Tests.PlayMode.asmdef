@@ -3,7 +3,7 @@
   "rootNamespace": "Daeume.Tests.PlayMode",
   "references": [
     "Daeume.Core", "Daeume.Player", "Daeume.Interaction", "Daeume.Flow", "Daeume.Prototype",
-    "Daeume.Contamination", "Daeume.ContaminationRuntime", "Daeume.Enemy", "Daeume.Encounter", "Daeume.Stage", "Unity.InputSystem"
+    "Daeume.Contamination", "Daeume.ContaminationRuntime", "Daeume.Enemy", "Daeume.Encounter", "Daeume.Stage", "Daeume.Audio", "Unity.InputSystem"
   ],
   "optionalUnityReferences": ["TestAssemblies"],
   "autoReferenced": false

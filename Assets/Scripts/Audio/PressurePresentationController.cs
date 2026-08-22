@@ -23,6 +23,7 @@ namespace Daeume.Audio
 
         private float pressureAmount;    // 0~1로 정규화한 압박 강도
         private float shakeAssist = 1f;  // 접근성 옵션(0이면 흔들림 완전 차단)
+        private Vector3 lastShakeOffset;  // 지난 프레임에 더한 흔들림. 다음 프레임에 먼저 빼서 누적을 막는다.
 
         public float PressureAmount => pressureAmount;
 
@@ -55,13 +56,24 @@ namespace Daeume.Audio
         /// 회상을 막 끝낸 탈출구 근처)에 고정된 것처럼 보이고 플레이어를 따라가지 않는 버그가 있었다.
         /// 고정 기준점 없이 "이번 프레임 위치"에 오프셋만 더하면, StageCameraBounds가 매 프레임 다시
         /// 계산해 주는 추적 위치를 지우지 않는다.
+        ///
+        /// 다만 지난 프레임 오프셋을 빼지 않고 그냥 더하기만 하면, StageCameraBounds가 손대지 않는 축
+        /// (followVertical이 꺼진 상태의 Y축)에서는 흔들림이 프레임마다 계속 쌓여 카메라가 서서히
+        /// 위/아래로 떠내려가는 실제 버그가 됐다. 그래서 새 오프셋을 더하기 전에 지난 오프셋을 먼저
+        /// 빼서, 이번 프레임의 흔들림만 순수하게 남긴다.
         /// </remarks>
         private void LateUpdate()
         {
-            if (targetCamera == null || pressureAmount <= 0f || shakeAssist <= 0f) return;
+            if (targetCamera == null) return;
+
+            targetCamera.transform.localPosition -= lastShakeOffset;
+            lastShakeOffset = Vector3.zero;
+
+            if (pressureAmount <= 0f || shakeAssist <= 0f) return;
 
             var offset = Random.insideUnitCircle * maximumShake * pressureAmount * shakeAssist;
-            targetCamera.transform.localPosition += new Vector3(offset.x, offset.y, 0f);
+            lastShakeOffset = new Vector3(offset.x, offset.y, 0f);
+            targetCamera.transform.localPosition += lastShakeOffset;
         }
 
         /// <summary>접근성 설정을 반영한다. 강도 0이면 흔들림이 완전히 사라진다.</summary>

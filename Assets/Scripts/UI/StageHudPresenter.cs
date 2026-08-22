@@ -1,5 +1,6 @@
 using Daeume.ContaminationRuntime;
 using Daeume.Core;
+using Daeume.Flow;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -31,6 +32,13 @@ namespace Daeume.UI
         public bool PromptVisible { get; private set; }
         public bool ChaseVisible { get; private set; }
 
+        // 조사 프롬프트가 "켜져야 한다"고 요청받은 원래 값. 추격 중에는 이 값이 참이어도 실제로는 숨긴다.
+        private bool promptRequested;
+
+        // spec-013 자막 크기 3단계. 씬에 디자인된 원래 크기를 기준(1단계)으로 배율만 곱한다.
+        private bool baseFontSizesCaptured;
+        private int healthBaseSize, promptBaseSize, chaseBaseSize, failBaseSize, objectiveBaseSize;
+
         // OnEnable과 Start 두 곳에서 연결한다.
         // HUD가 GameManager보다 먼저 생성되는 순서가 실제로 있어서, 한 번만 시도하면 구독을 놓친다.
         private void OnEnable() => Connect();
@@ -52,6 +60,29 @@ namespace Daeume.UI
             GameManager.Instance.Events.Subscribe<ChaseStateChanged>(OnChase);
             GameManager.Instance.Events.Subscribe<StageFailed>(OnFailed);
             GameManager.Instance.Events.Subscribe<StageStateChanged>(OnStageStateChanged);
+            ApplySubtitleSize();
+        }
+
+        /// <summary>spec-013 자막 크기 3단계를 HUD 문구에 반영한다. 값은 씬을 넘나드는 SceneFlowController가 들고 있다.</summary>
+        private void ApplySubtitleSize()
+        {
+            if (!baseFontSizesCaptured)
+            {
+                if (healthText != null) healthBaseSize = healthText.fontSize;
+                if (promptText != null) promptBaseSize = promptText.fontSize;
+                if (chaseText != null) chaseBaseSize = chaseText.fontSize;
+                if (failText != null) failBaseSize = failText.fontSize;
+                if (objectiveText != null) objectiveBaseSize = objectiveText.fontSize;
+                baseFontSizesCaptured = true;
+            }
+
+            var tier = FindAnyObjectByType<SceneFlowController>()?.CurrentData?.AssistSettings?.SubtitleSize ?? 1;
+            var scale = SubtitleScale.Resolve(tier);
+            if (healthText != null) healthText.fontSize = Mathf.RoundToInt(healthBaseSize * scale);
+            if (promptText != null) promptText.fontSize = Mathf.RoundToInt(promptBaseSize * scale);
+            if (chaseText != null) chaseText.fontSize = Mathf.RoundToInt(chaseBaseSize * scale);
+            if (failText != null) failText.fontSize = Mathf.RoundToInt(failBaseSize * scale);
+            if (objectiveText != null) objectiveText.fontSize = Mathf.RoundToInt(objectiveBaseSize * scale);
         }
 
         private void Disconnect()
@@ -90,13 +121,13 @@ namespace Daeume.UI
 
         private void OnPrompt(InteractionPromptChanged value)
         {
-            PromptVisible = value.Visible;
+            promptRequested = value.Visible;
 
             // 표시 형태: [현재 바인딩된 키] 문장
             // 키 이름은 이벤트가 실어다 준 실제 바인딩 값이라, 키를 재설정하면 표시도 따라 바뀐다.
             PromptLabel = value.Visible ? $"[{value.ActionName}] {StringTable.Get(value.StringTableKey)}" : string.Empty;
             if (promptText != null) promptText.text = PromptLabel;
-            if (promptRoot != null) promptRoot.SetActive(value.Visible);
+            ApplyPromptVisibility();
         }
 
         private void OnChase(ChaseStateChanged value)
@@ -104,12 +135,20 @@ namespace Daeume.UI
             ChaseVisible = value.Active;
             if (chaseText != null) chaseText.text = StringTable.Get("hud.chase");
             if (chaseRoot != null) chaseRoot.SetActive(value.Active);
+
+            // spec-013: 추격 중에는 조사 프롬프트가 아니라 생존 경고(chaseRoot)만 보여야 한다.
+            ApplyPromptVisibility();
+        }
+
+        /// <summary>조사 프롬프트 표시 여부를 다시 계산한다. 추격 중에는 요청 값과 무관하게 숨긴다.</summary>
+        private void ApplyPromptVisibility()
+        {
+            PromptVisible = promptRequested && !ChaseVisible;
+            if (promptRoot != null) promptRoot.SetActive(PromptVisible);
         }
 
         // 검토 메모(미구현, spec-013):
-        // 1) 추격 중에는 일반 조사 프롬프트를 숨기고 생존 경고만 남겨야 한다. 지금은 프롬프트가 그대로 뜬다.
-        //    (다만 추격 상태에서 조사 대상이 거의 없어 실사용상 노출은 드물다.)
-        // 2) 자막 크기 3단계(AssistSettings.SubtitleSize)가 실제 Text 크기에 반영되지 않는다.
-        //    접근성 옵션 화면을 만들 때 이 두 가지를 함께 붙여야 한다.
+        // 자막 크기 3단계(AssistSettings.SubtitleSize)가 실제 Text 크기에 반영되지 않는다.
+        // 접근성 옵션 화면을 만들 때 붙여야 한다.
     }
 }
