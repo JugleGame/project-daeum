@@ -85,13 +85,14 @@ namespace Daeume.ContaminationRuntime
         /// 압박 단계를 바꾸고, 필요한 오버레이 씬 교체를 요청한다.
         /// </summary>
         /// <remarks>
-        /// Collapse는 8일 슬라이스 범위 밖이라 거절한다(spec-006 Build scope). 의도된 동작이다.
+        /// Collapse를 포함한 4단계 모두 받는다(spec-006, Issue #9). Stage13 붕괴 연출 자체는 별도 이슈(#10) 몫이라
+        /// 여기서는 "거절하지 않는다"만 보장한다 — Collapse 전용 오버레이를 선언하지 않은 Variant는 그냥 빈 오버레이로 남는다.
         /// 이전 오버레이를 먼저 내리고 새 오버레이를 올리는 순서를 지키므로 두 오염 공간이 겹치지 않는다.
         /// (요청은 큐에 쌓여 OverlaySceneLoader가 한 번에 하나씩 처리한다.)
         /// </remarks>
         public bool SetPressure(PressureStage value)
         {
-            if (data == null || value == PressureStage.Collapse) return false;
+            if (data == null) return false;
             var nextOverlay = data.OverlayFor(value);
             if (!string.IsNullOrEmpty(loadedOverlay) && loadedOverlay != nextOverlay) RequestOverlay(loadedOverlay, false);
             Pressure = value;
