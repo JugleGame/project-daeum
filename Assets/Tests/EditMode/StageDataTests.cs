@@ -49,6 +49,18 @@ namespace Daeume.Tests.EditMode
         }
 
         [Test]
+        public void Test_Stage07_WinterDormitoryDataAndVariantAreValid()
+        {
+            var stage = AssetDatabase.LoadAssetAtPath<StageData>("Assets/Data/Stages/Stage07/Stage07.asset");
+            var variant = AssetDatabase.LoadAssetAtPath<ContaminationVariantData>("Assets/Data/Contamination/Stage07/Stage07_ContaminationVariant.asset");
+            Assert.That(stage, Is.Not.Null);
+            Assert.That(stage.ValidateData(), Is.Empty);
+            Assert.That(stage.HospitalImageryDirectness, Is.EqualTo(2));
+            Assert.That(variant, Is.Not.Null);
+            Assert.That(variant.ValidateData(out var error), Is.True, error);
+        }
+
+        [Test]
         public void Test_Contamination_VariantDeclaresStableEchoIntrusionSlice()
         {
             var data = ScriptableObject.CreateInstance<ContaminationVariantData>();
