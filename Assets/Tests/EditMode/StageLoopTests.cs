@@ -78,6 +78,21 @@ namespace Daeume.Tests.EditMode
         }
 
         [Test]
+        public void Test_SceneFlow_StageSceneNameFollowsConvention()
+        {
+            // 진행 연결(#12 준비)의 핵심 규칙. 이 이름 규칙이 깨지면 클리어 후 다음 스테이지로 못 넘어간다.
+            Assert.That(SceneFlowController.StageSceneName(1), Is.EqualTo("Stage01_Base"));
+            Assert.That(SceneFlowController.StageSceneName(2), Is.EqualTo("Stage02_Base"));
+
+            // 범위 밖 스테이지는 빈 문자열이다. 호출부는 이걸 보고 타이틀로 보낸다.
+            Assert.That(SceneFlowController.StageSceneName(0), Is.Empty);
+            Assert.That(SceneFlowController.StageSceneName(14), Is.Empty);
+
+            // 아직 만들지 않은 Stage 2는 "열 수 있는 씬"이 아니다(빌드 설정에 없다).
+            Assert.That(SceneFlowController.PlayableStageScene(1), Is.EqualTo("Stage01_Base"));
+        }
+
+        [Test]
         public void Test_SceneFlow_RejectsDuplicateTransition()
         {
             var plan = new SceneFlowPlan();

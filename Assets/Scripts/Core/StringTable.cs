@@ -32,6 +32,9 @@ namespace Daeume.Core
             ["hud.failed"] = "쓰러졌습니다... 체크포인트에서 다시 시작합니다.",
             ["hud.objective.memory"] = "오른쪽 끝의 기억을 찾아라",
 
+            // Stage 1 튜토리얼 조작 안내. 키 이름은 실제 바인딩에서 읽어 오고, 여기에는 동작 이름만 둔다.
+            ["hud.tutorial.hint"] = "조작",
+
             // 타이틀 화면
             ["title.loading"] = "불러오는 중…",
             ["title.retry"] = "잠시 후 다시 시도해 주세요.",
@@ -48,6 +51,7 @@ namespace Daeume.Core
             ["options.shake"] = "카메라 흔들림",
             ["options.subtitle_size"] = "자막 크기",
             ["options.chase_assist"] = "추격 속도 저하",
+            ["options.rebind.move"] = "이동",
             ["options.rebind.jump"] = "점프",
             ["options.rebind.attack"] = "공격",
             ["options.rebind.grab"] = "붙잡기",

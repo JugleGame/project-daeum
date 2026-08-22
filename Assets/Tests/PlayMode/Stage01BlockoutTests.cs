@@ -3,6 +3,7 @@ using Daeume.Core;
 using Daeume.Flow;
 using Daeume.Player;
 using Daeume.Stage;
+using Daeume.UI;
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -111,6 +112,27 @@ namespace Daeume.Tests.PlayMode
             Assert.That(body.position.y, Is.GreaterThan(-5f), "Player should have been teleported back onto the playable floor.");
             Assert.That(Vector2.Distance(body.position, startPosition), Is.LessThan(0.05f),
                 "Player should be restored to the last saved checkpoint position (SaveSystem.ResolveRespawnHealth path).");
+            LogAssert.NoUnexpectedReceived();
+        }
+
+        [UnityTest]
+        public IEnumerator Test_Stage01_TutorialHudShowsControlHints()
+        {
+            yield return LoadStage();
+
+            var hud = Object.FindAnyObjectByType<StageHudPresenter>();
+            Assert.That(hud, Is.Not.Null, "Stage01PresentationBootstrap should have spawned the HUD.");
+
+            // HUD는 방금 생성됐을 수 있다. Start()가 구독을 마칠 한 프레임을 준 뒤에 상태 변화를 알린다
+            // (구독 전에 알리면 목표/조작 문구가 비어 있는 채로 남는다).
+            yield return null;
+            GameManager.Instance.ResetStage();
+            yield return null;
+
+            // 튜토리얼 스테이지라 목표 문구만으로는 조작을 알 수 없다(#11).
+            Assert.That(hud.ObjectiveLabel, Does.Contain(StringTable.Get("options.rebind.jump")));
+            Assert.That(hud.ObjectiveLabel, Does.Contain(StringTable.Get("options.rebind.interact")));
+            Assert.That(hud.ObjectiveLabel, Does.Contain(StringTable.Get("hud.objective.memory")));
             LogAssert.NoUnexpectedReceived();
         }
 

@@ -2,6 +2,7 @@ using Daeume.ContaminationRuntime;
 using Daeume.Core;
 using Daeume.Flow;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 namespace Daeume.UI
@@ -27,13 +28,31 @@ namespace Daeume.UI
         [SerializeField] private Text objectiveText;
         [SerializeField] private GameObject objectiveRoot;
 
+        /// <summary>
+        /// Stage 1은 튜토리얼 스테이지다. 목표 문구와 함께 조작 안내를 띄우지 않으면
+        /// 새 게임을 시작한 플레이어가 아무 설명 없이 놓인다(#11).
+        /// 액션 이름과 문자열 테이블 키만 여기 두고, 키 표기는 실제 바인딩에서 읽는다.
+        /// </summary>
+        private static readonly (string ActionName, string LabelKey)[] TutorialActions =
+        {
+            ("Move", "options.rebind.move"),
+            ("Jump", "options.rebind.jump"),
+            ("Interact", "options.rebind.interact"),
+            ("Attack", "options.rebind.attack"),
+            ("Grab", "options.rebind.grab")
+        };
+
         public string HealthLabel { get; private set; } = string.Empty;
+        public string ObjectiveLabel { get; private set; } = string.Empty;
         public string PromptLabel { get; private set; } = string.Empty;
         public bool PromptVisible { get; private set; }
         public bool ChaseVisible { get; private set; }
 
         // 조사 프롬프트가 "켜져야 한다"고 요청받은 원래 값. 추격 중에는 이 값이 참이어도 실제로는 숨긴다.
         private bool promptRequested;
+
+        // 조작 안내는 바인딩이 바뀌지 않는 한 같은 문자열이라 한 번만 만든다.
+        private string controlHint = string.Empty;
 
         // spec-013 자막 크기 3단계. 씬에 디자인된 원래 크기를 기준(1단계)으로 배율만 곱한다.
         private bool baseFontSizesCaptured;
@@ -109,8 +128,44 @@ namespace Daeume.UI
 
             // 목표 문구는 탐색 중에만 보인다. 회상을 시작하거나 추격에 들어가면 자연히 사라진다.
             var visible = value.State == StageState.Explore;
-            if (objectiveText != null) objectiveText.text = StringTable.Get("hud.objective.memory");
+            var hint = ControlHint();
+            ObjectiveLabel = string.IsNullOrEmpty(hint)
+                ? StringTable.Get("hud.objective.memory")
+                : $"{hint}{System.Environment.NewLine}{StringTable.Get("hud.objective.memory")}";
+            if (objectiveText != null) objectiveText.text = ObjectiveLabel;
             if (objectiveRoot != null) objectiveRoot.SetActive(visible);
+        }
+
+        /// <summary>
+        /// "[키] 동작" 목록을 만든다. 프롬프트 표기(OnPrompt)와 같은 형식이라 읽는 규칙이 하나뿐이다.
+        /// </summary>
+        /// <remarks>
+        /// PlayerInput은 스테이지 씬에 있고 HUD는 씬을 넘나들며 살아남으므로, 아직 없을 수 있다.
+        /// 만들어진 뒤에만 캐시해서 다음 상태 변화 때 다시 시도한다.
+        /// </remarks>
+        private string ControlHint()
+        {
+            if (!string.IsNullOrEmpty(controlHint)) return controlHint;
+
+            var actions = FindAnyObjectByType<PlayerInput>()?.actions;
+            if (actions == null) return string.Empty;
+
+            var parts = new System.Collections.Generic.List<string>();
+            foreach (var (actionName, labelKey) in TutorialActions)
+            {
+                var action = actions.FindAction(actionName);
+                if (action == null || action.bindings.Count == 0) continue;
+
+                var keys = action.GetBindingDisplayString(InputBinding.DisplayStringOptions.DontIncludeInteractions);
+                if (string.IsNullOrWhiteSpace(keys)) continue;
+
+                parts.Add($"[{keys}] {StringTable.Get(labelKey)}");
+            }
+
+            if (parts.Count == 0) return string.Empty;
+
+            controlHint = $"{StringTable.Get("hud.tutorial.hint")}  {string.Join("   ", parts)}";
+            return controlHint;
         }
 
         private void OnHealth(PlayerHealthChanged value)
