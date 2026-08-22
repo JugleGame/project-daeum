@@ -22,18 +22,31 @@ namespace Daeume.Tests.PlayMode
         }
 
         [Test]
-        public void Test_Chase_DirectorKeepsDistanceBounds()
+        public void Test_Chase_DirectorClosesToContact()
         {
+            // 수정: 예전에는 최소 거리를 두고 그 이상은 다가오지 않는 "공정성 장치"가 있었는데,
+            // 그러면 추격자가 절대 플레이어를 붙잡지 못했다. 이제는 막다른 길이 아닌 한
+            // 항상 실제 접촉 거리(ContactDistance, 0.9)까지 다가온다. 정확히 0으로 두면 두 콜라이더
+            // 중심이 완전히 겹쳐 플레이어가 어느 방향으로도 못 움직이는 벽처럼 느껴지는 버그가 있었다.
             var context = CreateContext(10f, 10f, 2f, 5f);
             context.Player.position = Vector3.zero;
             context.Pursuer.position = new Vector3(-20f, 0f);
             context.Director.BeginChase();
             context.Director.Tick(2f);
-            Assert.That(Mathf.Abs(context.Player.position.x - context.Pursuer.position.x), Is.EqualTo(5f).Within(0.001f));
+            Assert.That(Mathf.Abs(context.Player.position.x - context.Pursuer.position.x), Is.EqualTo(0.9f).Within(0.001f));
+            context.Dispose();
+        }
 
-            context.Pursuer.position = new Vector3(-0.5f, 0f);
-            context.Director.Tick(1f);
-            Assert.That(Mathf.Abs(context.Player.position.x - context.Pursuer.position.x), Is.EqualTo(2f).Within(0.001f));
+        [Test]
+        public void Test_Chase_DeadEndStillHoldsMaxDistance()
+        {
+            var context = CreateContext(10f, 10f, 2f, 5f);
+            context.Player.position = Vector3.zero;
+            context.Pursuer.position = new Vector3(-20f, 0f);
+            context.Director.BeginChase();
+            context.Director.SetDeadEndBlocked(true);
+            context.Director.Tick(2f);
+            Assert.That(Mathf.Abs(context.Player.position.x - context.Pursuer.position.x), Is.EqualTo(5f).Within(0.001f));
             context.Dispose();
         }
 
