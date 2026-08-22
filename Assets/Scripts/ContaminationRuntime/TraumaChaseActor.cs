@@ -22,6 +22,11 @@ namespace Daeume.ContaminationRuntime
         /// <summary>
         /// 지시를 받아 목표 지점 쪽으로 정해진 속도만큼 이동한다.
         /// MoveTowards는 "목표를 지나치지 않고 정확히 멈추는" 이동이라 거리 유지에 적합하다.
+        ///
+        /// X축(좌우 거리 유지)만 지시를 따르고 Y는 트라우마 자신의 현재 높이를 그대로 쓴다.
+        /// 예전에는 목표 지점에 PlayerPosition.y를 그대로 섞어 써서, 플레이어가 점프하면
+        /// 트라우마도 같이 점프하는 것처럼 보였다(Y까지 플레이어를 쫓아간 것이 원인).
+        /// spec-006은 좌향 도주(수평 추격)만 규정하므로 Y를 플레이어에게 묶을 이유가 없다.
         /// </summary>
         public void ApplyDirective(ChaseDirectiveIssued directive, float deltaTime, float targetDistance)
         {
@@ -32,7 +37,8 @@ namespace Daeume.ContaminationRuntime
             var direction = Mathf.Approximately(directive.PursuerPosition.x, directive.PlayerPosition.x)
                 ? 1f
                 : Mathf.Sign(directive.PursuerPosition.x - directive.PlayerPosition.x);
-            var target = directive.PlayerPosition + Vector2.right * direction * Mathf.Max(0f, targetDistance);
+            var targetX = directive.PlayerPosition.x + direction * Mathf.Max(0f, targetDistance);
+            var target = new Vector2(targetX, transform.position.y);
             transform.position = Vector2.MoveTowards(transform.position, target, directive.Speed * deltaTime);
         }
     }
