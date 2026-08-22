@@ -1,6 +1,6 @@
 {
   "name": "Daeume.Stage",
   "rootNamespace": "Daeume.Stage",
-  "references": ["Daeume.Player", "Daeume.Contamination", "Daeume.ContaminationRuntime"],
+  "references": ["Daeume.Core", "Daeume.Player", "Daeume.Contamination", "Daeume.ContaminationRuntime"],
   "autoReferenced": true
 }

@@ -59,6 +59,7 @@ namespace Daeume.Flow
 
             GameManager.Instance?.Events.Subscribe<ChaseCheckpointRestoreRequested>(RestoreChaseCheckpoint);
             GameManager.Instance?.Events.Subscribe<StageFailed>(OnStageFailed);
+            GameManager.Instance?.Events.Subscribe<PlayerFellOutOfBounds>(OnPlayerFellOutOfBounds);
         }
 
         private void OnDestroy()
@@ -66,6 +67,7 @@ namespace Daeume.Flow
             // 구독 해제를 빼먹으면 씬을 다시 로드했을 때 죽은 객체가 이벤트를 받아 오류가 난다.
             GameManager.Instance?.Events.Unsubscribe<ChaseCheckpointRestoreRequested>(RestoreChaseCheckpoint);
             GameManager.Instance?.Events.Unsubscribe<StageFailed>(OnStageFailed);
+            GameManager.Instance?.Events.Unsubscribe<PlayerFellOutOfBounds>(OnPlayerFellOutOfBounds);
         }
 
         private Coroutine pendingRetry;
@@ -250,6 +252,18 @@ namespace Daeume.Flow
 
             // 회상을 다시 재생하지 않고 곧바로 추격 상태로 되돌린다.
             GameManager.Instance?.ResetStage(StageState.Chase);
+        }
+
+        /// <summary>
+        /// 낙사 구간(void) 접촉 처리. (#11)
+        /// 스테이지를 실패시키지 않고, 체력도 깎지 않는다 — spec-001이 낙사로 인한 즉사를 금지하기
+        /// 때문이다. 대신 SaveSystem.ResolveRespawnHealth(deathRestore: false)로 마지막 저장 위치·체력을
+        /// 그대로 복원해 되돌린다(전체 씬 리로드도 하지 않는다. 사망 재시도보다 가벼운 경로다).
+        /// </summary>
+        private void OnPlayerFellOutOfBounds(PlayerFellOutOfBounds _)
+        {
+            var health = SaveSystem.ResolveRespawnHealth(currentData, maxHealth, false, 0);
+            GameManager.Instance?.Events.Publish(new PlayerRestoreRequested(currentData.PlayerPosition, health));
         }
 
         /// <summary>내용 씬만 갈아 끼운다. Persistent와 Boot는 절대 내리지 않는다.</summary>
