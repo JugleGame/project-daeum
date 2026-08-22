@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f4955f267093d940ae422b67fc80322, type: 3}
+  m_Name: Stage02_ContaminationVariant
+  m_EditorClassIdentifier: Daeume.Contamination::Daeume.Contamination.ContaminationVariantData
+  variantId: Stage02_Overlay_Intrusion
+  echoOverlayScene: Stage02_Overlay_Echo
+  intrusionOverlayScene: Stage02_Overlay_Intrusion
+  targetChaseSeconds: 36
+  chaseSpeed: 6.5
+  minDistance: 0.75
+  maxDistance: 7.5
+  chaseLookaheadUnits: 3.5
+  declaredTeleportMarkerIds: []
