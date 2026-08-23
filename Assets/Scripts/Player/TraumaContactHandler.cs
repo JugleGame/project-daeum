@@ -33,6 +33,17 @@ namespace Daeume.Player
             }
         }
 
+        /// <summary>
+        /// 겹쳐 있는 동안에도 계속 검사한다. (#12)
+        /// </summary>
+        /// <remarks>
+        /// Enter는 "겹치기 시작한 그 프레임"에 한 번만 온다. 이미 겹친 채로 추격이 시작되거나,
+        /// 겹친 순간 추격자가 화면 밖이라 IsOnScreen에 걸리면 그 한 번을 놓치고 다시는 오지 않는다.
+        /// 그러면 추격자가 몸에 닿아 있는데도 아무 일이 일어나지 않는다. Stay로 매 프레임 다시 본다.
+        /// BeginGrab이 GrabInProgress로 중복을 막으므로 연출이 겹치지는 않는다.
+        /// </remarks>
+        private void OnTriggerStay2D(Collider2D other) => OnTriggerEnter2D(other);
+
         /// <summary>붙잡기 연출을 시작한다. 이미 진행 중이면 무시한다.</summary>
         public bool BeginGrab()
         {

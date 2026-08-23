@@ -112,6 +112,31 @@ namespace Daeume.Tests.PlayMode
             Object.DestroyImmediate(ground);
         }
 
+        /// <summary>
+        /// #12: 지형에 파묻힌 채 시작해도 빠져나올 수 있어야 한다.
+        ///
+        /// Stage 01은 트라우마가 경계벽 안쪽에 배치돼 있다. 막힘 검사를 넣은 뒤 거리 0 히트를
+        /// 막힘으로 취급하는 바람에 추격이 시작되자마자 그 자리에 굳어 플레이어를 쫓지 못했다.
+        /// </summary>
+        [Test]
+        public void Test_Trauma_EscapesWhenSpawnedInsideTerrain()
+        {
+            var wall = CreateSolid("Boundary", new Vector2(0f, 0f), new Vector2(1f, 8f));
+            var actor = CreateActor(new Vector3(0f, 0f, 0f));   // 벽 한가운데에서 시작
+            var startX = actor.transform.position.x;
+
+            for (var step = 0; step < 20; step++)
+            {
+                actor.ApplyDirective(Directive(actor.transform.position, new Vector2(-10f, 0f)), 0.05f, 0f);
+            }
+
+            Assert.That(actor.transform.position.x, Is.LessThan(startX - 0.5f),
+                "지형에 파묻힌 상태에서도 플레이어 쪽으로 빠져나와야 한다.");
+
+            Object.DestroyImmediate(actor.gameObject);
+            Object.DestroyImmediate(wall);
+        }
+
         private static TraumaChaseActor CreateActor(Vector3 position)
         {
             var actor = new GameObject("TraumaChaseActorTest").AddComponent<TraumaChaseActor>();

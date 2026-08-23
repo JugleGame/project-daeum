@@ -25,11 +25,19 @@ namespace Daeume.ContaminationRuntime
         [SerializeField] private Transform pursuer;
         [SerializeField] private ChaseSpeedAssistAdapter speedAssist;
 
-        // 실제 접촉 거리(대략 트라우마 반지름 + 플레이어 반폭). 목표를 정확히 0으로 두면
-        // 두 중심 좌표가 완전히 겹치도록 계속 밀어붙이는데, 그러면 트라우마 콜라이더가
-        // 플레이어를 사방에서 감싸는 꼴이 되어 "부딪히면 어느 방향으로도 못 움직이는" 벽처럼 느껴진다.
-        // 접촉 판정(TraumaContactHandler)은 이 값보다 먼저 트리거로 감지되므로 붙잡기에는 영향이 없다.
-        private const float ContactDistance = 0.9f;
+        /// <summary>추격자가 다가서는 목표 거리. 붙잡기가 실제로 성립할 만큼 겹쳐야 한다.</summary>
+        /// <remarks>
+        /// 예전 값은 0.9였고, "트라우마 반지름(0.65) + 플레이어 반폭(0.25)"이라는 계산에서 나왔다.
+        /// 그런데 그 합은 <b>두 콜라이더가 딱 맞닿는 접선 거리</b>다. 겹침이 0이라 유니티는
+        /// OnTriggerEnter2D를 쏘지 않는다. 그래서 가만히 서 있으면 추격자가 코앞까지 와서 멈춘 채
+        /// 아무 일도 일어나지 않았다(#12에서 실제로 발생). 플레이어가 스스로 뛰어들어 파고들 때만
+        /// 붙잡기가 성립했다.
+        ///
+        /// 접선보다 확실히 안쪽으로 들어오게 잡는다. 트라우마 콜라이더는 트리거라 물리적으로 밀지
+        /// 않으므로, 겹쳐도 "벽에 낀 것처럼 못 움직이는" 문제는 생기지 않는다.
+        /// 중심을 완전히 겹치게(0) 두지 않는 이유는 붙잡히는 순간의 그림이 읽혀야 하기 때문이다.
+        /// </remarks>
+        private const float ContactDistance = 0.55f;
 
         /// <summary>체크포인트 복귀 직후 추격자가 다가오지 않는 시간. 달아날 틈을 만든다.</summary>
         private const float RestoreGraceSeconds = 1.5f;

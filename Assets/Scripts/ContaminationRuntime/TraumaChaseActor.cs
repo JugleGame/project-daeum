@@ -75,8 +75,15 @@ namespace Daeume.ContaminationRuntime
             var nextX = Mathf.MoveTowards(position.x, targetX, directive.Speed * deltaTime);
             var moveX = nextX - position.x;
 
-            var blocked = !Mathf.Approximately(moveX, 0f) &&
-                          FindTerrain(position, new Vector2(Mathf.Sign(moveX), 0f), radius + Mathf.Abs(moveX) + Skin).HasValue;
+            var wall = Mathf.Approximately(moveX, 0f)
+                ? null
+                : FindTerrain(position, new Vector2(Mathf.Sign(moveX), 0f), radius + Mathf.Abs(moveX) + Skin);
+
+            // 거리 0 히트는 "이미 그 지형 안에 파묻혀 있다"는 뜻이므로 막힘으로 치지 않는다.
+            // Physics2D.Raycast는 콜라이더 안에서 시작하면 거리 0으로 즉시 맞았다고 알려 준다.
+            // 이걸 막힘으로 보면 파묻힌 상태에서 영원히 빠져나올 수 없다 — Stage 01은 트라우마가
+            // 경계벽(x 32.0~32.5) 안쪽인 x=32에 배치돼 있어서, 추격이 시작되자마자 굳어 버렸다.
+            var blocked = wall.HasValue && wall.Value.distance > 0f;
             if (!blocked) position.x = nextX;
 
             // ---- Y: 중력 / 벽타기 / 점프 ----

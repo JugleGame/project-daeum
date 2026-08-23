@@ -34,7 +34,13 @@ namespace Daeume.Tests.PlayMode
             context.Pursuer.position = new Vector3(-20f, 0f);
             context.Director.BeginChase();
             context.Director.Tick(2f);
-            Assert.That(Mathf.Abs(context.Player.position.x - context.Pursuer.position.x), Is.EqualTo(0.9f).Within(0.001f));
+            // 접촉 목표 거리는 두 콜라이더가 확실히 겹치는 값이어야 한다(#12).
+            // 접선 거리(0.65 + 0.25 = 0.9)로 두면 겹침이 0이라 OnTriggerEnter2D가 오지 않아
+            // 붙잡기가 아예 성립하지 않았다.
+            var contactDistance = Mathf.Abs(context.Player.position.x - context.Pursuer.position.x);
+            Assert.That(contactDistance, Is.LessThan(0.9f),
+                "접선 거리에서 멈추면 트리거가 겹치지 않아 붙잡기가 발생하지 않는다.");
+            Assert.That(contactDistance, Is.GreaterThan(0f));
             context.Dispose();
         }
 
