@@ -25,14 +25,14 @@ namespace Daeume.ContaminationRuntime
 
             CreateCamera();
             CreateBackdrop();
-            player = SpawnActor(playerPrefab, "Player", new Vector3(-6f, -1.4f, 0f));
-            trauma = SpawnActor(traumaPrefab, "Trauma", new Vector3(1.5f, -1.4f, 0f));
+            player = SpawnActor(playerPrefab, "Player", new Vector3(-6f, -1.4f, 0f))
+                     ?? CreateFallbackActor("Player", new Vector3(-6f, -1.4f, 0f), new Color(0.35f, 0.78f, 1f));
+            trauma = SpawnActor(traumaPrefab, "Trauma", new Vector3(1.5f, -1.4f, 0f))
+                     ?? CreateFallbackActor("Trauma", new Vector3(1.5f, -1.4f, 0f), new Color(0.85f, 0.18f, 0.35f));
 
-            if (player == null || trauma == null)
-            {
-                status = "Stage13 프리팹 참조가 비어 있습니다.";
-                return;
-            }
+            // 프리팹이 아직 연결되지 않은 상태로도 Stage 13 규칙을 검증할 수 있게 한다.
+            if (player.GetComponent<PlayerCombat>() == null) player.gameObject.AddComponent<PlayerCombat>();
+            if (player.GetComponent<TraumaContactHandler>() == null) player.gameObject.AddComponent<TraumaContactHandler>();
 
             ending = gameObject.AddComponent<StageThirteenEndingController>();
             ending.BeginAcceptance();
@@ -44,6 +44,10 @@ namespace Daeume.ContaminationRuntime
 
             var keyboard = Keyboard.current;
             if (keyboard == null) return;
+
+            var horizontal = (keyboard.dKey.isPressed || keyboard.rightArrowKey.isPressed ? 1f : 0f)
+                           - (keyboard.aKey.isPressed || keyboard.leftArrowKey.isPressed ? 1f : 0f);
+            player.position += Vector3.right * (horizontal * 4f * Time.deltaTime);
 
             if (keyboard.rKey.wasPressedThisFrame)
             {
@@ -104,6 +108,22 @@ namespace Daeume.ContaminationRuntime
             actor.name = objectName;
             actor.SetActive(true);
             return actor.transform;
+        }
+
+        /// <summary>프리팹 참조가 깨졌을 때도 씬의 핵심 상호작용이 중단되지 않도록 보이는 대체 캐릭터를 만든다.</summary>
+        private static Transform CreateFallbackActor(string objectName, Vector3 position, Color color)
+        {
+            var root = new GameObject(objectName);
+            root.transform.position = position;
+            CreateBodyPart(root.transform, "Body", new Vector3(0f, 0.55f, 0f), new Vector3(0.62f, 0.9f, 1f), color);
+            CreateBodyPart(root.transform, "Head", new Vector3(0f, 1.23f, 0f), new Vector3(0.48f, 0.48f, 1f), color * 1.15f);
+            return root.transform;
+        }
+
+        private static void CreateBodyPart(Transform parent, string objectName, Vector3 localPosition, Vector3 scale, Color color)
+        {
+            var part = CreatePanel(objectName, parent.position + localPosition, scale, color);
+            part.transform.SetParent(parent, true);
         }
 
         private static GameObject CreatePanel(string objectName, Vector3 position, Vector3 scale, Color color)
