@@ -69,10 +69,10 @@ namespace Daeume.Tests.PlayMode
             var startX = actor.transform.position.x;
             var startY = actor.transform.position.y;
 
-            // 플레이어가 벽 너머 왼쪽에 있다고 지시한다 → 왼쪽으로 가려다 벽에 막힌다.
+            // 플레이어가 벽 너머 왼쪽 위에 있다고 지시한다 → 왼쪽으로 가려다 벽에 막힌다.
             for (var step = 0; step < 20; step++)
             {
-                actor.ApplyDirective(Directive(actor.transform.position, new Vector2(-4f, 0f)), 0.05f, 0f);
+                actor.ApplyDirective(Directive(actor.transform.position, new Vector2(-4f, 3f)), 0.05f, 0f);
             }
 
             Assert.That(actor.transform.position.x, Is.GreaterThan(wall.transform.position.x),
@@ -84,6 +84,32 @@ namespace Daeume.Tests.PlayMode
 
             Object.DestroyImmediate(actor.gameObject);
             Object.DestroyImmediate(wall);
+        }
+
+        /// <summary>
+        /// #12: 플레이어가 위에 없으면 벽에 막혀도 오르지 않는다.
+        /// 조건 없이 오르게 두었더니 레벨 경계벽에 눌린 추격자가 화면 밖까지 끝없이 올라갔다.
+        /// </summary>
+        [Test]
+        public void Test_Trauma_DoesNotClimbBoundaryWallWhenPlayerIsNotAbove()
+        {
+            var ground = CreateSolid("Ground", new Vector2(0f, -1f), new Vector2(20f, 1f));
+            var wall = CreateSolid("Boundary", new Vector2(3f, 2f), new Vector2(1f, 8f));
+            var actor = CreateActor(new Vector3(2f, 0f, 0f));
+
+            // 플레이어가 벽 너머 오른쪽 아래(같은 높이)에 있다 → 벽에 막히지만 오를 이유가 없다.
+            for (var step = 0; step < 60; step++)
+            {
+                actor.ApplyDirective(Directive(actor.transform.position, new Vector2(8f, 0f)), 0.05f, 0f);
+            }
+
+            Assert.That(actor.IsClimbing, Is.False);
+            Assert.That(actor.transform.position.y, Is.LessThan(1f), "경계벽을 타고 하늘로 올라가면 안 된다.");
+            Assert.That(actor.IsGrounded, Is.True);
+
+            Object.DestroyImmediate(actor.gameObject);
+            Object.DestroyImmediate(wall);
+            Object.DestroyImmediate(ground);
         }
 
         private static TraumaChaseActor CreateActor(Vector3 position)

@@ -81,11 +81,14 @@ namespace Daeume.ContaminationRuntime
 
             // ---- Y: 중력 / 벽타기 / 점프 ----
             IsGrounded = verticalVelocity <= 0f && FindTerrain(position, Vector2.down, radius + Skin).HasValue;
-            IsClimbing = blocked;
 
-            if (blocked)
+            // 벽타기는 "플레이어가 위에 있을 때"만 한다.
+            // 조건 없이 막히기만 하면 오르게 두었더니, 레벨 경계벽에 눌린 추격자가 벽을 타고
+            // 화면 밖까지 끝없이 올라가 공중에 떠 버렸다(#12에서 실제로 발생).
+            IsClimbing = blocked && directive.PlayerPosition.y > position.y;
+
+            if (IsClimbing)
             {
-                // 벽에 막혔다 = 플레이어가 위쪽 경로로 갔다는 뜻. 벽을 타고 오른다.
                 verticalVelocity = climbSpeed;
             }
             else if (IsGrounded)

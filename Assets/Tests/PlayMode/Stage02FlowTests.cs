@@ -97,6 +97,36 @@ namespace Daeume.Tests.PlayMode
         }
 
         /// <summary>
+        /// #12: 트라우마에게 붙잡히면 게임 오버다. 체크포인트로 되돌리지 않고 타이틀로 나간다.
+        ///
+        /// 되돌리던 시절에는 부활 지점이 탈출 경로 반대편일 때 추격자를 지나갈 방법이 없어
+        /// 붙잡힘 → 복귀 → 붙잡힘이 무한 반복됐다(Stage 01·02 모두).
+        /// </summary>
+        [UnityTest]
+        public IEnumerator Test_Chase_TraumaGrabEndsTheGameInsteadOfRespawning()
+        {
+            SceneManager.LoadScene("Boot", LoadSceneMode.Single);
+            yield return null;
+
+            var flow = Object.FindAnyObjectByType<SceneFlowController>();
+            Assert.That(flow.StartNewGame(), Is.True);
+            yield return WaitForScene("Stage01_Base");
+
+            GameManager.Instance.SetStageState(StageState.Memory);
+            GameManager.Instance.SetStageState(StageState.Chase);
+            flow.SaveChaseCheckpoint("Stage01_Chase", new Vector2(5f, 0f), 3, "Stage01_Overlay_Intrusion");
+            Assert.That(flow.CurrentData.CheckpointId, Is.Not.Empty);
+
+            Assert.That(GameManager.Instance.Fail(StageFailureCause.TraumaGrabCompleted), Is.True);
+            yield return WaitForScene("Title");
+
+            Assert.That(flow.CurrentData.CheckpointId, Is.Empty,
+                "게임 오버 후 체크포인트가 남으면 이어하기가 죽은 자리에서 다시 시작한다.");
+            Assert.That(SceneManager.GetSceneByName("Stage01_Base").isLoaded, Is.False,
+                "스테이지 씬은 내려가야 한다.");
+        }
+
+        /// <summary>
         /// 회귀(#12): Stage 02에서 플레이어가 Kinematic으로 굳어 점프도 충돌도 죽었던 문제.
         ///
         /// StageVisualBootstrap이 "Stage01_Base"가 떠 있을 때만 플레이어를 Dynamic으로 켰다.
