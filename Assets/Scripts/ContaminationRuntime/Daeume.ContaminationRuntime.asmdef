@@ -1,1 +1,1 @@
-{"name":"Daeume.ContaminationRuntime","rootNamespace":"Daeume.ContaminationRuntime","references":["Daeume.Core","Daeume.Contamination","Daeume.Encounter","Daeume.Flow","Daeume.Player"],"autoReferenced":true}
+{"name":"Daeume.ContaminationRuntime","rootNamespace":"Daeume.ContaminationRuntime","references":["Daeume.Core","Daeume.Contamination","Daeume.Encounter","Daeume.Flow","Daeume.Player","Unity.InputSystem"],"autoReferenced":true}

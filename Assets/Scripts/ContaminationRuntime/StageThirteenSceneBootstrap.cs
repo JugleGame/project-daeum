@@ -1,5 +1,6 @@
 using Daeume.Player;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
 namespace Daeume.ContaminationRuntime
@@ -11,6 +12,8 @@ namespace Daeume.ContaminationRuntime
     public sealed class StageThirteenSceneBootstrap : MonoBehaviour
     {
         private const string StageSceneName = "Stage13_Base";
+        [SerializeField] private GameObject playerPrefab;
+        [SerializeField] private GameObject traumaPrefab;
         private StageThirteenEndingController ending;
         private Transform player;
         private Transform trauma;
@@ -22,12 +25,15 @@ namespace Daeume.ContaminationRuntime
 
             CreateCamera();
             CreateBackdrop();
-            player = CreateActor("Player", new Vector3(-6f, -1.4f, 0f), new Color(0.78f, 0.88f, 1f));
-            trauma = CreateActor("Trauma", new Vector3(1.5f, -1.4f, 0f), new Color(0.12f, 0.08f, 0.16f));
+            player = SpawnActor(playerPrefab, "Player", new Vector3(-6f, -1.4f, 0f));
+            trauma = SpawnActor(traumaPrefab, "Trauma", new Vector3(1.5f, -1.4f, 0f));
 
-            // 이 두 컴포넌트는 Stage 13 규칙이 공격과 접촉 실패를 무효화하는 실제 대상이다.
-            player.gameObject.AddComponent<PlayerCombat>();
-            player.gameObject.AddComponent<TraumaContactHandler>();
+            if (player == null || trauma == null)
+            {
+                status = "Stage13 프리팹 참조가 비어 있습니다.";
+                return;
+            }
+
             ending = gameObject.AddComponent<StageThirteenEndingController>();
             ending.BeginAcceptance();
         }
@@ -36,13 +42,10 @@ namespace Daeume.ContaminationRuntime
         {
             if (player == null || ending == null) return;
 
-            // ContaminationRuntime 어셈블리는 Input System을 직접 참조하지 않는다.
-            // 그래서 씬 확인용 입력도 기존 Input API로만 읽어 의존성 경계를 유지한다.
-            var horizontal = (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow) ? 1f : 0f)
-                           - (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow) ? 1f : 0f);
-            player.position += Vector3.right * (horizontal * 4f * Time.deltaTime);
+            var keyboard = Keyboard.current;
+            if (keyboard == null) return;
 
-            if (Input.GetKeyDown(KeyCode.R))
+            if (keyboard.rKey.wasPressedThisFrame)
             {
                 ending.RegisterRunawayLoop();
                 status = ending.TraumaWaiting
@@ -50,14 +53,14 @@ namespace Daeume.ContaminationRuntime
                     : $"도주 루프 {ending.State.LoopCount}/4 — 길은 다시 벤치로 이어집니다.";
             }
 
-            if (Input.GetKeyDown(KeyCode.E))
+            if (keyboard.eKey.wasPressedThisFrame)
             {
                 status = ending.TryLowerWeapon()
                     ? "무기를 내려놓았습니다. 천천히 마지막 걸음을 옮기세요."
                     : "트라우마 가까이에서만 무기를 내려놓을 수 있습니다.";
             }
 
-            if (Input.GetKeyDown(KeyCode.Return) && ending.State.WeaponLowered)
+            if (keyboard.enterKey.wasPressedThisFrame && ending.State.WeaponLowered)
             {
                 status = ending.CompleteAfterFarewell(true, true)
                     ? "다음에 보자. 버스가 출발합니다."
@@ -88,14 +91,18 @@ namespace Daeume.ContaminationRuntime
 
         private static void CreateBackdrop()
         {
-            CreatePanel("Platform", new Vector3(0f, -2.4f, 1f), new Vector3(17f, 0.45f, 1f), new Color(0.18f, 0.22f, 0.28f));
+            var platform = CreatePanel("Platform", new Vector3(0f, -2.4f, 1f), new Vector3(17f, 0.45f, 1f), new Color(0.18f, 0.22f, 0.28f));
+            platform.AddComponent<BoxCollider2D>();
             CreatePanel("EmptyPath", new Vector3(4f, -1.2f, 1f), new Vector3(8f, 1.7f, 1f), new Color(0.09f, 0.12f, 0.17f));
             CreatePanel("Bench", new Vector3(-6f, -1.65f, 0.5f), new Vector3(1.4f, 0.25f, 1f), new Color(0.42f, 0.25f, 0.16f));
         }
 
-        private static Transform CreateActor(string objectName, Vector3 position, Color color)
+        private static Transform SpawnActor(GameObject prefab, string objectName, Vector3 position)
         {
-            var actor = CreatePanel(objectName, position, new Vector3(0.7f, 1.5f, 1f), color);
+            if (prefab == null) return null;
+            var actor = Instantiate(prefab, position, Quaternion.identity);
+            actor.name = objectName;
+            actor.SetActive(true);
             return actor.transform;
         }
 

@@ -134,3 +134,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1cf074a4d8d4c2d9bf7836bbf174a13, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Daeume.ContaminationRuntime::Daeume.ContaminationRuntime.StageThirteenSceneBootstrap
+  playerPrefab: {fileID: 100100000, guid: d217a6e32d00f5b479ec418844bf8468, type: 3}
+  traumaPrefab: {fileID: 100100000, guid: 026aa18801a8fd64db5844fbafffe8ee, type: 3}
