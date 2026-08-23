@@ -1,0 +1,51 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 51afe46caf271254bac36bdd28ec0772, type: 3}
+  m_Name: Stage03_DashRemnant
+  m_EditorClassIdentifier: Daeume.Enemy::Daeume.Enemy.DashRemnantData
+  enemyId: remnant-stage03-dash
+  maxHealth: 3
+  contactDamage: 1
+  detectionRange: 6
+  attackRange: 1.1
+  moveSpeed: 2.1
+  alertSeconds: 0.2
+  attackTelegraphSeconds: 0.65
+  attackRecoverySeconds: 0.75
+  hitStunSeconds: 0.18
+  stageNumber: 3
+  visualTraitTags: 0
+  mimicsPlayerMotion: 0
+  reactive: 0
+  fragmentTraceTowardTraumaRatio: 0
+  pressureProfiles:
+  - stage: 0
+    moveSpeedMultiplier: 1
+    telegraphMultiplier: 1
+    watchesTrauma: 0
+    detectionRangeMultiplier: 1
+    retreatDirectionBias: 1
+  - stage: 1
+    moveSpeedMultiplier: 1.08
+    telegraphMultiplier: 0.85
+    watchesTrauma: 1
+    detectionRangeMultiplier: 1
+    retreatDirectionBias: 1
+  - stage: 2
+    moveSpeedMultiplier: 1.16
+    telegraphMultiplier: 0.7
+    watchesTrauma: 1
+    detectionRangeMultiplier: 1
+    retreatDirectionBias: 1
+  dashTriggerRange: 4
+  dashSpeed: 10
+  dashMaxDurationSeconds: 0.55

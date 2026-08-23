@@ -26,6 +26,8 @@ namespace Daeume.Core
             // Stage 2 전용 InteractionVerb. 공용 prompt.memory로 되돌리면 spec-005의
             // "Stage마다 다른 동사" 규칙이 깨지므로 Stage02MemoryNarrativeTests가 이 키를 검사한다.
             ["prompt.memory.stage02"] = "교실 책상 서랍 열기",
+            // Stage 3 전용 InteractionVerb. 동아리실 스피커를 켜는 외형과 동작을 짝지어 쓴다.
+            ["prompt.memory.stage03"] = "동아리실 스피커 켜기",
             ["prompt.continue"] = "계속",
             ["prompt.memory.skip"] = "건너뛰기",
 
@@ -71,7 +73,13 @@ namespace Daeume.Core
             ["memory.stage02.title"] = "기억의 조각 #2 — 학교",
             ["memory.stage02.01"] = "서랍 안쪽에 이름표 두 개가 나란히 붙어 있다. 하나는 내 것이고, 하나는 그때 아직 모르던 이름이었다.",
             ["memory.stage02.02"] = "창가 자리에서 처음 눈이 마주쳤다. 무슨 말을 걸어야 할지 몰라 공책을 한 장 찢어 내밀었다.",
-            ["memory.stage02.03"] = "그 이름을 소리 내어 불러 본 순간, 복도 끝의 발소리가 이쪽으로 방향을 튼다."
+            ["memory.stage02.03"] = "그 이름을 소리 내어 불러 본 순간, 복도 끝의 발소리가 이쪽으로 방향을 튼다.",
+
+            // Stage 3 — 동아리실. 둘이 처음 진짜 가까워지기 시작한 순간.
+            ["memory.stage03.title"] = "기억의 조각 #3 — 동아리실",
+            ["memory.stage03.01"] = "낡은 스피커의 전원을 켜자, 둘만 알던 노래의 첫 박자가 조용히 흘러나온다.",
+            ["memory.stage03.02"] = "서툰 연습이 끝난 뒤에도 우리는 남아 같은 구절을 몇 번이나 다시 들었다.",
+            ["memory.stage03.03"] = "그때 처음 아무 말 없이도 편안했다는 걸 떠올리자, 선반 너머의 그림자가 몸을 낮춘다."
         };
 
         /// <summary>
