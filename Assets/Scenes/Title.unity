@@ -508,7 +508,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ccb2ddef0a4e44c5ea6c06fb494ea74c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Daeume.UI::Daeume.UI.StageVisualBootstrap
-  cameraBackground: {r: 0.035, g: 0.045, b: 0.065, a: 1}
+  cameraBackground: {r: 0.35, g: 0.35, b: 0.35, a: 1}
 --- !u!4 &1145649542
 Transform:
   m_ObjectHideFlags: 0
