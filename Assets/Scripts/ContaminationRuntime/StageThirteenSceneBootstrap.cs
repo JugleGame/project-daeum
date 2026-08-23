@@ -12,12 +12,11 @@ namespace Daeume.ContaminationRuntime
     public sealed class StageThirteenSceneBootstrap : MonoBehaviour
     {
         private const string StageSceneName = "Stage13_Base";
-        private const float WorldMinX = -16f;
-        private const float WorldMaxX = 16f;
+        // 이 씬은 한 화면짜리 수용 엔딩 구간이다. 카메라를 이동시키지 않고 이 범위를 절대 넘지 않는다.
+        private const float WorldMinX = -8f;
+        private const float WorldMaxX = 8f;
         private const float ActorHalfWidth = 0.32f;
-        private const float CameraHalfWidth = 8.9f;
         private StageThirteenEndingController ending;
-        private Camera stageCamera;
         private Transform player;
         private Transform trauma;
         private string status = "트라우마에게 다가가세요.";
@@ -26,20 +25,20 @@ namespace Daeume.ContaminationRuntime
         {
             if (SceneManager.GetActiveScene().name != StageSceneName) return;
 
-            stageCamera = CreateCamera();
+            CreateCamera();
             CreateBackdrop();
             // Stage 13의 실제 아트 프리팹은 콘텐츠 이슈에서 배치한다.
             // 여기서는 외부 프리팹 참조에 의존하지 않는 테스트용 캐릭터를 확실히 만든다.
-            player = CreateFallbackActor("Player", new Vector3(-12f, -1.4f, 0f), new Color(0.35f, 0.78f, 1f));
-            trauma = CreateFallbackActor("Trauma", new Vector3(5f, -1.4f, 0f), new Color(0.85f, 0.18f, 0.35f));
+            player = FindOrCreateActor("Player", new Vector3(-6f, -1.4f, 0f), new Color(0.35f, 0.78f, 1f));
+            trauma = FindOrCreateActor("Trauma", new Vector3(2f, -1.4f, 0f), new Color(0.85f, 0.18f, 0.35f));
 
             // 프리팹이 아직 연결되지 않은 상태로도 Stage 13 규칙을 검증할 수 있게 한다.
             if (player.GetComponent<PlayerCombat>() == null) player.gameObject.AddComponent<PlayerCombat>();
             if (player.GetComponent<TraumaContactHandler>() == null) player.gameObject.AddComponent<TraumaContactHandler>();
 
-            ending = gameObject.AddComponent<StageThirteenEndingController>();
+            ending = GetComponent<StageThirteenEndingController>();
+            if (ending == null) ending = gameObject.AddComponent<StageThirteenEndingController>();
             ending.BeginAcceptance();
-            FollowPlayerCamera();
         }
 
         private void Update()
@@ -55,7 +54,6 @@ namespace Daeume.ContaminationRuntime
             // 캐릭터 중심뿐 아니라 몸통 전체가 경계 밖으로 나가지 않게 여유 폭을 뺀다.
             nextPosition.x = Mathf.Clamp(nextPosition.x, WorldMinX + ActorHalfWidth, WorldMaxX - ActorHalfWidth);
             player.position = nextPosition;
-            FollowPlayerCamera();
 
             if (keyboard.rKey.wasPressedThisFrame)
             {
@@ -89,16 +87,6 @@ namespace Daeume.ContaminationRuntime
             GUI.Label(new Rect(44, 110, 580, 24), $"루프 {ending.State.LoopCount}/4  |  무기: {(ending.State.WeaponLowered ? "내려놓음" : "들고 있음")}  |  엔딩: {(ending.State.EndingCompleted ? "완료" : "진행 중")}");
         }
 
-        private void FollowPlayerCamera()
-        {
-            if (stageCamera == null || player == null) return;
-            var cameraMinX = WorldMinX + CameraHalfWidth;
-            var cameraMaxX = WorldMaxX - CameraHalfWidth;
-            var cameraPosition = stageCamera.transform.position;
-            cameraPosition.x = Mathf.Clamp(player.position.x, cameraMinX, cameraMaxX);
-            stageCamera.transform.position = cameraPosition;
-        }
-
         private static Camera CreateCamera()
         {
             if (Camera.main != null) return Camera.main;
@@ -114,11 +102,11 @@ namespace Daeume.ContaminationRuntime
 
         private static void CreateBackdrop()
         {
-            CreatePanel("Platform", new Vector3(0f, -2.4f, 1f), new Vector3(32f, 0.45f, 1f), new Color(0.18f, 0.22f, 0.28f));
+            CreatePanel("Platform", new Vector3(0f, -2.4f, 1f), new Vector3(WorldMaxX - WorldMinX, 0.45f, 1f), new Color(0.18f, 0.22f, 0.28f));
             // 길의 양끝을 WorldMinX/WorldMaxX와 정확히 일치시킨다.
             // 보이는 길보다 이동 범위가 넓으면 캐릭터가 맵 밖으로 빠져 보인다.
             CreatePanel("EmptyPath", new Vector3(0f, -1.2f, 1f), new Vector3(WorldMaxX - WorldMinX, 1.7f, 1f), new Color(0.09f, 0.12f, 0.17f));
-            CreatePanel("Bench", new Vector3(-12f, -1.65f, 0.5f), new Vector3(1.4f, 0.25f, 1f), new Color(0.42f, 0.25f, 0.16f));
+            CreatePanel("Bench", new Vector3(-6f, -1.65f, 0.5f), new Vector3(1.4f, 0.25f, 1f), new Color(0.42f, 0.25f, 0.16f));
             CreatePanel("LeftMapEnd", new Vector3(WorldMinX, -0.4f, 0.5f), new Vector3(0.42f, 4.2f, 1f), new Color(0.32f, 0.12f, 0.18f));
             CreatePanel("RightMapEnd", new Vector3(WorldMaxX, -0.4f, 0.5f), new Vector3(0.42f, 4.2f, 1f), new Color(0.32f, 0.12f, 0.18f));
         }
@@ -131,6 +119,12 @@ namespace Daeume.ContaminationRuntime
             CreateBodyPart(root.transform, "Body", new Vector3(0f, 0.55f, 0f), new Vector3(0.62f, 0.9f, 1f), color);
             CreateBodyPart(root.transform, "Head", new Vector3(0f, 1.23f, 0f), new Vector3(0.48f, 0.48f, 1f), color * 1.15f);
             return root.transform;
+        }
+
+        private static Transform FindOrCreateActor(string objectName, Vector3 position, Color color)
+        {
+            var existing = GameObject.Find(objectName);
+            return existing == null ? CreateFallbackActor(objectName, position, color) : existing.transform;
         }
 
         private static void CreateBodyPart(Transform parent, string objectName, Vector3 localPosition, Vector3 scale, Color color)
