@@ -16,7 +16,7 @@ MonoBehaviour:
   echoOverlayName: Stage05_Overlay_Echo
   intrusionOverlayName: Stage05_Overlay_Intrusion
   targetChaseSeconds: 49
-  chaseSpeed: 6.7
+  chaseSpeed: 4
   minDistance: 0.75
   maxDistance: 8
   chaseLookaheadUnits: 4
