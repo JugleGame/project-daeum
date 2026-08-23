@@ -23,6 +23,9 @@ namespace Daeume.Core
             ["prompt.memory"] = "기억 살펴보기",
             // Stage 1 전용 InteractionVerb (spec-005: Stage마다 매개체 외형과 동사가 다르다).
             ["prompt.memory.stage01"] = "정류장 보관함 열기",
+            // Stage 2 전용 InteractionVerb. 공용 prompt.memory로 되돌리면 spec-005의
+            // "Stage마다 다른 동사" 규칙이 깨지므로 Stage02MemoryNarrativeTests가 이 키를 검사한다.
+            ["prompt.memory.stage02"] = "교실 책상 서랍 열기",
             ["prompt.continue"] = "계속",
             ["prompt.memory.skip"] = "건너뛰기",
 
@@ -62,7 +65,13 @@ namespace Daeume.Core
             ["memory.stage01.title"] = "기억의 조각 #1 — 정류장",
             ["memory.stage01.01"] = "보관함 안에 낡은 버스표 한 장. 돌아오는 편도, 여기서 끊었다.",
             ["memory.stage01.02"] = "누군가 이 자리에 오래 서서 나를 기다렸다. 그 온기가 잠깐 돌아온다.",
-            ["memory.stage01.03"] = "기억을 손에 쥔 순간, 거리 끝에서 무언가 이쪽으로 걸어오기 시작한다."
+            ["memory.stage01.03"] = "기억을 손에 쥔 순간, 거리 끝에서 무언가 이쪽으로 걸어오기 시작한다.",
+
+            // Stage 2 — 학교. 둘이 처음 만났던 순간.
+            ["memory.stage02.title"] = "기억의 조각 #2 — 학교",
+            ["memory.stage02.01"] = "서랍 안쪽에 이름표 두 개가 나란히 붙어 있다. 하나는 내 것이고, 하나는 그때 아직 모르던 이름이었다.",
+            ["memory.stage02.02"] = "창가 자리에서 처음 눈이 마주쳤다. 무슨 말을 걸어야 할지 몰라 공책을 한 장 찢어 내밀었다.",
+            ["memory.stage02.03"] = "그 이름을 소리 내어 불러 본 순간, 복도 끝의 발소리가 이쪽으로 방향을 튼다."
         };
 
         /// <summary>
