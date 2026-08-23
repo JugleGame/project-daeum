@@ -14,6 +14,7 @@ namespace Daeume.ContaminationRuntime
         private const string StageSceneName = "Stage13_Base";
         private const float WorldMinX = -16f;
         private const float WorldMaxX = 16f;
+        private const float ActorHalfWidth = 0.32f;
         private const float CameraHalfWidth = 8.9f;
         private StageThirteenEndingController ending;
         private Camera stageCamera;
@@ -51,7 +52,8 @@ namespace Daeume.ContaminationRuntime
             var horizontal = (keyboard.dKey.isPressed || keyboard.rightArrowKey.isPressed ? 1f : 0f)
                            - (keyboard.aKey.isPressed || keyboard.leftArrowKey.isPressed ? 1f : 0f);
             var nextPosition = player.position + Vector3.right * (horizontal * 4f * Time.deltaTime);
-            nextPosition.x = Mathf.Clamp(nextPosition.x, WorldMinX, WorldMaxX);
+            // 캐릭터 중심뿐 아니라 몸통 전체가 경계 밖으로 나가지 않게 여유 폭을 뺀다.
+            nextPosition.x = Mathf.Clamp(nextPosition.x, WorldMinX + ActorHalfWidth, WorldMaxX - ActorHalfWidth);
             player.position = nextPosition;
             FollowPlayerCamera();
 
@@ -112,9 +114,11 @@ namespace Daeume.ContaminationRuntime
 
         private static void CreateBackdrop()
         {
-            CreatePanel("Platform", new Vector3(0f, -2.4f, 1f), new Vector3(34f, 0.45f, 1f), new Color(0.18f, 0.22f, 0.28f));
+            CreatePanel("Platform", new Vector3(0f, -2.4f, 1f), new Vector3(32f, 0.45f, 1f), new Color(0.18f, 0.22f, 0.28f));
             CreatePanel("EmptyPath", new Vector3(6f, -1.2f, 1f), new Vector3(18f, 1.7f, 1f), new Color(0.09f, 0.12f, 0.17f));
             CreatePanel("Bench", new Vector3(-12f, -1.65f, 0.5f), new Vector3(1.4f, 0.25f, 1f), new Color(0.42f, 0.25f, 0.16f));
+            CreatePanel("LeftMapEnd", new Vector3(WorldMinX, -0.4f, 0.5f), new Vector3(0.42f, 4.2f, 1f), new Color(0.32f, 0.12f, 0.18f));
+            CreatePanel("RightMapEnd", new Vector3(WorldMaxX, -0.4f, 0.5f), new Vector3(0.42f, 4.2f, 1f), new Color(0.32f, 0.12f, 0.18f));
         }
 
         /// <summary>Stage 13 아트가 준비되기 전에도 핵심 상호작용을 확인할 수 있는 대체 캐릭터를 만든다.</summary>
