@@ -12,8 +12,6 @@ namespace Daeume.ContaminationRuntime
     public sealed class StageThirteenSceneBootstrap : MonoBehaviour
     {
         private const string StageSceneName = "Stage13_Base";
-        [SerializeField] private GameObject playerPrefab;
-        [SerializeField] private GameObject traumaPrefab;
         private StageThirteenEndingController ending;
         private Transform player;
         private Transform trauma;
@@ -25,10 +23,10 @@ namespace Daeume.ContaminationRuntime
 
             CreateCamera();
             CreateBackdrop();
-            player = SpawnActor(playerPrefab, "Player", new Vector3(-6f, -1.4f, 0f))
-                     ?? CreateFallbackActor("Player", new Vector3(-6f, -1.4f, 0f), new Color(0.35f, 0.78f, 1f));
-            trauma = SpawnActor(traumaPrefab, "Trauma", new Vector3(1.5f, -1.4f, 0f))
-                     ?? CreateFallbackActor("Trauma", new Vector3(1.5f, -1.4f, 0f), new Color(0.85f, 0.18f, 0.35f));
+            // Stage 13의 실제 아트 프리팹은 콘텐츠 이슈에서 배치한다.
+            // 여기서는 외부 프리팹 참조에 의존하지 않는 테스트용 캐릭터를 확실히 만든다.
+            player = CreateFallbackActor("Player", new Vector3(-6f, -1.4f, 0f), new Color(0.35f, 0.78f, 1f));
+            trauma = CreateFallbackActor("Trauma", new Vector3(1.5f, -1.4f, 0f), new Color(0.85f, 0.18f, 0.35f));
 
             // 프리팹이 아직 연결되지 않은 상태로도 Stage 13 규칙을 검증할 수 있게 한다.
             if (player.GetComponent<PlayerCombat>() == null) player.gameObject.AddComponent<PlayerCombat>();
@@ -95,22 +93,12 @@ namespace Daeume.ContaminationRuntime
 
         private static void CreateBackdrop()
         {
-            var platform = CreatePanel("Platform", new Vector3(0f, -2.4f, 1f), new Vector3(17f, 0.45f, 1f), new Color(0.18f, 0.22f, 0.28f));
-            platform.AddComponent<BoxCollider2D>();
+            CreatePanel("Platform", new Vector3(0f, -2.4f, 1f), new Vector3(17f, 0.45f, 1f), new Color(0.18f, 0.22f, 0.28f));
             CreatePanel("EmptyPath", new Vector3(4f, -1.2f, 1f), new Vector3(8f, 1.7f, 1f), new Color(0.09f, 0.12f, 0.17f));
             CreatePanel("Bench", new Vector3(-6f, -1.65f, 0.5f), new Vector3(1.4f, 0.25f, 1f), new Color(0.42f, 0.25f, 0.16f));
         }
 
-        private static Transform SpawnActor(GameObject prefab, string objectName, Vector3 position)
-        {
-            if (prefab == null) return null;
-            var actor = Instantiate(prefab, position, Quaternion.identity);
-            actor.name = objectName;
-            actor.SetActive(true);
-            return actor.transform;
-        }
-
-        /// <summary>프리팹 참조가 깨졌을 때도 씬의 핵심 상호작용이 중단되지 않도록 보이는 대체 캐릭터를 만든다.</summary>
+        /// <summary>Stage 13 아트가 준비되기 전에도 핵심 상호작용을 확인할 수 있는 대체 캐릭터를 만든다.</summary>
         private static Transform CreateFallbackActor(string objectName, Vector3 position, Color color)
         {
             var root = new GameObject(objectName);
