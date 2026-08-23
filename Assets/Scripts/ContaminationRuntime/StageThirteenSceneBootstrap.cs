@@ -12,7 +12,11 @@ namespace Daeume.ContaminationRuntime
     public sealed class StageThirteenSceneBootstrap : MonoBehaviour
     {
         private const string StageSceneName = "Stage13_Base";
+        private const float WorldMinX = -16f;
+        private const float WorldMaxX = 16f;
+        private const float CameraHalfWidth = 8.9f;
         private StageThirteenEndingController ending;
+        private Camera stageCamera;
         private Transform player;
         private Transform trauma;
         private string status = "트라우마에게 다가가세요.";
@@ -21,12 +25,12 @@ namespace Daeume.ContaminationRuntime
         {
             if (SceneManager.GetActiveScene().name != StageSceneName) return;
 
-            CreateCamera();
+            stageCamera = CreateCamera();
             CreateBackdrop();
             // Stage 13의 실제 아트 프리팹은 콘텐츠 이슈에서 배치한다.
             // 여기서는 외부 프리팹 참조에 의존하지 않는 테스트용 캐릭터를 확실히 만든다.
-            player = CreateFallbackActor("Player", new Vector3(-6f, -1.4f, 0f), new Color(0.35f, 0.78f, 1f));
-            trauma = CreateFallbackActor("Trauma", new Vector3(1.5f, -1.4f, 0f), new Color(0.85f, 0.18f, 0.35f));
+            player = CreateFallbackActor("Player", new Vector3(-12f, -1.4f, 0f), new Color(0.35f, 0.78f, 1f));
+            trauma = CreateFallbackActor("Trauma", new Vector3(5f, -1.4f, 0f), new Color(0.85f, 0.18f, 0.35f));
 
             // 프리팹이 아직 연결되지 않은 상태로도 Stage 13 규칙을 검증할 수 있게 한다.
             if (player.GetComponent<PlayerCombat>() == null) player.gameObject.AddComponent<PlayerCombat>();
@@ -34,6 +38,7 @@ namespace Daeume.ContaminationRuntime
 
             ending = gameObject.AddComponent<StageThirteenEndingController>();
             ending.BeginAcceptance();
+            FollowPlayerCamera();
         }
 
         private void Update()
@@ -45,7 +50,10 @@ namespace Daeume.ContaminationRuntime
 
             var horizontal = (keyboard.dKey.isPressed || keyboard.rightArrowKey.isPressed ? 1f : 0f)
                            - (keyboard.aKey.isPressed || keyboard.leftArrowKey.isPressed ? 1f : 0f);
-            player.position += Vector3.right * (horizontal * 4f * Time.deltaTime);
+            var nextPosition = player.position + Vector3.right * (horizontal * 4f * Time.deltaTime);
+            nextPosition.x = Mathf.Clamp(nextPosition.x, WorldMinX, WorldMaxX);
+            player.position = nextPosition;
+            FollowPlayerCamera();
 
             if (keyboard.rKey.wasPressedThisFrame)
             {
@@ -79,9 +87,19 @@ namespace Daeume.ContaminationRuntime
             GUI.Label(new Rect(44, 110, 580, 24), $"루프 {ending.State.LoopCount}/4  |  무기: {(ending.State.WeaponLowered ? "내려놓음" : "들고 있음")}  |  엔딩: {(ending.State.EndingCompleted ? "완료" : "진행 중")}");
         }
 
-        private static void CreateCamera()
+        private void FollowPlayerCamera()
         {
-            if (Camera.main != null) return;
+            if (stageCamera == null || player == null) return;
+            var cameraMinX = WorldMinX + CameraHalfWidth;
+            var cameraMaxX = WorldMaxX - CameraHalfWidth;
+            var cameraPosition = stageCamera.transform.position;
+            cameraPosition.x = Mathf.Clamp(player.position.x, cameraMinX, cameraMaxX);
+            stageCamera.transform.position = cameraPosition;
+        }
+
+        private static Camera CreateCamera()
+        {
+            if (Camera.main != null) return Camera.main;
             var cameraObject = new GameObject("Stage13Camera");
             cameraObject.tag = "MainCamera";
             cameraObject.transform.position = new Vector3(0f, 0f, -10f);
@@ -89,13 +107,14 @@ namespace Daeume.ContaminationRuntime
             camera.orthographic = true;
             camera.orthographicSize = 5f;
             camera.backgroundColor = new Color(0.035f, 0.045f, 0.075f);
+            return camera;
         }
 
         private static void CreateBackdrop()
         {
-            CreatePanel("Platform", new Vector3(0f, -2.4f, 1f), new Vector3(17f, 0.45f, 1f), new Color(0.18f, 0.22f, 0.28f));
-            CreatePanel("EmptyPath", new Vector3(4f, -1.2f, 1f), new Vector3(8f, 1.7f, 1f), new Color(0.09f, 0.12f, 0.17f));
-            CreatePanel("Bench", new Vector3(-6f, -1.65f, 0.5f), new Vector3(1.4f, 0.25f, 1f), new Color(0.42f, 0.25f, 0.16f));
+            CreatePanel("Platform", new Vector3(0f, -2.4f, 1f), new Vector3(34f, 0.45f, 1f), new Color(0.18f, 0.22f, 0.28f));
+            CreatePanel("EmptyPath", new Vector3(6f, -1.2f, 1f), new Vector3(18f, 1.7f, 1f), new Color(0.09f, 0.12f, 0.17f));
+            CreatePanel("Bench", new Vector3(-12f, -1.65f, 0.5f), new Vector3(1.4f, 0.25f, 1f), new Color(0.42f, 0.25f, 0.16f));
         }
 
         /// <summary>Stage 13 아트가 준비되기 전에도 핵심 상호작용을 확인할 수 있는 대체 캐릭터를 만든다.</summary>
