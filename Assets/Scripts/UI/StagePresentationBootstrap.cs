@@ -7,21 +7,25 @@ using UnityEngine.SceneManagement;
 namespace Daeume.UI
 {
     /// <summary>
-    /// Stage01_Base 씬이 열릴 때 C(연출) 담당 프리팹들을 코드로 배치해 주는 부트스트랩이다.
+    /// StageNN_Base 씬이 열릴 때 C(연출) 담당 프리팹들을 코드로 배치해 주는 부트스트랩이다.
     ///
     /// 왜 씬에 직접 넣지 않고 코드로 배치하나:
-    /// 협업 규칙상 Stage01_Base 씬은 B만 수정할 수 있다(유니티 씬 파일은 사실상 병합이 불가능해서
+    /// 협업 규칙상 스테이지 씬은 B만 수정할 수 있다(유니티 씬 파일은 사실상 병합이 불가능해서
     /// 두 사람이 같이 열면 작업이 통째로 날아간다). C가 만든 HUD·회상 앵커를 그 씬에 넣으려면
     /// 씬 파일을 건드려야 하는데, 그 대신 실행 시점에 코드로 얹어 소유권 규칙을 지킨다.
+    ///
+    /// 수정(#12): 예전에는 "Stage01_Base" 한 이름만 처리해서, Stage 02 씬에서는 HUD도 회상 앵커도
+    /// 생기지 않았다. 이제는 씬 이름 규칙(StageNN_Base)에서 스테이지 번호를 뽑아
+    /// 마커 ID(stageNN.memory.anchor.01)와 앵커 프리팹(Memory/StageNN_MemoryAnchor)을 계산한다.
+    /// SceneFlowController.StageSceneName이 쓰는 것과 같은 규칙이라, 새 스테이지는 씬과 프리팹만
+    /// 추가하면 코드 변경 없이 이어진다.
     ///
     /// [RuntimeInitializeOnLoadMethod]:
     /// 게임이 시작될 때 유니티가 자동으로 불러 주는 진입점이다. 씬에 오브젝트를 미리 놓지 않아도 실행된다.
     /// </summary>
-    internal static class Stage01PresentationBootstrap
+    internal static class StagePresentationBootstrap
     {
-        private const string StageSceneName = "Stage01_Base";
         private const string TitleSceneName = "Title";
-        private const string MemoryAnchorMarkerId = "stage01.memory.anchor.01";
         private const string VisualGuideObjectName = "B1_VisualGuide";
 
         /// <summary>월드 디버그 라벨(B1_VisualGuide)을 게임 화면에 보일지 여부. 기본은 숨김이다.</summary>
@@ -39,12 +43,12 @@ namespace Daeume.UI
             SceneManager.sceneLoaded += OnSceneLoaded;
 
             // 수정: 이미 열려 있는 씬도 검사한다.
-            // 에디터에서 Stage01_Base를 직접 열고 Play를 누르면 sceneLoaded 이벤트가 오지 않아
+            // 에디터에서 스테이지 씬을 직접 열고 Play를 누르면 sceneLoaded 이벤트가 오지 않아
             // HUD도 회상 앵커도 생성되지 않았다(= 아무것도 안 보이는 상태). 그 경우를 여기서 처리한다.
             for (var index = 0; index < SceneManager.sceneCount; index++)
             {
                 var scene = SceneManager.GetSceneAt(index);
-                if (scene.isLoaded && scene.name == StageSceneName)
+                if (scene.isLoaded && IsStageScene(scene.name))
                 {
                     ApplyToStageScene(scene);
                 }
@@ -55,9 +59,9 @@ namespace Daeume.UI
         {
             // Title이 올라와도 스테이지 씬이 아직 열려 있으면 정리하지 않는다.
             // 정상 흐름에서는 SceneFlowController.ReplaceContent가 스테이지를 먼저 내린 뒤 Title을 올리므로
-            // 이 조건은 걸리지 않는다. 반대로 에디터에서 Stage01_Base를 직접 열고 Play를 누르면
+            // 이 조건은 걸리지 않는다. 반대로 에디터에서 스테이지 씬을 직접 열고 Play를 누르면
             // 스테이지가 이미 열린 채로 Boot가 Title을 추가 적재해서, 방금 만든 HUD가 곧바로 파괴됐다.
-            // 그 뒤에는 Stage01_Base의 sceneLoaded가 다시 오지 않아 HUD가 영원히 복구되지 않는다
+            // 그 뒤에는 스테이지 씬의 sceneLoaded가 다시 오지 않아 HUD가 영원히 복구되지 않는다
             // (= 상자를 열면 이동만 잠기고 자막이 없어 멈춘 것처럼 보이는 증상).
             if (scene.name == TitleSceneName)
             {
@@ -65,24 +69,19 @@ namespace Daeume.UI
                 return;
             }
 
-            if (scene.name != StageSceneName) return;
+            if (!IsStageScene(scene.name)) return;
             ApplyToStageScene(scene);
         }
+
+        private static bool IsStageScene(string sceneName) => StageScenes.IsStageScene(sceneName);
+
+        private static int StageNumber(string sceneName) => StageScenes.StageNumber(sceneName);
 
         /// <summary>
         /// Title로 돌아가면 DontDestroyOnLoad로 남아 있던 HUD·압박 연출을 정리한다.
         /// 다음에 스테이지에 들어갈 때 SpawnPersistentPresentation이 새로 만들 수 있도록 참조도 비운다.
         /// </summary>
-        private static bool IsStageSceneLoaded()
-        {
-            for (var index = 0; index < SceneManager.sceneCount; index++)
-            {
-                var scene = SceneManager.GetSceneAt(index);
-                if (scene.isLoaded && scene.name == StageSceneName) return true;
-            }
-
-            return false;
-        }
+        private static bool IsStageSceneLoaded() => StageScenes.AnyLoaded();
 
         private static void DespawnPersistentPresentation()
         {
@@ -136,8 +135,9 @@ namespace Daeume.UI
                 return;
             }
 
-            var marker = FindMarker(MemoryAnchorMarkerId);
-            var prefab = Resources.Load<GameObject>("Memory/Stage01_MemoryAnchor");
+            var stageId = StageNumber(scene.name);
+            var marker = FindMarker($"stage{stageId:00}.memory.anchor.01");
+            var prefab = Resources.Load<GameObject>($"Memory/Stage{stageId:00}_MemoryAnchor");
             if (marker == null || prefab == null) return;
 
             var instance = Object.Instantiate(prefab, marker.transform.position, marker.transform.rotation);

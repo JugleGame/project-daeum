@@ -25,14 +25,26 @@ namespace Daeume.ContaminationRuntime
         [SerializeField] private Transform pursuer;
         [SerializeField] private ChaseSpeedAssistAdapter speedAssist;
 
-        // 실제 접촉 거리(대략 트라우마 반지름 + 플레이어 반폭). 목표를 정확히 0으로 두면
-        // 두 중심 좌표가 완전히 겹치도록 계속 밀어붙이는데, 그러면 트라우마 콜라이더가
-        // 플레이어를 사방에서 감싸는 꼴이 되어 "부딪히면 어느 방향으로도 못 움직이는" 벽처럼 느껴진다.
-        // 접촉 판정(TraumaContactHandler)은 이 값보다 먼저 트리거로 감지되므로 붙잡기에는 영향이 없다.
-        private const float ContactDistance = 0.9f;
+        /// <summary>추격자가 다가서는 목표 거리. 붙잡기가 실제로 성립할 만큼 겹쳐야 한다.</summary>
+        /// <remarks>
+        /// 예전 값은 0.9였고, "트라우마 반지름(0.65) + 플레이어 반폭(0.25)"이라는 계산에서 나왔다.
+        /// 그런데 그 합은 <b>두 콜라이더가 딱 맞닿는 접선 거리</b>다. 겹침이 0이라 유니티는
+        /// OnTriggerEnter2D를 쏘지 않는다. 그래서 가만히 서 있으면 추격자가 코앞까지 와서 멈춘 채
+        /// 아무 일도 일어나지 않았다(#12에서 실제로 발생). 플레이어가 스스로 뛰어들어 파고들 때만
+        /// 붙잡기가 성립했다.
+        ///
+        /// 접선보다 확실히 안쪽으로 들어오게 잡는다. 트라우마 콜라이더는 트리거라 물리적으로 밀지
+        /// 않으므로, 겹쳐도 "벽에 낀 것처럼 못 움직이는" 문제는 생기지 않는다.
+        /// 중심을 완전히 겹치게(0) 두지 않는 이유는 붙잡히는 순간의 그림이 읽혀야 하기 때문이다.
+        /// </remarks>
+        private const float ContactDistance = 0.55f;
+
+        /// <summary>체크포인트 복귀 직후 추격자가 다가오지 않는 시간. 달아날 틈을 만든다.</summary>
+        private const float RestoreGraceSeconds = 1.5f;
 
         private string loadedOverlay = string.Empty;
         private bool deadEndBlocked;
+        private float restoreGraceRemaining;
 
         public ContaminationVariantData Data => data;
         public PressureStage Pressure { get; private set; } = PressureStage.Stable;
@@ -48,13 +60,24 @@ namespace Daeume.ContaminationRuntime
 
         private void OnEnable()
         {
-            GameManager.Instance?.Events.Subscribe<PlayerRestoreRequested>(OnPlayerRestoreRequested);
+            GameManager.Instance?.Events.Subscribe<PlayerRestoreRequested>(HandlePlayerRestore);
         }
 
         private void OnDisable()
         {
-            GameManager.Instance?.Events.Unsubscribe<PlayerRestoreRequested>(OnPlayerRestoreRequested);
+            GameManager.Instance?.Events.Unsubscribe<PlayerRestoreRequested>(HandlePlayerRestore);
         }
+
+        /// <summary>
+        /// 스테이지가 새로 열리면 지금 압박 단계가 무엇인지 알린다. (#12)
+        /// </summary>
+        /// <remarks>
+        /// 압박 연출(카메라 흔들림·환경음)은 씬을 넘나들며 살아남는 DontDestroyOnLoad 오브젝트다.
+        /// 감독은 스테이지마다 새로 생기지만 연출은 그대로라, 아무도 알려 주지 않으면 연출 쪽이
+        /// 이전 스테이지의 압박 값을 계속 들고 있는다. Stage 01 추격의 흔들림이 Stage 02 탐색까지
+        /// 그대로 이어지던 증상이 이것이었다.
+        /// </remarks>
+        private void Start() => SetPressure(Pressure);
 
         private void Update()
         {
@@ -69,7 +92,7 @@ namespace Daeume.ContaminationRuntime
         /// KeepDistance는 프레임당 이동 속도 제한이 있어 이 상황을 스스로 벗어나지 못하므로,
         /// 체크포인트 복귀는 "선언된 지점"으로 취급해 순간이동으로 처리한다.
         /// </summary>
-        private void OnPlayerRestoreRequested(PlayerRestoreRequested request)
+        public void HandlePlayerRestore(PlayerRestoreRequested request)
         {
             ResolveActors();
             if (!ChaseActive || pursuer == null || data == null) return;
@@ -77,6 +100,11 @@ namespace Daeume.ContaminationRuntime
             var offset = pursuer.position.x - request.Position.x;
             var direction = Mathf.Approximately(offset, 0f) ? 1f : Mathf.Sign(offset);
             pursuer.position = new Vector3(request.Position.x + direction * data.MaxDistance, request.Position.y, pursuer.position.z);
+
+            // 거리를 벌려 놓기만 하면 부족했다(#12). 추격자는 플레이어보다 빠르므로 복귀하자마자
+            // 곧바로 다시 붙어, 탈출 경로가 추격자 너머에 있으면 지나갈 틈이 생기지 않는다
+            // (복귀 → 즉사 → 복귀 무한 반복). 복귀 직후 잠깐은 다가오지 않게 해서 달아날 틈을 준다.
+            restoreGraceRemaining = RestoreGraceSeconds;
         }
 
         public void Configure(ContaminationVariantData variantData, Transform playerTransform, Transform pursuerTransform, string id = "chase-stage01-left-escape")
@@ -145,6 +173,7 @@ namespace Daeume.ContaminationRuntime
             if (!ChaseActive || data == null) return;
             var step = Mathf.Max(0f, deltaTime);
             ElapsedChaseSeconds = Mathf.Min(data.TargetChaseSeconds, ElapsedChaseSeconds + step);
+            restoreGraceRemaining = Mathf.Max(0f, restoreGraceRemaining - step);
             KeepDistance(step);
             PublishDirective();
             if (ElapsedChaseSeconds < data.TargetChaseSeconds) return;
@@ -175,6 +204,11 @@ namespace Daeume.ContaminationRuntime
         private void KeepDistance(float deltaTime)
         {
             if (player == null || pursuer == null || deltaTime <= 0f) return;
+
+            // 복귀 직후 유예 동안은 거리를 좁히지 않는다. 이게 없으면 추격자가 플레이어보다 빨라
+            // 복귀 → 즉시 재접촉 → 복귀가 무한 반복된다.
+            if (restoreGraceRemaining > 0f) return;
+
             var offset = pursuer.position.x - player.position.x;
             var direction = Mathf.Approximately(offset, 0f) ? -1f : Mathf.Sign(offset);
             var distance = Mathf.Abs(offset);

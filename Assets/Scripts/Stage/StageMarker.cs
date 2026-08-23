@@ -24,7 +24,7 @@ namespace Daeume.Stage
     /// C의 코드는 좌표 대신 그 ID를 찾아 배치한다.
     /// 덕분에 B가 레벨을 손봐도 C 코드를 고칠 필요가 없다. 협업 구조상 매우 적합한 방식이다.
     ///
-    /// 실제 사용 예: "stage01.memory.anchor.01" → Stage01PresentationBootstrap이 이 ID로 찾는다.
+    /// 실제 사용 예: "stage01.memory.anchor.01" → StagePresentationBootstrap이 이 ID로 찾는다.
     /// </summary>
     public sealed class StageMarker : MonoBehaviour
     {

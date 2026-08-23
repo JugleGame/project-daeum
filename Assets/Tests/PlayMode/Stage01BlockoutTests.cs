@@ -121,7 +121,7 @@ namespace Daeume.Tests.PlayMode
             yield return LoadStage();
 
             var hud = Object.FindAnyObjectByType<StageHudPresenter>();
-            Assert.That(hud, Is.Not.Null, "Stage01PresentationBootstrap should have spawned the HUD.");
+            Assert.That(hud, Is.Not.Null, "StagePresentationBootstrap should have spawned the HUD.");
 
             // HUD는 방금 생성됐을 수 있다. Start()가 구독을 마칠 한 프레임을 준 뒤에 상태 변화를 알린다
             // (구독 전에 알리면 목표/조작 문구가 비어 있는 채로 남는다).

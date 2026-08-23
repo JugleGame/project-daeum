@@ -24,6 +24,9 @@ EditorBuildSettings:
     path: Assets/Scenes/Stage01_Overlay_Intrusion.unity
     guid: 81433ca01563a964faceae861984d2de
   - enabled: 1
+    path: Assets/Scenes/Stage02_Base.unity
+    guid: b90113c5c8e6bd54b88fb5f10a861103
+  - enabled: 1
     path: Assets/Scenes/RoleAPrototype.unity
     guid: 66d1b885c841dfb4ebb2bec16b819b03
   m_configObjects:

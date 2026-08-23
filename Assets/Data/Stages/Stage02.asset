@@ -1,0 +1,55 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0567ce6f5126b5847ae6bf0323dfc8d5, type: 3}
+  m_Name: Stage02
+  m_EditorClassIdentifier: Daeume.Stage::Daeume.Stage.StageData
+  stageId: 2
+  location: "\uD559\uAD50 \u2014 \uAD50\uC2E4\uACFC \uBCF5\uB3C4, \uADF8\uB9AC\uACE0
+    \uACC4\uB2E8"
+  memoryId: memory-stage02-fragment-01
+  memoryTitle: "\uAE30\uC5B5\uC758 \uC870\uAC01 #2 \u2014 \uD559\uAD50"
+  memoryPresentationId: memory-presentation-stage02
+  emotionalRole: 1
+  encounterIds:
+  - stage02.encounter.01
+  - stage02.encounter.02
+  - stage02.encounter.03
+  contaminationVariantId: Stage02_Overlay_Intrusion
+  primaryContaminationChannels: 000000000100000003000000
+  contaminationMeaning: "\uCC98\uC74C \uB9CC\uB09C \uAD50\uC2E4\uC774 \uC624\uC5FC\uB418\uBA74
+    \uC0AC\uB77C\uC9C0\uB294 \uAC83\uC774 \uC544\uB2C8\uB77C \uACB9\uCCD0 \uBCF4\uC778\uB2E4.
+    \uCE60\uD310\uACFC \uC0AC\uBB3C\uD568\uC774 \uB450 \uBC88\uC529 \uC6B8\uB9AC\uACE0(\uC2DC\uAC01\xB7\uCCAD\uAC01),
+    \uBC29\uAE08\uAE4C\uC9C0 \uD1B5\uD558\uB358 \uACC4\uB2E8 \uB09C\uAC04\uC774 \uC190\uC5D0
+    \uBD99\uC7A1\uD788\uC9C0 \uC54A\uB294\uB2E4(\uAE30\uACC4\uC801). \uACF5\uAC04\uC740
+    \uADF8\uB300\uB85C\uC778\uB370 \uADDC\uCE59\uB9CC \uC5B4\uAE0B\uB098\uC11C, \"\uB0B4\uAC00
+    \uAE30\uC5B5\uC744 \uC798\uBABB \uC950\uACE0 \uC788\uB2E4\"\uB294 \uAC10\uAC01\uC73C\uB85C
+    \uB4DC\uB7EC\uB09C\uB2E4."
+  hospitalImageryDirectness: 0
+  chaseId: chase-stage02-corridor-backtrack
+  chaseMeaning: "\uBC29\uAE08 \uC2F8\uC6B0\uBA70 \uC9C0\uB098\uC628 \uACC4\uB2E8\uACFC
+    \uBCF5\uB3C4\uB97C \uADF8\uB300\uB85C \uC5ED\uC8FC\uD589\uD55C\uB2E4. \uC0C8
+    \uC7A5\uC560\uBB3C\uC744 \uAC70\uC758 \uB123\uC9C0 \uC54A\uB294 \uC774\uC720\uAC00
+    \uACE7 \uC758\uBBF8\uB2E4 \u2014 \uC774\uBBF8 \uC548\uC804\uC744 \uD655\uC778\uD55C
+    \uACF5\uAC04\uC774 \uBC29\uD5A5\uB9CC \uB4A4\uC9D1\uD614\uC744 \uBFD0\uC778\uB370
+    \uC704\uD611\uC774 \uB41C\uB2E4."
+  targetChaseSeconds: 36
+  lengthCategory: 1
+  targetPlaytimeMinutes: 14
+  clueIds:
+  - clue-stage02-name-tag
+  - clue-stage02-shared-notebook
+  explorationIntensity: 2
+  memoryIntensity: 3
+  encounterIntensity: 3
+  contaminationIntensity: 2
+  chaseIntensity: 3
+  nextStageId: 3
