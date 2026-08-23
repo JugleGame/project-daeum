@@ -32,6 +32,9 @@ namespace Daeume.Core
             ["prompt.memory.stage04"] = "이불 요새 보드게임 펼치기",
             // Stage 5 전용 InteractionVerb. 프로젝트 보드와 밤샘 작업 흔적을 되짚는 외형과 짝을 이룬다.
             ["prompt.memory.stage05"] = "프로젝트 보드의 낙서 넘겨보기",
+            // Stage 6 전용 InteractionVerb. 쇼핑백과 작은 장난감 외형을 함께 살펴보는 기억과 짝을 이룬다.
+            ["prompt.memory.stage06"] = "쇼핑백 속 작은 장난감 살펴보기",
+
             ["prompt.continue"] = "계속",
             ["prompt.memory.skip"] = "건너뛰기",
 
@@ -95,7 +98,13 @@ namespace Daeume.Core
             ["memory.stage05.title"] = "기억의 조각 #5 — 프로젝트실",
             ["memory.stage05.01"] = "프로젝트 보드에는 밤새 고친 흔적과 서로의 낙서가 겹쳐 남아 있다.",
             ["memory.stage05.02"] = "식은 컵과 엉킨 케이블 사이로, 졸음을 쫓으려 장난치던 순간이 떠오른다.",
-            ["memory.stage05.03"] = "밝은 작업등 아래 웃음이 번지자 책상 너머의 선명한 그림자가 한 걸음 가까워진다."
+            ["memory.stage05.03"] = "밝은 작업등 아래 웃음이 번지자 책상 너머의 선명한 그림자가 한 걸음 가까워진다.",
+
+            // Stage 6 — 거리/상점가. 최종 대사가 아닌 기능 검증용 최소 기억 캡션이다.
+            ["memory.stage06.title"] = "기억의 조각 #6 — 거리와 상점",
+            ["memory.stage06.01"] = "밝은 진열대 앞에서 서로 고른 작은 장난감과 간식이 쇼핑백 안에서 부딪힌다.",
+            ["memory.stage06.02"] = "파라솔 아래 벤치에 앉아 영수증 뒷면에 다음에 갈 곳을 함께 적었다.",
+            ["memory.stage06.03"] = "웃음이 남은 거리를 돌아보자 작은 잔재들의 공격 예고가 밝은 간판 사이에서 번쩍인다."
         };
 
         /// <summary>
