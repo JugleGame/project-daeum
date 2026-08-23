@@ -115,7 +115,9 @@ namespace Daeume.ContaminationRuntime
         private static void CreateBackdrop()
         {
             CreatePanel("Platform", new Vector3(0f, -2.4f, 1f), new Vector3(32f, 0.45f, 1f), new Color(0.18f, 0.22f, 0.28f));
-            CreatePanel("EmptyPath", new Vector3(6f, -1.2f, 1f), new Vector3(18f, 1.7f, 1f), new Color(0.09f, 0.12f, 0.17f));
+            // 길의 양끝을 WorldMinX/WorldMaxX와 정확히 일치시킨다.
+            // 보이는 길보다 이동 범위가 넓으면 캐릭터가 맵 밖으로 빠져 보인다.
+            CreatePanel("EmptyPath", new Vector3(0f, -1.2f, 1f), new Vector3(WorldMaxX - WorldMinX, 1.7f, 1f), new Color(0.09f, 0.12f, 0.17f));
             CreatePanel("Bench", new Vector3(-12f, -1.65f, 0.5f), new Vector3(1.4f, 0.25f, 1f), new Color(0.42f, 0.25f, 0.16f));
             CreatePanel("LeftMapEnd", new Vector3(WorldMinX, -0.4f, 0.5f), new Vector3(0.42f, 4.2f, 1f), new Color(0.32f, 0.12f, 0.18f));
             CreatePanel("RightMapEnd", new Vector3(WorldMaxX, -0.4f, 0.5f), new Vector3(0.42f, 4.2f, 1f), new Color(0.32f, 0.12f, 0.18f));
