@@ -15,6 +15,9 @@ namespace Daeume.Audio
     ///
     /// 압박 → 강도 매핑: Stable 0 / Echo 0.35 / Intrusion 1.0
     /// </summary>
+    // 카메라 추적(StageCameraBounds, 기본 순서 0)이 위치를 정한 뒤에 흔들림을 얹어야 한다.
+    // 순서를 정하지 않으면 프레임마다 누가 먼저 쓸지 알 수 없어 흔들림이 지워지기도 한다.
+    [DefaultExecutionOrder(100)]
     public sealed class PressurePresentationController : MonoBehaviour
     {
         [SerializeField] private AudioSource ambientSource;
@@ -24,6 +27,7 @@ namespace Daeume.Audio
         private float pressureAmount;    // 0~1로 정규화한 압박 강도
         private float shakeAssist = 1f;  // 접근성 옵션(0이면 흔들림 완전 차단)
         private Vector3 lastShakeOffset;  // 지난 프레임에 더한 흔들림. 다음 프레임에 먼저 빼서 누적을 막는다.
+        private Vector3 lastAppliedPosition;  // 지난 프레임에 우리가 최종적으로 써 둔 카메라 위치.
 
         public float PressureAmount => pressureAmount;
 
@@ -57,23 +61,33 @@ namespace Daeume.Audio
         /// 고정 기준점 없이 "이번 프레임 위치"에 오프셋만 더하면, StageCameraBounds가 매 프레임 다시
         /// 계산해 주는 추적 위치를 지우지 않는다.
         ///
-        /// 다만 지난 프레임 오프셋을 빼지 않고 그냥 더하기만 하면, StageCameraBounds가 손대지 않는 축
-        /// (followVertical이 꺼진 상태의 Y축)에서는 흔들림이 프레임마다 계속 쌓여 카메라가 서서히
-        /// 위/아래로 떠내려가는 실제 버그가 됐다. 그래서 새 오프셋을 더하기 전에 지난 오프셋을 먼저
-        /// 빼서, 이번 프레임의 흔들림만 순수하게 남긴다.
+        /// 다만 지난 프레임 오프셋을 빼지 않고 그냥 더하기만 하면, StageCameraBounds가 손대지 않는 축에서는
+        /// 흔들림이 프레임마다 계속 쌓여 카메라가 서서히 떠내려가는 실제 버그가 됐다. 그래서 아무도
+        /// 손대지 않은 프레임에는 지난 오프셋을 먼저 빼서, 이번 프레임의 흔들림만 순수하게 남긴다.
+        ///
+        /// 수정(#12): StageCameraBounds가 어느 축을 덮어쓰는지에 기대면 안 된다.
+        /// Stage 02는 세로로 넓어 followVertical을 켰는데, 그 순간 추적이 X·Y를 모두 절대값으로 덮어써서
+        /// 흔들림이 통째로 지워졌다(추격 중인데 화면이 미동도 않는 증상). 두 가지로 고정한다.
+        /// 1. [DefaultExecutionOrder]로 추적(기본 순서 0)보다 늘 뒤에 실행되게 한다.
+        /// 2. 기준점을 "우리가 지난 프레임에 써 둔 값과 같은가"로 판별한다. 같으면 아무도 안 건드린 것이므로
+        ///    지난 오프셋을 되돌리고, 다르면 추적이 새로 쓴 값이므로 그대로 기준으로 삼는다.
         /// </remarks>
         private void LateUpdate()
         {
             if (targetCamera == null) return;
 
-            targetCamera.transform.localPosition -= lastShakeOffset;
+            var current = targetCamera.transform.localPosition;
+            var basePosition = current == lastAppliedPosition ? current - lastShakeOffset : current;
+
             lastShakeOffset = Vector3.zero;
+            if (pressureAmount > 0f && shakeAssist > 0f)
+            {
+                var offset = Random.insideUnitCircle * maximumShake * pressureAmount * shakeAssist;
+                lastShakeOffset = new Vector3(offset.x, offset.y, 0f);
+            }
 
-            if (pressureAmount <= 0f || shakeAssist <= 0f) return;
-
-            var offset = Random.insideUnitCircle * maximumShake * pressureAmount * shakeAssist;
-            lastShakeOffset = new Vector3(offset.x, offset.y, 0f);
-            targetCamera.transform.localPosition += lastShakeOffset;
+            lastAppliedPosition = basePosition + lastShakeOffset;
+            targetCamera.transform.localPosition = lastAppliedPosition;
         }
 
         /// <summary>접근성 설정을 반영한다. 강도 0이면 흔들림이 완전히 사라진다.</summary>
