@@ -21,6 +21,8 @@ namespace Daeume.Tests.EditMode
             Assert.That(stages, Is.Not.Empty, "Expected at least Stage 1's StageData asset to exist.");
             Assert.That(stages.Select(stage => stage.StageId), Does.Contain(4),
                 "Issue #14 requires an authored Stage04 record.");
+            Assert.That(stages.Select(stage => stage.StageId), Does.Contain(5),
+                "Issue #15 requires an authored Stage05 record.");
 
             foreach (var stage in stages)
             {
@@ -41,6 +43,23 @@ namespace Daeume.Tests.EditMode
             }));
             Assert.That(stage.PrimaryContaminationChannels.Count, Is.InRange(2, 3));
             Assert.That(stage.NextStageId, Is.EqualTo(5));
+        }
+
+        [Test]
+        public void Test_Progression_Stage05DeclaresHappyAnxiousProjectRoomContract()
+        {
+            var stage = LoadAllStageData().Single(value => value.StageId == 5);
+            Assert.That(stage.Location, Does.Contain("프로젝트실"));
+            Assert.That(stage.EmotionalRole, Is.EqualTo(EmotionalRole.HappinessAnxiety));
+            Assert.That(stage.HospitalImageryDirectness, Is.EqualTo(1));
+            Assert.That(stage.EncounterIds, Is.EqualTo(new[]
+            {
+                "stage05.encounter.01", "stage05.encounter.02", "stage05.encounter.03"
+            }));
+            Assert.That(stage.ContaminationVariantId, Is.EqualTo("Stage05_Overlay_Intrusion"));
+            Assert.That(stage.PrimaryContaminationChannels.Count, Is.InRange(2, 3));
+            Assert.That(stage.TargetChaseSeconds, Is.GreaterThan(46f));
+            Assert.That(stage.NextStageId, Is.EqualTo(6));
         }
 
         [Test]

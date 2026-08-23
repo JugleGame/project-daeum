@@ -13,7 +13,9 @@ namespace Daeume.Stage
         Escalation,
         Revelation,
         Resolution,
-        Happiness
+        Happiness,
+        [InspectorName("행복/불안")]
+        HappinessAnxiety
     }
 
     public enum StageLengthCategory
