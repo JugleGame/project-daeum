@@ -30,6 +30,8 @@ namespace Daeume.Core
             ["prompt.memory.stage03"] = "동아리실 스피커 켜기",
             // Stage 4 전용 InteractionVerb. 이불 요새의 보드게임을 다시 펼치는 기억 외형과 짝을 이룬다.
             ["prompt.memory.stage04"] = "이불 요새 보드게임 펼치기",
+            // Stage 5 전용 InteractionVerb. 프로젝트 보드와 밤샘 작업 흔적을 되짚는 외형과 짝을 이룬다.
+            ["prompt.memory.stage05"] = "프로젝트 보드의 낙서 넘겨보기",
             ["prompt.continue"] = "계속",
             ["prompt.memory.skip"] = "건너뛰기",
 
@@ -87,7 +89,13 @@ namespace Daeume.Core
             ["memory.stage04.title"] = "기억의 조각 #4 — 기숙사",
             ["memory.stage04.01"] = "이불 요새 안에 간식 봉지와 반쯤 끝난 보드게임이 그대로 놓여 있다.",
             ["memory.stage04.02"] = "서로 속이려다 먼저 웃음을 터뜨린 흔적이, 접힌 점수표 위에 남아 있다.",
-            ["memory.stage04.03"] = "밝은 방의 웃음이 멎자 복도에서 급한 발소리만 가까워진다."
+            ["memory.stage04.03"] = "밝은 방의 웃음이 멎자 복도에서 급한 발소리만 가까워진다.",
+
+            // Stage 5 — 프로젝트실. 최종 대사 원고가 아닌 기능 검증용 최소 기억 캡션이다.
+            ["memory.stage05.title"] = "기억의 조각 #5 — 프로젝트실",
+            ["memory.stage05.01"] = "프로젝트 보드에는 밤새 고친 흔적과 서로의 낙서가 겹쳐 남아 있다.",
+            ["memory.stage05.02"] = "식은 컵과 엉킨 케이블 사이로, 졸음을 쫓으려 장난치던 순간이 떠오른다.",
+            ["memory.stage05.03"] = "밝은 작업등 아래 웃음이 번지자 책상 너머의 선명한 그림자가 한 걸음 가까워진다."
         };
 
         /// <summary>
