@@ -36,6 +36,7 @@ namespace Daeume.Player
         private Coroutine swipeRoutine;
 
         public bool PlayerAggression { get; private set; }
+        public int AttackSequence { get; private set; }
 
         private void Awake()
         {
@@ -93,6 +94,8 @@ namespace Daeume.Player
             {
                 return 0;
             }
+
+            AttackSequence++;
 
             damaged.Clear();
             var center = attackOrigin == null ? transform.position : attackOrigin.position;
