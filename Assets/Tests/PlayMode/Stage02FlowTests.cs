@@ -227,21 +227,21 @@ namespace Daeume.Tests.PlayMode
             Assert.That(loader, Is.Not.Null);
 
             var sceneCountBefore = SceneManager.sceneCount;
-            var echo = OverlaySceneLoader.FindOverlayRoot(director.Data.EchoOverlayScene);
+            var echo = OverlaySceneLoader.FindOverlayRoot(director.Data.EchoOverlayName);
             Assert.That(echo, Is.Not.Null, "Echo 오버레이 루트가 Stage02_Base 안에 없다.");
             Assert.That(echo.activeSelf, Is.False);
 
-            yield return loader.ApplyRequest(director.Data.EchoOverlayScene, true);
+            loader.ApplyRequest(director.Data.EchoOverlayName, true);
             Assert.That(echo.activeSelf, Is.True);
             Assert.That(SceneManager.GetSceneByName("Stage02_Base").isLoaded, Is.True, "기저 공간은 닫히지 않는다.");
             Assert.That(SceneManager.sceneCount, Is.EqualTo(sceneCountBefore), "오버레이는 씬을 추가하지 않는다.");
 
             // 재시도(같은 Variant로 다시 진입)해도 같은 결과여야 한다.
-            yield return loader.ApplyRequest(director.Data.EchoOverlayScene, true);
+            loader.ApplyRequest(director.Data.EchoOverlayName, true);
             Assert.That(echo.activeSelf, Is.True);
             Assert.That(SceneManager.sceneCount, Is.EqualTo(sceneCountBefore));
 
-            yield return loader.ApplyRequest(director.Data.EchoOverlayScene, false);
+            loader.ApplyRequest(director.Data.EchoOverlayName, false);
             Assert.That(echo.activeSelf, Is.False);
             Assert.That(SceneManager.GetSceneByName("Stage02_Base").isLoaded, Is.True);
         }

@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Stage02_ContaminationVariant
   m_EditorClassIdentifier: Daeume.Contamination::Daeume.Contamination.ContaminationVariantData
   variantId: Stage02_Overlay_Intrusion
-  echoOverlayScene: Stage02_Overlay_Echo
-  intrusionOverlayScene: Stage02_Overlay_Intrusion
+  echoOverlayName: Stage02_Overlay_Echo
+  intrusionOverlayName: Stage02_Overlay_Intrusion
   targetChaseSeconds: 36
   chaseSpeed: 6.5
   minDistance: 0.75

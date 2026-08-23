@@ -12,7 +12,10 @@ namespace Daeume.Flow
         public SceneFlowStep Step { get; }
     }
 
-    /// <summary>오염 오버레이 씬을 올리거나 내려 달라는 요청. 실제 처리는 OverlaySceneLoader가 한다.</summary>
+    /// <summary>
+    /// 오염 오버레이를 켜거나 꺼 달라는 요청. 실제 처리는 OverlaySceneLoader가 한다.
+    /// SceneName은 <b>StageNN_Base 안의 오버레이 루트 오브젝트 이름</b>이다 — 별도 씬 이름이 아니다(#38).
+    /// </summary>
     public readonly struct OverlaySceneLoadRequested
     {
         public OverlaySceneLoadRequested(string sceneName, bool load)

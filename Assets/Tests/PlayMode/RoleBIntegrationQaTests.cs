@@ -56,10 +56,13 @@ namespace Daeume.Tests.PlayMode
             Assert.That(flow.CurrentData.CheckpointId, Is.EqualTo(StageOneChaseController.CheckpointId));
             Assert.That(flow.CurrentData.ContaminationVariantId, Is.EqualTo(director.VariantId));
 
-            for (var frame = 0; frame < 120 && !SceneManager.GetSceneByName("Stage01_Overlay_Intrusion").isLoaded; frame++)
+            // 오버레이는 Stage01_Base 안의 루트 오브젝트다(#38). 씬이 아니라 활성 여부를 본다.
+            var intrusionOverlay = OverlaySceneLoader.FindOverlayRoot("Stage01_Overlay_Intrusion");
+            Assert.That(intrusionOverlay, Is.Not.Null, "Intrusion 오버레이 루트가 Stage01_Base 안에 없다.");
+            for (var frame = 0; frame < 120 && !intrusionOverlay.activeSelf; frame++)
                 yield return null;
             Assert.That(SceneManager.GetSceneByName("Stage01_Base").isLoaded, Is.True);
-            Assert.That(SceneManager.GetSceneByName("Stage01_Overlay_Intrusion").isLoaded, Is.True);
+            Assert.That(intrusionOverlay.activeSelf, Is.True);
 
             GameObject.Find("Trauma").GetComponent<Collider2D>().enabled = false;
             Assert.That(chase.CompleteAtEscape(), Is.True);

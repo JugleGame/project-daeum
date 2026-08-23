@@ -140,8 +140,8 @@ namespace Daeume.Tests.EditMode
 
             Assert.That(director.Data, Is.Not.Null);
             Assert.That(director.Data.VariantId, Is.EqualTo("Stage02_Overlay_Intrusion"));
-            Assert.That(director.Data.EchoOverlayScene, Is.EqualTo("Stage02_Overlay_Echo"));
-            Assert.That(director.Data.IntrusionOverlayScene, Is.EqualTo("Stage02_Overlay_Intrusion"));
+            Assert.That(director.Data.EchoOverlayName, Is.EqualTo("Stage02_Overlay_Echo"));
+            Assert.That(director.Data.IntrusionOverlayName, Is.EqualTo("Stage02_Overlay_Intrusion"));
             Assert.That(director.Data.ValidateData(out var error), Is.True, error);
 
             var stage = AssetDatabase.LoadAssetAtPath<StageData>("Assets/Data/Stages/Stage02.asset");
@@ -176,7 +176,7 @@ namespace Daeume.Tests.EditMode
             var variant = AssetDatabase.LoadAssetAtPath<ContaminationVariantData>(
                 "Assets/Data/Contamination/Stage02_ContaminationVariant.asset");
 
-            foreach (var overlayName in new[] { variant.EchoOverlayScene, variant.IntrusionOverlayScene })
+            foreach (var overlayName in new[] { variant.EchoOverlayName, variant.IntrusionOverlayName })
             {
                 var root = scene.GetRootGameObjects().FirstOrDefault(go => go.name == overlayName);
                 Assert.That(root, Is.Not.Null, $"'{overlayName}' 루트가 Stage02_Base에 없다.");
