@@ -23,6 +23,9 @@ namespace Daeume.Tests.EditMode
                 "Issue #14 requires an authored Stage04 record.");
             Assert.That(stages.Select(stage => stage.StageId), Does.Contain(5),
                 "Issue #15 requires an authored Stage05 record.");
+            Assert.That(stages.Select(stage => stage.StageId), Does.Contain(6),
+                "Issue #16 requires an authored Stage06 record.");
+
 
             foreach (var stage in stages)
             {
@@ -61,6 +64,25 @@ namespace Daeume.Tests.EditMode
             Assert.That(stage.TargetChaseSeconds, Is.GreaterThan(46f));
             Assert.That(stage.NextStageId, Is.EqualTo(6));
         }
+
+        [Test]
+        public void Test_Progression_Stage06DeclaresBrightStreetShopContract()
+        {
+            var stage = LoadAllStageData().Single(value => value.StageId == 6);
+            Assert.That(stage.Location, Does.Contain("거리/상점가"));
+            Assert.That(stage.EmotionalRole, Is.EqualTo(EmotionalRole.HappinessAnxiety));
+            Assert.That(stage.HospitalImageryDirectness, Is.EqualTo(1),
+                "Issue #16 overrides the overview curve for Stage06.");
+            Assert.That(stage.EncounterIds, Is.EqualTo(new[]
+            {
+                "stage06.encounter.01", "stage06.encounter.02", "stage06.encounter.03"
+            }));
+            Assert.That(stage.ContaminationVariantId, Is.EqualTo("Stage06_Overlay_Intrusion"));
+            Assert.That(stage.PrimaryContaminationChannels.Count, Is.InRange(2, 3));
+            Assert.That(stage.TargetChaseSeconds, Is.GreaterThan(49f));
+            Assert.That(stage.NextStageId, Is.EqualTo(7));
+        }
+
 
         [Test]
         public void Test_Progression_HospitalDirectnessInRange()

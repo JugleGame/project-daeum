@@ -69,8 +69,10 @@ namespace Daeume.Tests.PlayMode
             var chase = Object.FindAnyObjectByType<StageOneChaseController>();
             Assert.That(chase.CompleteAtEscape(), Is.True);
             Assert.That(chase.CompleteAtEscape(), Is.False, "escape transition must start only once");
-            yield return WaitForScene("Title");
-            Assert.That(flow.CurrentData.CurrentStageId, Is.EqualTo(5), "Stage06 is not implemented, so progress must remain at Stage05.");
+            yield return WaitForScene("Stage06_Base");
+            Assert.That(flow.CurrentData.CurrentStageId, Is.EqualTo(6));
+            Assert.That(flow.CurrentData.CheckpointId, Is.Empty);
+            Assert.That(flow.CurrentData.ContaminationVariantId, Is.Empty);
         }
 
         [UnityTest]
