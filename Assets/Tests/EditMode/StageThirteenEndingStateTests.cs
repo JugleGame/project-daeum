@@ -40,6 +40,16 @@ namespace Daeume.Tests.EditMode
         }
 
         [Test]
+        public void Test_Ending_RunawayLoopCountStopsAtFourthLoop()
+        {
+            var state = new StageThirteenEndingState();
+            for (var index = 0; index < 12; index++) state.RegisterRunawayLoop();
+
+            Assert.That(state.LoopCount, Is.EqualTo(StageThirteenEndingState.HintStageCount));
+            Assert.That(state.TraumaWaiting, Is.True);
+        }
+
+        [Test]
         public void Test_Ending_HintNeverStatesDirection()
         {
             var state = new StageThirteenEndingState();

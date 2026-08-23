@@ -47,7 +47,9 @@ namespace Daeume.Core
         {
             if (!EndingCompleted)
             {
-                LoopCount++;
+                // 힌트·연출은 4단계가 전부다. 그 이후 도주는 같은 "기다림" 상태를 유지할 뿐
+                // 저장값이 매 프레임/입력 반복에 따라 끝없이 커지면 안 된다.
+                LoopCount = Math.Min(HintStageCount, LoopCount + 1);
             }
 
             return HintStage;
