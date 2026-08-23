@@ -6,6 +6,7 @@ using Daeume.Encounter;
 using Daeume.Enemy;
 using Daeume.Flow;
 using Daeume.Memory;
+using Daeume.Player;
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -93,6 +94,49 @@ namespace Daeume.Tests.PlayMode
             Assert.That(director.ChaseActive, Is.True);
             Assert.That(director.VariantId, Is.EqualTo("Stage02_Overlay_Intrusion"),
                 "Stage 02는 자기 오염 Variant로 추격해야 한다(재시도 시 같은 공간이 나오는 근거).");
+        }
+
+        /// <summary>
+        /// 회귀(#12): 잔재 몸통이 solid 콜라이더면 플레이어를 위로 튕겨 올린다.
+        ///
+        /// 잔재는 Rigidbody2D 없이 transform으로 움직여서 유니티가 정적 콜라이더로 취급한다.
+        /// 그게 플레이어를 파고들면 겹침 해소가 최소 축(= 납작한 몸통이라 위쪽)으로 강하게 밀어낸다.
+        /// 그 상태에서는 접지가 아니라 점프가 아예 나가지 않는다("Space가 안 먹는" 증상).
+        /// </summary>
+        [UnityTest]
+        public IEnumerator Test_Encounter_RemnantBodyDoesNotPushPlayerOffTheGround()
+        {
+            SceneManager.LoadScene("Persistent", LoadSceneMode.Single);
+            yield return null;
+            yield return SceneManager.LoadSceneAsync("Stage02_Base", LoadSceneMode.Additive);
+            yield return null;
+
+            var classroom = Object.FindObjectsByType<EncounterController>(FindObjectsSortMode.None)
+                .Single(controller => controller.Data.EncounterId == "stage02.encounter.01");
+            Assert.That(classroom.TryActivate(), Is.True);
+            yield return null;
+
+            var enemy = classroom.ActiveEnemies.First();
+            Assert.That(enemy.GetComponent<Collider2D>().isTrigger, Is.True,
+                "잔재 몸통은 트리거여야 한다. solid면 플레이어를 밀어 올린다.");
+
+            // 잔재와 정확히 겹친 자리에 세워도 땅에 붙어 있어야 한다.
+            var player = Object.FindAnyObjectByType<PlayerController>();
+            var body = player.GetComponent<Rigidbody2D>();
+            var startY = enemy.transform.position.y + 0.25f;
+            body.position = new Vector2(enemy.transform.position.x, startY);
+            body.linearVelocity = Vector2.zero;
+            Physics2D.SyncTransforms();
+
+            for (var frame = 0; frame < 30; frame++)
+            {
+                yield return new WaitForFixedUpdate();
+            }
+
+            Assert.That(body.position.y, Is.LessThan(startY + 0.5f),
+                "잔재와 겹쳐도 플레이어가 위로 솟구치면 안 된다.");
+            Assert.That(player.IsGrounded, Is.True, "겹친 상태에서도 접지가 유지돼야 점프가 나간다.");
+            Assert.That(player.TryJump(), Is.True);
         }
 
         /// <summary>
