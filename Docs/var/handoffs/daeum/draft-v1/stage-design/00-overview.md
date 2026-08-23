@@ -40,6 +40,11 @@
   0→1(10)→2(11)→4(12, 최댓값)
 - Stage13: 규칙 자체가 깨짐(전투가 아니라 수용)
 
+## 오염 오버레이 저작 규칙
+
+- 오버레이는 `StageNN_Base` 안의 루트 오브젝트로 저작한다(`StageNN_Overlay_Echo`, `StageNN_Overlay_Intrusion`).
+  탐색 중에는 비활성이고, `OverlaySceneLoader`가 이름으로 찾아 켜고 끈다. 별도 씬 파일은 만들지 않는다.
+
 ## 추격(Chase) 길이 커브
 
 - Stage1: 최단(첫 학습, 판정 자체를 가르침)

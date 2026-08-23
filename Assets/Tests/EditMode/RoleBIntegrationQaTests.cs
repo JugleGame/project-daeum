@@ -10,11 +10,10 @@ namespace Daeume.Tests.EditMode
 {
     public sealed class RoleBIntegrationQaTests
     {
+        // 오버레이는 Stage01_Base 안의 루트 오브젝트다(#38). 씬 파일은 더 이상 없다.
         private static readonly string[] OwnedScenePaths =
         {
-            "Assets/Scenes/Stage01_Base.unity",
-            "Assets/Scenes/Stage01_Overlay_Echo.unity",
-            "Assets/Scenes/Stage01_Overlay_Intrusion.unity"
+            "Assets/Scenes/Stage01_Base.unity"
         };
 
         [Test]
