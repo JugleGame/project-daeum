@@ -12,7 +12,8 @@ namespace Daeume.Stage
         Development,
         Escalation,
         Revelation,
-        Resolution
+        Resolution,
+        Happiness
     }
 
     public enum StageLengthCategory

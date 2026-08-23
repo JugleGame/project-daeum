@@ -19,11 +19,28 @@ namespace Daeume.Tests.EditMode
         {
             var stages = LoadAllStageData();
             Assert.That(stages, Is.Not.Empty, "Expected at least Stage 1's StageData asset to exist.");
+            Assert.That(stages.Select(stage => stage.StageId), Does.Contain(4),
+                "Issue #14 requires an authored Stage04 record.");
 
             foreach (var stage in stages)
             {
                 Assert.That(stage.ValidateData(), Is.Empty, $"Stage {stage.StageId} ({stage.name}) has invalid narrative fields.");
             }
+        }
+
+        [Test]
+        public void Test_Progression_Stage04DeclaresHappyDormitoryContract()
+        {
+            var stage = LoadAllStageData().Single(value => value.StageId == 4);
+            Assert.That(stage.Location, Does.Contain("기숙사"));
+            Assert.That(stage.EmotionalRole.ToString(), Is.EqualTo("Happiness"));
+            Assert.That(stage.HospitalImageryDirectness, Is.Zero);
+            Assert.That(stage.EncounterIds, Is.EqualTo(new[]
+            {
+                "stage04.encounter.01", "stage04.encounter.02", "stage04.encounter.03"
+            }));
+            Assert.That(stage.PrimaryContaminationChannels.Count, Is.InRange(2, 3));
+            Assert.That(stage.NextStageId, Is.EqualTo(5));
         }
 
         [Test]

@@ -28,6 +28,8 @@ namespace Daeume.Core
             ["prompt.memory.stage02"] = "교실 책상 서랍 열기",
             // Stage 3 전용 InteractionVerb. 동아리실 스피커를 켜는 외형과 동작을 짝지어 쓴다.
             ["prompt.memory.stage03"] = "동아리실 스피커 켜기",
+            // Stage 4 전용 InteractionVerb. 이불 요새의 보드게임을 다시 펼치는 기억 외형과 짝을 이룬다.
+            ["prompt.memory.stage04"] = "이불 요새 보드게임 펼치기",
             ["prompt.continue"] = "계속",
             ["prompt.memory.skip"] = "건너뛰기",
 
@@ -79,7 +81,13 @@ namespace Daeume.Core
             ["memory.stage03.title"] = "기억의 조각 #3 — 동아리실",
             ["memory.stage03.01"] = "낡은 스피커의 전원을 켜자, 둘만 알던 노래의 첫 박자가 조용히 흘러나온다.",
             ["memory.stage03.02"] = "서툰 연습이 끝난 뒤에도 우리는 남아 같은 구절을 몇 번이나 다시 들었다.",
-            ["memory.stage03.03"] = "그때 처음 아무 말 없이도 편안했다는 걸 떠올리자, 선반 너머의 그림자가 몸을 낮춘다."
+            ["memory.stage03.03"] = "그때 처음 아무 말 없이도 편안했다는 걸 떠올리자, 선반 너머의 그림자가 몸을 낮춘다.",
+
+            // Stage 4 — 기숙사. 최종 대사 원고가 아니라 동선 검증용 기억 캡션이다.
+            ["memory.stage04.title"] = "기억의 조각 #4 — 기숙사",
+            ["memory.stage04.01"] = "이불 요새 안에 간식 봉지와 반쯤 끝난 보드게임이 그대로 놓여 있다.",
+            ["memory.stage04.02"] = "서로 속이려다 먼저 웃음을 터뜨린 흔적이, 접힌 점수표 위에 남아 있다.",
+            ["memory.stage04.03"] = "밝은 방의 웃음이 멎자 복도에서 급한 발소리만 가까워진다."
         };
 
         /// <summary>
