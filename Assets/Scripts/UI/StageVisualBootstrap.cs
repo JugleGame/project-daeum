@@ -37,7 +37,7 @@ namespace Daeume.UI
 
         // 추격 중 압박 단계가 바뀔 때마다 오염 오버레이 씬이 추가로 로드/언로드된다(ContaminationDirector).
         // 그 오버레이 씬도 sceneUnloaded를 발생시키므로, Stage01_Base가 실제로 남아 있는지 다시 확인해야 한다.
-        private void OnSceneUnloaded(Scene scene) => SetPlayerPhysicsActive(SceneManager.GetSceneByName("Stage01_Base").isLoaded);
+        private void OnSceneUnloaded(Scene scene) => SetPlayerPhysicsActive(StageScenes.AnyLoaded());
 
         private void ApplyToStage(Scene scene)
         {
@@ -45,15 +45,18 @@ namespace Daeume.UI
             // 실제 스테이지(바닥)가 없는 Title/Boot 단계에서도 중력으로 계속 낙하했다.
             // 스테이지에 들어와 있을 때만 Dynamic으로 켜고, 그 외에는 Kinematic으로 묶어 둔다.
             //
-            // 주의: 방금 로드된 scene.name과 "Stage01_Base"를 직접 비교하면 안 된다.
-            // 추격 중 압박 단계가 바뀔 때마다 오염 오버레이 씬(Stage01_Overlay_Echo 등)이 추가로
-            // 로드되는데, 그때도 이 콜백이 호출된다. scene.name만 비교하면 오버레이 로드 때마다
-            // Player가 Kinematic으로 바뀌어 버리고, 그 순간 공중에 떠 있었다면(예: 점프 중)
-            // 중력을 안 받는 Kinematic 상태로 남아 속도만으로 하늘로 계속 올라가 버린다.
-            // 그래서 "방금 뭐가 로드됐나"가 아니라 "지금 Stage01_Base가 실제로 떠 있나"를 확인한다.
-            SetPlayerPhysicsActive(SceneManager.GetSceneByName("Stage01_Base").isLoaded);
+            // 주의 1: 방금 로드된 scene.name만 보고 판단하면 안 된다.
+            // 오염 오버레이가 별도 씬이던 시절 그 적재마다 이 콜백이 왔고, 그때마다 Player가
+            // Kinematic으로 바뀌었다. 그 순간 공중에 떠 있었다면(예: 점프 중) 중력을 안 받는
+            // Kinematic 상태로 남아 속도만으로 하늘로 계속 올라가 버린다.
+            // 그래서 "방금 뭐가 로드됐나"가 아니라 "지금 스테이지가 떠 있나"를 확인한다.
+            //
+            // 주의 2(#12): 특정 스테이지 이름을 박아 두면 안 된다. 예전에는 "Stage01_Base"를
+            // 직접 비교해서, Stage 02에서는 이 조건이 영영 참이 되지 않아 플레이어가 Kinematic으로
+            // 굳었다 — 점프가 안 나가고 지형을 통과하는 증상이었다. 이름 규칙은 StageScenes가 안다.
+            SetPlayerPhysicsActive(StageScenes.AnyLoaded());
 
-            if (scene.name != "Stage01_Base") return;
+            if (!StageScenes.IsStageScene(scene.name)) return;
 
             var shader = Shader.Find("Universal Render Pipeline/2D/Sprite-Unlit-Default");
             if (shader != null && unlitMaterial == null)

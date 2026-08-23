@@ -97,6 +97,46 @@ namespace Daeume.Tests.PlayMode
         }
 
         /// <summary>
+        /// 회귀(#12): Stage 02에서 플레이어가 Kinematic으로 굳어 점프도 충돌도 죽었던 문제.
+        ///
+        /// StageVisualBootstrap이 "Stage01_Base"가 떠 있을 때만 플레이어를 Dynamic으로 켰다.
+        /// Stage 02에서는 그 조건이 영영 참이 되지 않아 중력이 사라졌고, 접지가 안 되니 점프가
+        /// 나가지 않았으며 충돌 반응도 없어 지형을 그대로 통과했다.
+        ///
+        /// Boot부터 실제 흐름(Continue)으로 들어가야 재현된다. 에디터에서 씬을 직접 열면
+        /// StageVisualBootstrap이 없어 통과해 버린다.
+        /// </summary>
+        [UnityTest]
+        public IEnumerator Test_Stage02_PlayerKeepsDynamicPhysicsAndCanJump()
+        {
+            SceneManager.LoadScene("Boot", LoadSceneMode.Single);
+            yield return null;
+
+            var flow = Object.FindAnyObjectByType<SceneFlowController>();
+            Assert.That(flow, Is.Not.Null);
+            Assert.That(flow.StartNewGame(), Is.True);
+            yield return WaitForScene("Stage01_Base");
+
+            GameManager.Instance.SetStageState(StageState.Memory);
+            GameManager.Instance.SetStageState(StageState.Chase);
+            Assert.That(flow.CompleteStageOne(), Is.True);
+            yield return WaitForScene("Stage02_Base");
+
+            var player = Object.FindAnyObjectByType<PlayerController>();
+            var body = player.GetComponent<Rigidbody2D>();
+            Assert.That(body.bodyType, Is.EqualTo(RigidbodyType2D.Dynamic),
+                "스테이지 안에서는 플레이어가 Dynamic이어야 중력·충돌이 산다.");
+
+            for (var frame = 0; frame < 120 && !player.IsGrounded; frame++)
+            {
+                yield return new WaitForFixedUpdate();
+            }
+
+            Assert.That(player.IsGrounded, Is.True, "Stage 02 바닥에 착지해야 한다.");
+            Assert.That(player.TryJump(), Is.True, "접지 상태에서 점프가 나가야 한다.");
+        }
+
+        /// <summary>
         /// 회귀(#12): 잔재 몸통이 solid 콜라이더면 플레이어를 위로 튕겨 올린다.
         ///
         /// 잔재는 Rigidbody2D 없이 transform으로 움직여서 유니티가 정적 콜라이더로 취급한다.

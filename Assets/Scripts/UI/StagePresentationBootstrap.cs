@@ -25,8 +25,6 @@ namespace Daeume.UI
     /// </summary>
     internal static class StagePresentationBootstrap
     {
-        private const string StageScenePrefix = "Stage";
-        private const string StageSceneSuffix = "_Base";
         private const string TitleSceneName = "Title";
         private const string VisualGuideObjectName = "B1_VisualGuide";
 
@@ -75,40 +73,15 @@ namespace Daeume.UI
             ApplyToStageScene(scene);
         }
 
-        /// <summary>
-        /// "Stage02_Base" 같은 스테이지 씬 이름인지 판별한다.
-        /// SceneFlowController.StageSceneName이 만드는 이름 규칙과 같은 규칙을 반대로 읽는 것뿐이라,
-        /// 스테이지가 늘어나도 여기에 이름을 추가할 필요가 없다.
-        /// </summary>
-        private static bool IsStageScene(string sceneName) => StageNumber(sceneName) > 0;
+        private static bool IsStageScene(string sceneName) => StageScenes.IsStageScene(sceneName);
 
-        /// <summary>씬 이름에서 스테이지 번호를 뽑는다. 규칙에 맞지 않으면 0.</summary>
-        private static int StageNumber(string sceneName)
-        {
-            if (string.IsNullOrEmpty(sceneName)) return 0;
-            if (!sceneName.StartsWith(StageScenePrefix) || !sceneName.EndsWith(StageSceneSuffix)) return 0;
-
-            var digits = sceneName.Substring(
-                StageScenePrefix.Length,
-                sceneName.Length - StageScenePrefix.Length - StageSceneSuffix.Length);
-
-            return int.TryParse(digits, out var stageId) && stageId > 0 ? stageId : 0;
-        }
+        private static int StageNumber(string sceneName) => StageScenes.StageNumber(sceneName);
 
         /// <summary>
         /// Title로 돌아가면 DontDestroyOnLoad로 남아 있던 HUD·압박 연출을 정리한다.
         /// 다음에 스테이지에 들어갈 때 SpawnPersistentPresentation이 새로 만들 수 있도록 참조도 비운다.
         /// </summary>
-        private static bool IsStageSceneLoaded()
-        {
-            for (var index = 0; index < SceneManager.sceneCount; index++)
-            {
-                var scene = SceneManager.GetSceneAt(index);
-                if (scene.isLoaded && IsStageScene(scene.name)) return true;
-            }
-
-            return false;
-        }
+        private static bool IsStageSceneLoaded() => StageScenes.AnyLoaded();
 
         private static void DespawnPersistentPresentation()
         {
