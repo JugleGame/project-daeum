@@ -10,7 +10,8 @@ namespace Daeume.Editor
     /// 사람이 매번 손으로 설정하면 반드시 빠뜨리는 항목이 생기므로, 규격을 코드로 강제하는 편이 안전하다.
     ///
     /// 여기서 고정하는 값들은 협업 문서(collaboration-setup)의 픽셀 규칙과 일치해야 한다.
-    /// - PPU 32 (캐릭터 32px = 1 유닛)
+    /// - 기본 PPU 32 (프로젝트 blockout 격자)
+    /// - FinalDaeume PPU 64 (64px 캐릭터 canvas = 1 유닛)
     /// - Point 필터 (픽셀이 뭉개지지 않게)
     /// - 압축 없음 (색이 변질되지 않게)
     /// - 밉맵 없음 (2D에서는 불필요하고 흐려지는 원인)
@@ -19,6 +20,7 @@ namespace Daeume.Editor
     public sealed class DaeumeSpriteImportSettings : AssetPostprocessor
     {
         private const float PixelsPerUnit = 32f;
+        private const float FinalDaeumePixelsPerUnit = 64f;
 
         /// <summary>이미지를 임포트하기 직전에 호출된다(이미 임포트된 파일은 재임포트해야 적용된다).</summary>
         private void OnPreprocessTexture()
@@ -30,25 +32,40 @@ namespace Daeume.Editor
                 return;
             }
 
+            var isFinalDaeume = normalized.Contains("/Sprites/FinalDaeume/");
             var importer = (TextureImporter)assetImporter;
             importer.textureType = TextureImporterType.Sprite;
-            importer.spritePixelsPerUnit = PixelsPerUnit;
+            importer.spritePixelsPerUnit = isFinalDaeume
+                ? FinalDaeumePixelsPerUnit
+                : PixelsPerUnit;
             importer.filterMode = FilterMode.Point;
             importer.textureCompression = TextureImporterCompression.Uncompressed;
             importer.mipmapEnabled = false;
             importer.alphaIsTransparency = true;
             importer.spriteImportMode = SpriteImportMode.Single;
+            if (isFinalDaeume)
+            {
+                importer.userData = "daeume-final-64ppu";
+            }
 
             var isCharacter = normalized.Contains("/Sprites/Player/")
                 || normalized.Contains("/Sprites/Remnant/")
                 || normalized.Contains("/Sprites/Trauma/");
+            var isFinalDaeumeHero = normalized.Contains("/Sprites/FinalDaeume/Hero/");
 
             var settings = new TextureImporterSettings();
             importer.ReadTextureSettings(settings);
             settings.spriteMeshType = SpriteMeshType.FullRect;
-            settings.spriteAlignment = isCharacter
-                ? (int)SpriteAlignment.BottomCenter
-                : (int)SpriteAlignment.Center;
+            if (isFinalDaeumeHero)
+            {
+                settings.spriteAlignment = (int)SpriteAlignment.BottomCenter;
+            }
+            else if (!isFinalDaeume)
+            {
+                settings.spriteAlignment = isCharacter
+                    ? (int)SpriteAlignment.BottomCenter
+                    : (int)SpriteAlignment.Center;
+            }
             importer.SetTextureSettings(settings);
         }
     }

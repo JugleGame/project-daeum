@@ -104,6 +104,9 @@ namespace Daeume.Editor
                 if (pixelPerfect != null)
                 {
                     var serialized = new SerializedObject(pixelPerfect);
+                    serialized.FindProperty("m_AssetsPPU").intValue = 64;
+                    serialized.FindProperty("m_RefResolutionX").intValue = 1920;
+                    serialized.FindProperty("m_RefResolutionY").intValue = 1080;
                     serialized.FindProperty("m_UpscaleRT").boolValue = true;
                     serialized.FindProperty("m_PixelSnapping").boolValue = true;
                     serialized.ApplyModifiedPropertiesWithoutUndo();

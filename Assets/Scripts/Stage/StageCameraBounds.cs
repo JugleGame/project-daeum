@@ -12,7 +12,7 @@ namespace Daeume.Stage
         [SerializeField] private Vector2 minimum = new(-2f, -2f);
         [SerializeField] private Vector2 maximum = new(28f, 4f);
         [SerializeField] private bool followVertical;
-        [SerializeField, Min(0.01f)] private float orthographicSize = 4.21875f;
+        [SerializeField, Min(0.01f)] private float orthographicSize = 3.375f;
         [SerializeField] private float fixedCameraY;
 
         private Transform target;

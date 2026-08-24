@@ -1,0 +1,46 @@
+{
+  "formatVersion": 2,
+  "assetSet": "daeume-64ppu",
+  "coordinateOrigin": "bottom-center",
+  "unityImport": {
+    "textureType": "Sprite (2D and UI)",
+    "pixelsPerUnit": 64,
+    "filterMode": "Point",
+    "compression": "None",
+    "mipMaps": false,
+    "alphaIsTransparency": true
+  },
+  "hero": {
+    "framesDirectory": "Hero/Frames",
+    "direction": "right",
+    "canvas": [64, 64],
+    "clips": {
+      "idle": { "prefix": "idle", "frameCount": 5, "fps": 6, "loop": true },
+      "move": { "prefix": "move", "frameCount": 8, "fps": 10, "loop": true },
+      "attack": { "prefix": "attack", "frameCount": 8, "fps": 12, "loop": false },
+      "jump": { "prefix": "jump", "frameCount": 6, "fps": 8, "loop": false },
+      "grab": { "prefix": "grab", "frameCount": 4, "fps": 6, "loop": true }
+    },
+    "notes": {
+      "attack": "가방 하나를 양손으로 잡고 가볍게 수평으로 휘두른 뒤 회수",
+      "grab": "양손 접점을 유지하며 체중이 실리고 복귀하는 4프레임 loop"
+    }
+  },
+  "trauma": {
+    "framesDirectory": "Trauma/Frames",
+    "clips": {
+      "idle": { "prefix": "idle", "frameCount": 4, "fps": 5, "loop": true },
+      "move": { "prefix": "move", "frameCount": 6, "fps": 8, "loop": true },
+      "attack": { "prefix": "attack", "frameCount": 4, "fps": 10, "loop": false }
+    }
+  },
+  "provenance": {
+    "sourceWorkspace": "Game-Develop-Orchestration/var/assets/assets/daeume/animations/player_consistent_v6",
+    "heroFrameCount": 31,
+    "heroSourceCanvas": [256, 256],
+    "heroUnityCanvas": [64, 64],
+    "heroResizeFilter": "NearestNeighbor",
+    "heroEdgeSanitization": "Bright neutral alpha-boundary pixels are remapped to the nearest dark opaque outline color during animation sync.",
+    "traumaFrameCount": 14
+  }
+}

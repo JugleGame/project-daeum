@@ -53,6 +53,7 @@ namespace Daeume.Player
         public bool IsGrounded => grounded;
         public bool IsGrabbing { get; private set; }
         public float GrabHoldSeconds => grabHoldSeconds;
+        public float HorizontalInput => moveInput.x;
         public float FacingDirection { get; private set; } = 1f;  // 1=오른쪽, -1=왼쪽. 상호작용 대상 선택에도 쓰인다.
 
         /// <summary>연출 중 조작을 잠글 때 사용한다(붙잡히는 연출, 회상 재생 등).</summary>
@@ -61,6 +62,7 @@ namespace Daeume.Player
         private void Awake()
         {
             body = GetComponent<Rigidbody2D>();
+            if (visualRenderer == null) visualRenderer = GetComponentInChildren<SpriteRenderer>();
 
             // 수정: 예전에는 붙잡기 해제 시 중력 배율을 1로 "고정 대입"했다.
             // 프리팹이 중력 배율을 1이 아닌 값(예: 3)으로 쓰면 붙잡기 한 번에 낙하 감각이 영구히 바뀌는 버그가 된다.
@@ -191,6 +193,7 @@ namespace Daeume.Player
             {
                 // 입력이 0일 때는 방향을 유지한다. 멈춰 섰다고 정면이 바뀌면 상호작용 대상이 튄다.
                 FacingDirection = Mathf.Sign(moveInput.x);
+                if (visualRenderer != null) visualRenderer.flipX = FacingDirection < 0f;
             }
         }
 

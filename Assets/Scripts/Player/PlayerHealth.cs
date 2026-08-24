@@ -22,6 +22,7 @@ namespace Daeume.Player
         public DamageTargetKind TargetKind => DamageTargetKind.Player;
         public int MaxHealth => maxHealth;
         public int CurrentHealth { get; private set; }
+        public int DamageSequence { get; private set; }
 
         private void Awake() => CurrentHealth = maxHealth;
 
@@ -59,6 +60,7 @@ namespace Daeume.Player
             CurrentHealth = Mathf.Max(0, CurrentHealth - request.Amount);
             invulnerableUntil = now + invulnerabilitySeconds;
             var applied = previous - CurrentHealth;
+            if (applied > 0) DamageSequence++;
             GameManager.Instance?.Events.Publish(new PlayerHealthChanged(CurrentHealth, maxHealth));
 
             if (CurrentHealth == 0)
