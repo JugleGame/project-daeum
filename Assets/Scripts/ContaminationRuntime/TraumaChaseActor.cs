@@ -44,6 +44,7 @@ namespace Daeume.ContaminationRuntime
 
         public ChaseDirectiveIssued LastDirective { get; private set; }
         public int AppliedDirectiveCount { get; private set; }
+        public float LastHorizontalMovement { get; private set; }
 
         /// <summary>지금 지형을 딛고 서 있는지. 테스트와 연출이 읽는다.</summary>
         public bool IsGrounded { get; private set; }
@@ -61,6 +62,7 @@ namespace Daeume.ContaminationRuntime
         {
             LastDirective = directive;
             AppliedDirectiveCount++;
+            LastHorizontalMovement = 0f;
             if (deltaTime <= 0f) return;
 
             var position = (Vector2)transform.position;
@@ -85,6 +87,7 @@ namespace Daeume.ContaminationRuntime
             // 경계벽(x 32.0~32.5) 안쪽인 x=32에 배치돼 있어서, 추격이 시작되자마자 굳어 버렸다.
             var blocked = wall.HasValue && wall.Value.distance > 0f;
             if (!blocked) position.x = nextX;
+            LastHorizontalMovement = position.x - transform.position.x;
 
             // ---- Y: 중력 / 벽타기 / 점프 ----
             IsGrounded = verticalVelocity <= 0f && FindTerrain(position, Vector2.down, radius + Skin).HasValue;

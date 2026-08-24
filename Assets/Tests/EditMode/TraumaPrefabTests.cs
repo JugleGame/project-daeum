@@ -24,8 +24,7 @@ namespace Daeume.Tests.EditMode
             // 실제 크기 표현은 자식 Visual이 전담한다.
             var visual = prefab.transform.Find("Visual");
             Assert.That(visual, Is.Not.Null);
-            Assert.That(visual.localScale.x, Is.GreaterThan(1f));
-            Assert.That(visual.localScale.y, Is.GreaterThan(1f));
+            Assert.That(visual.localScale, Is.EqualTo(Vector3.one));
         }
     }
 }
