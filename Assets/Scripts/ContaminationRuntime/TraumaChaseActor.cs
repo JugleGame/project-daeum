@@ -83,11 +83,8 @@ namespace Daeume.ContaminationRuntime
                 ? null
                 : FindTerrain(position + bodyOffset, new Vector2(Mathf.Sign(moveX), 0f), radius + Mathf.Abs(moveX) + Skin);
 
-            // 거리 0 히트는 "이미 그 지형 안에 파묻혀 있다"는 뜻이므로 막힘으로 치지 않는다.
-            // Physics2D.Raycast는 콜라이더 안에서 시작하면 거리 0으로 즉시 맞았다고 알려 준다.
-            // 이걸 막힘으로 보면 파묻힌 상태에서 영원히 빠져나올 수 없다 — Stage 01은 트라우마가
-            // 경계벽(x 32.0~32.5) 안쪽인 x=32에 배치돼 있어서, 추격이 시작되자마자 굳어 버렸다.
-            var blocked = wall.HasValue && wall.Value.distance > 0f;
+            // 거리 0 히트는 FindTerrain에서 걸러내므로, 파묻힌 상태에서도 막힘으로 보지 않는다.
+            var blocked = wall.HasValue;
             if (!blocked) position.x = nextX;
             LastHorizontalMovement = position.x - transform.position.x;
 
@@ -165,6 +162,11 @@ namespace Daeume.ContaminationRuntime
             {
                 var collider = hit.collider;
                 if (collider == null || collider.isTrigger) continue;
+                // 거리 0 히트는 "기준점이 이미 그 콜라이더 안에 있다"는 뜻이고, point가 기준점
+                // 그대로 돌아온다. 지형을 찾은 것으로 치면 벽에 파묻힌 채 착지했다고 판단해
+                // 그 자리에 굳거나 위로 밀려 올라간다. Stage 01은 트라우마 콜라이더 중심이
+                // 경계벽(x 32.0~32.5) 안에 걸쳐 있어 공중에 뜬 채로 움직였다.
+                if (hit.distance <= 0f) continue;
                 if (collider.transform == transform || collider.transform.IsChildOf(transform)) continue;
                 if (collider.GetComponentInParent<PlayerController>() != null) continue;
                 if (found && hit.distance >= nearest.distance) continue;
