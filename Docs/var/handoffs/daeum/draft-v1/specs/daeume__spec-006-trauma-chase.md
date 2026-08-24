@@ -24,6 +24,7 @@ dependencies = ["daeume__spec-002-movement-platforming", "daeume__spec-005-memor
 - 각 Stage는 공간, 조명, 사운드, 리듬, 문, 동선, 잔재, 기억 재맥락화, 카메라 중 `PrimaryContaminationChannels` 2~3개만 전면에 사용한다.
 - Variant는 선택한 Primary 채널과 필요한 보조 신호만 포함하며 모든 채널을 매 Stage 필수로 요구하지 않는다.
 - Variant 공간은 원본 공간을 복제하지 않고 기저 레벨 위에 추가 오버레이로 얹는다. 오버레이 적재는 기저 레벨을 닫지 않으며, 같은 `ContaminationVariantId`는 재시도를 포함해 매 진입마다 같은 충돌·타이밍·스폰을 만든다.
+- 오버레이는 `StageNN_Base` 안의 루트 오브젝트로 저작한다. 별도 오버레이 씬 파일을 만들지 않는다 — `ContaminationVariantData`의 `EchoOverlayName`/`IntrusionOverlayName`은 그 루트 오브젝트 이름이다.
 - 런타임에 지오메트리를 생성·이동·삭제해 Variant를 만들지 않는다.
 - 병원 이미지는 Stage 1~4 추상적 이상, Stage 5~6 의료적 느낌, Stage 7~8 병원 의심, Stage 9 명확한 중첩, Stage 10 확정, Stage 11~12 실제 공간 순으로만 직접성을 높인다.
 

@@ -23,6 +23,18 @@ namespace Daeume.Core
             ["prompt.memory"] = "기억 살펴보기",
             // Stage 1 전용 InteractionVerb (spec-005: Stage마다 매개체 외형과 동사가 다르다).
             ["prompt.memory.stage01"] = "정류장 보관함 열기",
+            // Stage 2 전용 InteractionVerb. 공용 prompt.memory로 되돌리면 spec-005의
+            // "Stage마다 다른 동사" 규칙이 깨지므로 Stage02MemoryNarrativeTests가 이 키를 검사한다.
+            ["prompt.memory.stage02"] = "교실 책상 서랍 열기",
+            // Stage 3 전용 InteractionVerb. 동아리실 스피커를 켜는 외형과 동작을 짝지어 쓴다.
+            ["prompt.memory.stage03"] = "동아리실 스피커 켜기",
+            // Stage 4 전용 InteractionVerb. 이불 요새의 보드게임을 다시 펼치는 기억 외형과 짝을 이룬다.
+            ["prompt.memory.stage04"] = "이불 요새 보드게임 펼치기",
+            // Stage 5 전용 InteractionVerb. 프로젝트 보드와 밤샘 작업 흔적을 되짚는 외형과 짝을 이룬다.
+            ["prompt.memory.stage05"] = "프로젝트 보드의 낙서 넘겨보기",
+            // Stage 6 전용 InteractionVerb. 쇼핑백과 작은 장난감 외형을 함께 살펴보는 기억과 짝을 이룬다.
+            ["prompt.memory.stage06"] = "쇼핑백 속 작은 장난감 살펴보기",
+
             ["prompt.continue"] = "계속",
             ["prompt.memory.skip"] = "건너뛰기",
 
@@ -62,7 +74,37 @@ namespace Daeume.Core
             ["memory.stage01.title"] = "기억의 조각 #1 — 정류장",
             ["memory.stage01.01"] = "보관함 안에 낡은 버스표 한 장. 돌아오는 편도, 여기서 끊었다.",
             ["memory.stage01.02"] = "누군가 이 자리에 오래 서서 나를 기다렸다. 그 온기가 잠깐 돌아온다.",
-            ["memory.stage01.03"] = "기억을 손에 쥔 순간, 거리 끝에서 무언가 이쪽으로 걸어오기 시작한다."
+            ["memory.stage01.03"] = "기억을 손에 쥔 순간, 거리 끝에서 무언가 이쪽으로 걸어오기 시작한다.",
+
+            // Stage 2 — 학교. 둘이 처음 만났던 순간.
+            ["memory.stage02.title"] = "기억의 조각 #2 — 학교",
+            ["memory.stage02.01"] = "서랍 안쪽에 이름표 두 개가 나란히 붙어 있다. 하나는 내 것이고, 하나는 그때 아직 모르던 이름이었다.",
+            ["memory.stage02.02"] = "창가 자리에서 처음 눈이 마주쳤다. 무슨 말을 걸어야 할지 몰라 공책을 한 장 찢어 내밀었다.",
+            ["memory.stage02.03"] = "그 이름을 소리 내어 불러 본 순간, 복도 끝의 발소리가 이쪽으로 방향을 튼다.",
+
+            // Stage 3 — 동아리실. 둘이 처음 진짜 가까워지기 시작한 순간.
+            ["memory.stage03.title"] = "기억의 조각 #3 — 동아리실",
+            ["memory.stage03.01"] = "낡은 스피커의 전원을 켜자, 둘만 알던 노래의 첫 박자가 조용히 흘러나온다.",
+            ["memory.stage03.02"] = "서툰 연습이 끝난 뒤에도 우리는 남아 같은 구절을 몇 번이나 다시 들었다.",
+            ["memory.stage03.03"] = "그때 처음 아무 말 없이도 편안했다는 걸 떠올리자, 선반 너머의 그림자가 몸을 낮춘다.",
+
+            // Stage 4 — 기숙사. 최종 대사 원고가 아니라 동선 검증용 기억 캡션이다.
+            ["memory.stage04.title"] = "기억의 조각 #4 — 기숙사",
+            ["memory.stage04.01"] = "이불 요새 안에 간식 봉지와 반쯤 끝난 보드게임이 그대로 놓여 있다.",
+            ["memory.stage04.02"] = "서로 속이려다 먼저 웃음을 터뜨린 흔적이, 접힌 점수표 위에 남아 있다.",
+            ["memory.stage04.03"] = "밝은 방의 웃음이 멎자 복도에서 급한 발소리만 가까워진다.",
+
+            // Stage 5 — 프로젝트실. 최종 대사 원고가 아닌 기능 검증용 최소 기억 캡션이다.
+            ["memory.stage05.title"] = "기억의 조각 #5 — 프로젝트실",
+            ["memory.stage05.01"] = "프로젝트 보드에는 밤새 고친 흔적과 서로의 낙서가 겹쳐 남아 있다.",
+            ["memory.stage05.02"] = "식은 컵과 엉킨 케이블 사이로, 졸음을 쫓으려 장난치던 순간이 떠오른다.",
+            ["memory.stage05.03"] = "밝은 작업등 아래 웃음이 번지자 책상 너머의 선명한 그림자가 한 걸음 가까워진다.",
+
+            // Stage 6 — 거리/상점가. 최종 대사가 아닌 기능 검증용 최소 기억 캡션이다.
+            ["memory.stage06.title"] = "기억의 조각 #6 — 거리와 상점",
+            ["memory.stage06.01"] = "밝은 진열대 앞에서 서로 고른 작은 장난감과 간식이 쇼핑백 안에서 부딪힌다.",
+            ["memory.stage06.02"] = "파라솔 아래 벤치에 앉아 영수증 뒷면에 다음에 갈 곳을 함께 적었다.",
+            ["memory.stage06.03"] = "웃음이 남은 거리를 돌아보자 작은 잔재들의 공격 예고가 밝은 간판 사이에서 번쩍인다."
         };
 
         /// <summary>

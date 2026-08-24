@@ -67,8 +67,30 @@ namespace Daeume.Enemy
         protected virtual void Awake()
         {
             bodyCollider = GetComponent<Collider2D>();
+            ForceTriggerBody();
             CurrentHealth = DataBase.MaxHealth;
             EnterState(RemnantState.Idle);
+        }
+
+        /// <summary>
+        /// 잔재의 몸 콜라이더는 반드시 트리거여야 한다. 프리팹 설정에 의존하지 않고 코드로 강제한다.
+        /// </summary>
+        /// <remarks>
+        /// 실제로 겪은 버그(#12): 잔재는 Rigidbody2D 없이 transform으로 움직인다. 그러면 유니티는
+        /// 그 콜라이더를 "정적(static) 콜라이더"로 취급하는데, 정적 콜라이더가 움직이면서
+        /// 동적 몸(플레이어)을 파고들면 물리 엔진이 겹침을 푸느라 최소 축 방향으로 강하게 밀어낸다.
+        /// 잔재 몸통은 높이 0.5로 납작해서 그 최소 축이 위쪽이라, 플레이어가 하늘로 솟구쳤다.
+        /// 공중에 있는 동안은 접지가 아니라 점프가 아예 나가지 않아 "Space 키가 안 먹는" 증상으로 보였다.
+        ///
+        /// 트리거로 바꿔도 잃는 것이 없다. 잔재의 접촉 피해는 충돌이 아니라 거리(TargetInRange)로 판정하고,
+        /// 플레이어 공격 탐지(PlayerCombat)는 OverlapCircleAll이라 트리거도 그대로 잡는다.
+        /// 오히려 플레이어가 잔재 머리 위에 올라서던 것도 함께 막힌다(접지 검사는 트리거를 제외한다).
+        ///
+        /// Stage 1은 잔재를 실제로 소환하지 않아 이 버그가 드러나지 않았고, Stage 2에서 처음 나타났다.
+        /// </remarks>
+        private void ForceTriggerBody()
+        {
+            if (bodyCollider != null) bodyCollider.isTrigger = true;
         }
 
         // Update에서 Tick을 부르되, 실제 로직은 Tick에 모아 뒀다.
@@ -84,6 +106,7 @@ namespace Daeume.Enemy
             FragmentTraceDirection = 0f;
             if (bodyCollider == null) bodyCollider = GetComponent<Collider2D>();
             bodyCollider.enabled = true;
+            ForceTriggerBody();
             EnterState(RemnantState.Idle);
         }
 

@@ -33,6 +33,17 @@ namespace Daeume.Player
             }
         }
 
+        /// <summary>
+        /// 겹쳐 있는 동안에도 계속 검사한다. (#12)
+        /// </summary>
+        /// <remarks>
+        /// Enter는 "겹치기 시작한 그 프레임"에 한 번만 온다. 이미 겹친 채로 추격이 시작되거나,
+        /// 겹친 순간 추격자가 화면 밖이라 IsOnScreen에 걸리면 그 한 번을 놓치고 다시는 오지 않는다.
+        /// 그러면 추격자가 몸에 닿아 있는데도 아무 일이 일어나지 않는다. Stay로 매 프레임 다시 본다.
+        /// BeginGrab이 GrabInProgress로 중복을 막으므로 연출이 겹치지는 않는다.
+        /// </remarks>
+        private void OnTriggerStay2D(Collider2D other) => OnTriggerEnter2D(other);
+
         /// <summary>붙잡기 연출을 시작한다. 이미 진행 중이면 무시한다.</summary>
         public bool BeginGrab()
         {
@@ -67,8 +78,14 @@ namespace Daeume.Player
             // 재시도마다 같은 길이여야 한다. Time.deltaTime 누적이 아니라 고정 대기라서 결정적이다. 적합하다.
             yield return new WaitForSeconds(traumaGrabSeconds);
 
+            // 붙잡히면 게임 오버다(#12). 체크포인트 복귀를 요청하지 않는다.
+            //
+            // 예전에는 여기서 ChaseCheckpointRestoreRequested를 발행해 추격 지점으로 되돌렸다.
+            // 그런데 부활 지점이 탈출 경로 반대편이면 지나갈 방법이 없어 붙잡힘 → 복귀 → 붙잡힘이
+            // 무한 반복됐다(Stage 01·02 모두에서 실제로 발생). 추격자를 밀어내고 유예를 주는
+            // 완화책으로는 "지나갈 수 없는 배치"라는 근본 문제가 남는다.
+            // 붙잡힘을 되돌릴 수 없는 결말로 두면 추격의 긴장도 함께 산다.
             GameManager.Instance?.Fail(StageFailureCause.TraumaGrabCompleted);
-            GameManager.Instance?.Events.Publish(new ChaseCheckpointRestoreRequested(chaseCheckpointId));
 
             // 수정: 조작 잠금을 여기서 반드시 풀어 준다.
             // 원래는 체크포인트 복귀(PlayerRestoreRequested)가 대신 풀어 주기를 기대했는데,

@@ -1,0 +1,51 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0567ce6f5126b5847ae6bf0323dfc8d5, type: 3}
+  m_Name: Stage05
+  m_EditorClassIdentifier: Daeume.Stage::Daeume.Stage.StageData
+  stageId: 5
+  location: "\uD504\uB85C\uC81D\uD2B8\uC2E4 \u2014 \uC785\uAD6C \uC791\uC5C5\uB300,
+    \uC790\uB8CC \uBCF4\uAD00 \uBCBD\uC7A5\uACFC \uBA54\uC778 \uC791\uC5C5\uCE35"
+  memoryId: memory-stage05-fragment-01
+  memoryTitle: "\uAE30\uC5B5\uC758 \uC870\uAC01 #5 \u2014 \uD504\uB85C\uC81D\uD2B8\uC2E4"
+  memoryPresentationId: memory-presentation-stage05-project-board
+  emotionalRole: 6
+  encounterIds:
+  - stage05.encounter.01
+  - stage05.encounter.02
+  - stage05.encounter.03
+  contaminationVariantId: Stage05_Overlay_Intrusion
+  primaryContaminationChannels: 000000000100000002000000
+  contaminationMeaning: "\uBC1D\uC740 \uD504\uB85C\uC81D\uD2B8\uC2E4\uACFC \uD568\uAED8
+    \uB9CC\uB4E0 \uD754\uC801 \uC704\uB85C \uBD88\uC548\uC774 \uC2A4\uBA70\uB4E4\uACE0,
+    \uB610\uB837\uD574\uC9C4 \uC794\uC7AC \uC2E4\uB8E8\uC5E3\uC774 \uD589\uBCF5\uD588\uB358
+    \uBC24\uC0D8 \uC791\uC5C5\uC758 \uACF5\uAC04\uC744 \uCD94\uACA9 \uACBD\uB85C\uB85C
+    \uBC14\uAFBC\uB2E4."
+  hospitalImageryDirectness: 1
+  chaseId: chase-stage05-project-floor-backtrack
+  chaseMeaning: "\uBA54\uC778 \uC791\uC5C5\uCE35\uC758 \uC775\uC219\uD55C \uCC45\uC0C1
+    \uBC30\uCE58\uB97C \uC5ED\uC8FC\uD589\uD558\uBA70, \uD568\uAED8 \uB9CC\uB4E4\uB358
+    \uD589\uBCF5\uACFC \uAC00\uAE4C\uC6CC\uC9C0\uB294 \uBD88\uC548\uC758 \uB300\uBE44\uB97C
+    \uC555\uBC15\uC73C\uB85C \uBC14\uAFBC\uB2E4."
+  targetChaseSeconds: 49
+  lengthCategory: 1
+  targetPlaytimeMinutes: 17
+  clueIds:
+  - clue-stage05-project-board-doodles
+  - clue-stage05-cold-paper-cups
+  - clue-stage05-tangled-cables
+  explorationIntensity: 3
+  memoryIntensity: 4
+  encounterIntensity: 4
+  contaminationIntensity: 3
+  chaseIntensity: 4
+  nextStageId: 6

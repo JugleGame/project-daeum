@@ -155,6 +155,58 @@ namespace Daeume.Tests.PlayMode
             Object.DestroyImmediate(trauma);
         }
 
+        [Test]
+        public void Test_DashRemnant_StopsBurstBeforeSolidTerrain()
+        {
+            var dash = CreateDash(out var data);
+            var player = CreatePlayer(out _);
+            var wall = CreateSolidTerrain("Wall", new Vector2(1.25f, 0f), new Vector2(0.2f, 3f));
+            player.transform.position = Vector2.right * (data.DashTriggerRange - 0.1f);
+            dash.SetTarget(player.transform);
+
+            AdvanceThroughAlert(dash, data.AlertSeconds);
+            dash.Tick(data.AttackTelegraphSeconds);
+            Physics2D.SyncTransforms();
+            dash.Tick(0.2f);
+            Physics2D.SyncTransforms();
+
+            var dashCollider = dash.GetComponent<Collider2D>();
+            var wallCollider = wall.GetComponent<Collider2D>();
+            Assert.That(dashCollider.bounds.max.x, Is.LessThanOrEqualTo(wallCollider.bounds.min.x + 0.001f));
+            Assert.That(Physics2D.Distance(dashCollider, wallCollider).isOverlapped, Is.False);
+
+            Object.DestroyImmediate(dash.gameObject);
+            Object.DestroyImmediate(player);
+            Object.DestroyImmediate(wall);
+            Object.DestroyImmediate(data);
+        }
+
+        [Test]
+        public void Test_DashRemnant_DoesNotEnterFloorOrWallDuringBurst()
+        {
+            var dash = CreateDash(out var data);
+            var player = CreatePlayer(out _);
+            var platform = CreateSolidTerrain("PlatformEdge", new Vector2(1.5f, 0f), new Vector2(1.5f, 0.5f));
+            player.transform.position = Vector2.right * (data.DashTriggerRange - 0.1f);
+            dash.SetTarget(player.transform);
+
+            AdvanceThroughAlert(dash, data.AlertSeconds);
+            dash.Tick(data.AttackTelegraphSeconds);
+            Physics2D.SyncTransforms();
+            dash.Tick(data.DashMaxDurationSeconds);
+            Physics2D.SyncTransforms();
+
+            var dashCollider = dash.GetComponent<Collider2D>();
+            var platformCollider = platform.GetComponent<Collider2D>();
+            Assert.That(Physics2D.Distance(dashCollider, platformCollider).isOverlapped, Is.False);
+            Assert.That(dashCollider.bounds.max.x, Is.LessThanOrEqualTo(platformCollider.bounds.min.x + 0.001f));
+
+            Object.DestroyImmediate(dash.gameObject);
+            Object.DestroyImmediate(player);
+            Object.DestroyImmediate(platform);
+            Object.DestroyImmediate(data);
+        }
+
         private static void AdvanceThroughAlert(RemnantActor remnant, float alertSeconds)
         {
             remnant.Tick(0f);
@@ -197,6 +249,15 @@ namespace Daeume.Tests.PlayMode
             var player = new GameObject("Player");
             health = player.AddComponent<Daeume.Player.PlayerHealth>();
             return player;
+        }
+
+        private static GameObject CreateSolidTerrain(string name, Vector2 position, Vector2 size)
+        {
+            var terrain = new GameObject(name);
+            terrain.transform.position = position;
+            var collider = terrain.AddComponent<BoxCollider2D>();
+            collider.size = size;
+            return terrain;
         }
     }
 }

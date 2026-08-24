@@ -26,7 +26,8 @@ namespace Daeume.Editor
         private void OnPreprocessTexture()
         {
             var normalized = assetPath.Replace("\\", "/");
-            if (!normalized.StartsWith("Assets/Art/"))
+            if (!normalized.StartsWith("Assets/Art/")
+                && !normalized.StartsWith("Assets/Resources/Art/"))
             {
                 return;
             }

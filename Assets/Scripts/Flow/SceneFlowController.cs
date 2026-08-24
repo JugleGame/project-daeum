@@ -12,7 +12,10 @@ namespace Daeume.Flow
         public SceneFlowStep Step { get; }
     }
 
-    /// <summary>오염 오버레이 씬을 올리거나 내려 달라는 요청. 실제 처리는 OverlaySceneLoader가 한다.</summary>
+    /// <summary>
+    /// 오염 오버레이를 켜거나 꺼 달라는 요청. 실제 처리는 OverlaySceneLoader가 한다.
+    /// SceneName은 <b>StageNN_Base 안의 오버레이 루트 오브젝트 이름</b>이다 — 별도 씬 이름이 아니다(#38).
+    /// </summary>
     public readonly struct OverlaySceneLoadRequested
     {
         public OverlaySceneLoadRequested(string sceneName, bool load)
@@ -75,7 +78,57 @@ namespace Daeume.Flow
 
         private Coroutine pendingRetry;
 
-        private void OnStageFailed(StageFailed value) => pendingRetry = StartCoroutine(RetryAfterDelay());
+        /// <summary>
+        /// 실패 원인에 따라 뒷처리가 갈린다. (#12)
+        /// </summary>
+        /// <remarks>
+        /// 트라우마에게 붙잡히면 게임 오버다 — 체크포인트로 되돌리지 않고 타이틀로 나간다.
+        /// 되돌리던 시절에는 부활 지점이 탈출 경로 반대편일 때 추격자를 지나갈 방법이 없어
+        /// 붙잡힘 → 복귀 → 붙잡힘이 무한 반복됐다. 체력 소진은 종전대로 체크포인트에서 재시도한다.
+        /// </remarks>
+        private void OnStageFailed(StageFailed value)
+        {
+            pendingRetry = value.Cause == StageFailureCause.TraumaGrabCompleted
+                ? StartCoroutine(GameOverAfterDelay())
+                : StartCoroutine(RetryAfterDelay());
+        }
+
+        /// <summary>붙잡힘 연출을 볼 시간을 준 뒤 타이틀로 내보낸다.</summary>
+        private IEnumerator GameOverAfterDelay()
+        {
+            yield return new WaitForSeconds(1.2f);
+            pendingRetry = null;
+            ReturnToTitleAfterGameOver();
+        }
+
+        /// <summary>
+        /// 게임 오버 처리. 진행 스테이지는 남기고 추격 체크포인트만 지운다.
+        /// </summary>
+        /// <remarks>
+        /// CurrentStageId를 남기므로 "이어하기"는 붙잡힌 그 스테이지의 처음부터 다시 시작한다.
+        /// 반대로 CheckpointId를 남기면 이어하기가 곧바로 추격 상태로 복귀해, 방금 죽은 그 자리에서
+        /// 다시 시작하는 꼴이 된다 — 게임 오버로 만든 의미가 사라진다.
+        /// </remarks>
+        public bool ReturnToTitleAfterGameOver()
+        {
+            if (!plan.TryBeginTransition()) return false;
+
+            currentData.CheckpointId = string.Empty;
+            currentData.ContaminationVariantId = string.Empty;
+            currentData.PressureStage = "Stable";
+            currentData.PlayerPosition = Vector2.zero;
+            currentData.PlayerHealth = maxHealth;
+            saveSystem.Save(currentData, maxHealth);
+
+            StartCoroutine(LoadTitleAfterGameOver());
+            return true;
+        }
+
+        private IEnumerator LoadTitleAfterGameOver()
+        {
+            yield return ReplaceContent(titleScene);
+            plan.CompleteTransition();
+        }
 
         /// <summary>실패 후 잠깐 기다렸다가 재시작한다. 실패 화면을 볼 시간을 주기 위한 지연이다.</summary>
         private IEnumerator RetryAfterDelay()

@@ -1,5 +1,6 @@
 using Daeume.Contamination;
 using Daeume.ContaminationRuntime;
+using Daeume.Core;
 using NUnit.Framework;
 using UnityEngine;
 
@@ -33,7 +34,13 @@ namespace Daeume.Tests.PlayMode
             context.Pursuer.position = new Vector3(-20f, 0f);
             context.Director.BeginChase();
             context.Director.Tick(2f);
-            Assert.That(Mathf.Abs(context.Player.position.x - context.Pursuer.position.x), Is.EqualTo(0.9f).Within(0.001f));
+            // 접촉 목표 거리는 두 콜라이더가 확실히 겹치는 값이어야 한다(#12).
+            // 접선 거리(0.65 + 0.25 = 0.9)로 두면 겹침이 0이라 OnTriggerEnter2D가 오지 않아
+            // 붙잡기가 아예 성립하지 않았다.
+            var contactDistance = Mathf.Abs(context.Player.position.x - context.Pursuer.position.x);
+            Assert.That(contactDistance, Is.LessThan(0.9f),
+                "접선 거리에서 멈추면 트리거가 겹치지 않아 붙잡기가 발생하지 않는다.");
+            Assert.That(contactDistance, Is.GreaterThan(0f));
             context.Dispose();
         }
 
@@ -61,6 +68,35 @@ namespace Daeume.Tests.PlayMode
             Assert.That(Vector3.Distance(before, context.Pursuer.position), Is.LessThanOrEqualTo(0.6001f));
             Assert.That(context.Director.TeleportCount, Is.Zero);
             Assert.That(context.Data.DeclaredTeleportMarkerIds, Is.Empty);
+            context.Dispose();
+        }
+
+        /// <summary>
+        /// #12: 체크포인트 복귀 직후에는 추격자가 잠시 다가오지 않는다.
+        ///
+        /// 거리를 벌려 두기만 하면 추격자가 플레이어보다 빨라 곧바로 다시 붙는다.
+        /// 탈출 경로가 추격자 너머에 있으면 지나갈 틈이 없어 복귀 → 즉사 → 복귀가 무한 반복된다.
+        /// </summary>
+        [Test]
+        public void Test_Chase_RestoreGivesGraceBeforeClosingIn()
+        {
+            var context = CreateContext(30f, 10f, 2f, 5f);
+            context.Player.position = Vector3.zero;
+            context.Pursuer.position = new Vector3(-20f, 0f);
+            context.Director.BeginChase();
+
+            context.Director.HandlePlayerRestore(new PlayerRestoreRequested(Vector2.zero, 3));
+            var afterRestore = context.Pursuer.position.x;
+
+            // 복귀 직후에는 거리가 좁혀지지 않는다.
+            context.Director.Tick(0.5f);
+            Assert.That(context.Pursuer.position.x, Is.EqualTo(afterRestore).Within(0.001f),
+                "복귀 유예 동안에는 추격자가 다가오면 안 된다.");
+
+            // 유예가 지나면 다시 붙는다.
+            context.Director.Tick(2f);
+            Assert.That(Mathf.Abs(context.Pursuer.position.x - context.Player.position.x),
+                Is.LessThan(Mathf.Abs(afterRestore)));
             context.Dispose();
         }
 

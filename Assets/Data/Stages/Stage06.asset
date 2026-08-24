@@ -1,0 +1,52 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0567ce6f5126b5847ae6bf0323dfc8d5, type: 3}
+  m_Name: Stage06
+  m_EditorClassIdentifier: Daeume.Stage::Daeume.Stage.StageData
+  stageId: 6
+  location: "\uBC1D\uC740 \uAC70\uB9AC/\uC0C1\uC810\uAC00 \u2014 \uAC70\uB9AC \uCD08\uC785,
+    \uC0C1\uC810 \uACE8\uBAA9\uACFC \uBA54\uC778 \uAC70\uB9AC"
+  memoryId: memory-stage06-fragment-01
+  memoryTitle: "\uAE30\uC5B5\uC758 \uC870\uAC01 #6 \u2014 \uAC70\uB9AC\uC640 \uC0C1\uC810"
+  memoryPresentationId: memory-presentation-stage06-shopping-bag
+  emotionalRole: 6
+  encounterIds:
+  - stage06.encounter.01
+  - stage06.encounter.02
+  - stage06.encounter.03
+  contaminationVariantId: Stage06_Overlay_Intrusion
+  primaryContaminationChannels: 000000000200000004000000
+  contaminationMeaning: "\uAC00\uC7A5 \uBC1D\uACE0 \uCC44\uB3C4 \uB192\uC740 \uC0C1\uC810\uAC00\uB97C
+    \uADF8\uB300\uB85C \uC720\uC9C0\uD55C \uCC44 \uC791\uACE0 \uC5B4\uC0C9\uD55C
+    \uC794\uC7AC\uC640 \uBD88\uC548\uC758 \uD754\uC801\uC744 \uACB9\uCCD0, \uD589\uBCF5\uD55C
+    \uC678\uCD9C \uAE30\uC5B5 \uC790\uCCB4\uAC00 \uB3C4\uD53C \uACBD\uB85C\uB85C
+    \uB4A4\uC9D1\uD788\uB294 \uB300\uBE44\uB97C \uB9CC\uB4E0\uB2E4."
+  hospitalImageryDirectness: 1
+  chaseId: chase-stage06-street-backtrack
+  chaseMeaning: "\uAC70\uB9AC \uCD08\uC785\uBD80\uD130 \uBA54\uC778 \uAC70\uB9AC\uAE4C\uC9C0
+    \uC5ED\uC8FC\uD589\uD558\uBA70 \uBC1D\uC740 \uACF5\uAC04\uACFC \uC794\uC7AC\uC758
+    \uACF5\uACA9 \uC608\uACE0 \uC2E0\uD638\uB97C \uB300\uBE44\uC2DC\uD0A8\uB2E4.
+    \uD22C\uC0AC\uCCB4\uB098 LOS \uCC28\uB2E8\uC744 \uC0C8\uB85C \uAC00\uC815\uD558\uC9C0
+    \uC54A\uB294\uB2E4."
+  targetChaseSeconds: 52
+  lengthCategory: 1
+  targetPlaytimeMinutes: 18
+  clueIds:
+  - clue-stage06-parasol-sticker
+  - clue-stage06-shop-receipt
+  - clue-stage06-bench-keychain
+  explorationIntensity: 3
+  memoryIntensity: 4
+  encounterIntensity: 4
+  contaminationIntensity: 4
+  chaseIntensity: 4
+  nextStageId: 7

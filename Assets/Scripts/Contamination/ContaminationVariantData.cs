@@ -7,7 +7,7 @@ namespace Daeume.Contamination
     /// <summary>
     /// 한 스테이지의 오염 공간 설정을 담는 데이터 에셋. (spec-006)
     ///
-    /// 어떤 오버레이 씬을 쓸지, 목표 추격 시간은 몇 초인지, 추격자 속도와 거리 한계는 얼마인지를 선언한다.
+    /// 어떤 오버레이를 쓸지, 목표 추격 시간은 몇 초인지, 추격자 속도와 거리 한계는 얼마인지를 선언한다.
     /// 이 값들이 코드가 아니라 에셋에 있는 이유는, 스테이지마다 다르게 저작해야 하고
     /// 기획자가 코드를 만지지 않고 조정할 수 있어야 하기 때문이다.
     ///
@@ -18,8 +18,8 @@ namespace Daeume.Contamination
     public sealed class ContaminationVariantData : ScriptableObject
     {
         [SerializeField] private string variantId = string.Empty;
-        [SerializeField] private string echoOverlayScene = string.Empty;
-        [SerializeField] private string intrusionOverlayScene = string.Empty;
+        [SerializeField] private string echoOverlayName = string.Empty;
+        [SerializeField] private string intrusionOverlayName = string.Empty;
         [SerializeField, Min(0.1f)] private float targetChaseSeconds = 30f;  // director가 목표로 삼는 추격 길이
         [SerializeField, Min(0.1f)] private float chaseSpeed = 6f;
         [SerializeField, Min(0.1f)] private float minDistance = 2f;          // 이보다 가까워지면 추격자를 물린다
@@ -28,8 +28,8 @@ namespace Daeume.Contamination
         [SerializeField] private List<string> declaredTeleportMarkerIds = new();
 
         public string VariantId => variantId;
-        public string EchoOverlayScene => echoOverlayScene;
-        public string IntrusionOverlayScene => intrusionOverlayScene;
+        public string EchoOverlayName => echoOverlayName;
+        public string IntrusionOverlayName => intrusionOverlayName;
 
         // 읽을 때도 한 번 더 하한을 건다.
         // 인스펙터의 Min 속성은 에디터 입력만 막을 뿐, 코드로 잘못된 값이 들어오는 것은 막지 못하기 때문이다.
@@ -59,8 +59,8 @@ namespace Daeume.Contamination
         /// <summary>테스트나 툴에서 값을 한 번에 채워 넣는다.</summary>
         public void Configure(
             string id,
-            string echoScene,
-            string intrusionScene,
+            string echoOverlay,
+            string intrusionOverlay,
             float chaseSeconds,
             float speed,
             float minimumDistance,
@@ -69,8 +69,8 @@ namespace Daeume.Contamination
             float lookaheadUnits = 3f)
         {
             variantId = id ?? string.Empty;
-            echoOverlayScene = echoScene ?? string.Empty;
-            intrusionOverlayScene = intrusionScene ?? string.Empty;
+            echoOverlayName = echoOverlay ?? string.Empty;
+            intrusionOverlayName = intrusionOverlay ?? string.Empty;
             targetChaseSeconds = Mathf.Max(0.1f, chaseSeconds);
             chaseSpeed = Mathf.Max(0.1f, speed);
             minDistance = Mathf.Max(0.1f, minimumDistance);
@@ -91,8 +91,8 @@ namespace Daeume.Contamination
         public bool ValidateData(out string error)
         {
             if (string.IsNullOrWhiteSpace(variantId)) return Fail("VariantId is required.", out error);
-            if (string.IsNullOrWhiteSpace(echoOverlayScene)) return Fail("Echo overlay scene is required.", out error);
-            if (string.IsNullOrWhiteSpace(intrusionOverlayScene)) return Fail("Intrusion overlay scene is required.", out error);
+            if (string.IsNullOrWhiteSpace(echoOverlayName)) return Fail("Echo overlay name is required.", out error);
+            if (string.IsNullOrWhiteSpace(intrusionOverlayName)) return Fail("Intrusion overlay name is required.", out error);
             if (targetChaseSeconds <= 0f) return Fail("TargetChaseSeconds must be positive.", out error);
             if (chaseSpeed <= 0f) return Fail("ChaseSpeed must be positive.", out error);
             if (minDistance <= 0f || maxDistance <= minDistance) return Fail("Distance bounds are invalid.", out error);
@@ -102,13 +102,20 @@ namespace Daeume.Contamination
             return true;
         }
 
-        /// <summary>압박 단계에 해당하는 오버레이 씬 이름. Stable에는 오버레이가 없다.</summary>
+        /// <summary>
+        /// 압박 단계에 해당하는 오버레이 루트 오브젝트 이름. Stable에는 오버레이가 없다.
+        /// </summary>
+        /// <remarks>
+        /// 이름이 가리키는 것은 <b>StageNN_Base 씬 안의 루트 GameObject</b>다(#38). 별도 씬 이름이 아니다.
+        /// 씬으로 저작하면 스테이지당 씬이 3개로 불어나고, 기저 지형을 못 보는 채로 오버레이 좌표를
+        /// 맞춰야 한다. 그래서 필드 이름에서 "Scene"을 걷어냈다 — 이름이 남아 있으면 다음 저작자가 또 씬을 만든다.
+        /// </remarks>
         public string OverlayFor(PressureStage stage)
         {
             return stage switch
             {
-                PressureStage.Echo => echoOverlayScene,
-                PressureStage.Intrusion => intrusionOverlayScene,
+                PressureStage.Echo => echoOverlayName,
+                PressureStage.Intrusion => intrusionOverlayName,
                 _ => string.Empty
             };
         }

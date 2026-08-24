@@ -56,6 +56,13 @@ namespace Daeume.Stage
             {
                 position.y = Mathf.Clamp(target.position.y, minimum.y, maximum.y);
             }
+            else
+            {
+                // Persistent 카메라는 씬을 바꿔도 살아남으므로 현재 Y를 그대로 두면
+                // 세로 추적 스테이지의 마지막 위치를 다음 횡스크롤 스테이지가 상속한다.
+                // 이 컴포넌트가 놓인 스테이지 루트의 Y를 해당 스테이지의 결정적 기준으로 쓴다.
+                position.y = transform.position.y;
+            }
 
             targetCamera.transform.position = position;
         }

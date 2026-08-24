@@ -1,0 +1,42 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0567ce6f5126b5847ae6bf0323dfc8d5, type: 3}
+  m_Name: Stage04
+  m_EditorClassIdentifier: Daeume.Stage::Daeume.Stage.StageData
+  stageId: 4
+  location: "기숙사 — 공용 라운지, 복도, 계단과 개인 방"
+  memoryId: memory-stage04-fragment-01
+  memoryTitle: "기억의 조각 #4 — 기숙사"
+  memoryPresentationId: memory-presentation-stage04-blanket-fort
+  emotionalRole: 5
+  encounterIds:
+  - stage04.encounter.01
+  - stage04.encounter.02
+  - stage04.encounter.03
+  contaminationVariantId: Stage04_Overlay_Intrusion
+  primaryContaminationChannels: 000000000100000004000000
+  contaminationMeaning: "밝은 기숙사와 둘이 놀던 흔적은 그대로인데 웃음이 멎은 자리에 발소리와 겹친 사물만 남아, 행복했던 기억 자체가 추격의 배경이 된다."
+  hospitalImageryDirectness: 0
+  chaseId: chase-stage04-bright-dormitory-backtrack
+  chaseMeaning: "밝은 조명과 일상 소품을 유지한 방·복도·계단을 역주행해, 어둠 대신 행복한 공간에 괴물이 있다는 병치로 공포를 만든다."
+  targetChaseSeconds: 46
+  lengthCategory: 1
+  targetPlaytimeMinutes: 15
+  clueIds:
+  - clue-stage04-boardgame-score
+  - clue-stage04-shared-snack-wrapper
+  explorationIntensity: 2
+  memoryIntensity: 4
+  encounterIntensity: 3
+  contaminationIntensity: 2
+  chaseIntensity: 3
+  nextStageId: 5

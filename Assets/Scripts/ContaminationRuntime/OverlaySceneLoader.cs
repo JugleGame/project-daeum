@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using Daeume.Core;
 using Daeume.Flow;
 using UnityEngine;
@@ -8,25 +6,28 @@ using UnityEngine.SceneManagement;
 namespace Daeume.ContaminationRuntime
 {
     /// <summary>
-    /// 오염 공간(Overlay) 씬을 기저 씬 위에 덧씌우거나 걷어 내는 담당자다. (spec-006, spec-015)
+    /// 오염 공간(Overlay)을 기저 지형 위에 덧씌우거나 걷어 내는 담당자다. (spec-006, spec-015)
     ///
     /// 왜 "덧씌우기"인가:
     /// 오염된 공간을 따로 만들어 통째로 교체하면 같은 지형을 두 벌 관리해야 한다.
-    /// 그래서 기저 씬(Stage01_Base)은 계속 열어 둔 채, 변화한 부분만 담은 씬을 추가(Additive)로 얹는다.
+    /// 그래서 기저 레벨은 그대로 둔 채, 변화한 부분만 얹는다.
     /// 스펙도 "오버레이 적재는 기저 레벨을 닫지 않는다"를 명시적으로 요구한다.
     ///
-    /// 이 스크립트는 씬 API를 직접 부르는 유일한 창구다.
-    /// 다른 시스템은 이벤트(OverlaySceneLoadRequested)만 발행하고 씬을 직접 건드리지 않는다(spec-015).
+    /// 오버레이는 <b>StageNN_Base 씬 안의 루트 GameObject</b>다. 그것을 켜고 끄는 것이 전부다(#38).
+    /// 예전에는 오버레이를 별도 씬 파일로 두고 additive로 얹었고 이 클래스에 그 폴백이 남아 있었다.
+    /// 지웠다. 이유는 세 가지다:
+    /// 1. 스테이지당 씬 3개 × 13스테이지 = 39씬. 적재/해제 비용이 그만큼 늘어난다.
+    /// 2. 오버레이 좌표를 기저 지형을 못 보는 상태에서 맞춰야 한다(Stage 02를 실제로 눈감고 배치했다).
+    /// 3. 실제 내용물은 발판 몇 개뿐인데 씬 파일 + meta가 따라붙는다.
+    /// 폴백을 남겨 두면 다음 저작자가 "되니까" 또 씬을 만든다. 경로를 하나만 남겨 그 여지를 없앤다.
+    ///
+    /// 씬을 하나도 건드리지 않으므로 "기저 레벨을 닫지 않는다"는 계약이 구조적으로 보장된다.
     /// </summary>
     public sealed class OverlaySceneLoader : MonoBehaviour
     {
         private GameManager subscribedManager;
 
-        // 처리 대기 중인 요청 줄(큐)과, 지금 처리 중인지 여부.
-        private readonly Queue<(string sceneName, bool load)> pending = new();
-        private bool processing;
-
-        public string LastRequestedScene { get; private set; } = string.Empty;
+        public string LastRequestedOverlay { get; private set; } = string.Empty;
         public bool LastRequestWasLoad { get; private set; }
 
         // Awake/OnEnable/Start 세 곳에서 구독을 시도한다.
@@ -55,55 +56,51 @@ namespace Daeume.ContaminationRuntime
             subscribedManager = null;
         }
 
-        /// <summary>요청을 줄 세워 두고, 앞의 작업이 끝나면 순서대로 처리한다.</summary>
+        /// <summary>
+        /// 요청을 그 자리에서 처리한다.
+        /// </summary>
         /// <remarks>
-        /// 수정 이유(중요):
-        /// 예전에는 요청이 올 때마다 코루틴을 따로 시작했다. 그러면 같은 프레임에
-        /// "Echo 적재 → Echo 해제 → Intrusion 적재"처럼 요청이 몰릴 때 서로 뒤엉킨다.
-        /// 아직 적재가 끝나지 않은 씬을 해제하려 해서 "Scene to unload is invalid" 오류가 나거나,
-        /// 해제가 늦게 끝나 방금 올린 씬이 도로 내려가는 사고가 생긴다.
-        /// 회상 완료 시 압박이 Stable → Echo → Intrusion으로 연속 변하므로 이 상황이 실제로 발생한다.
-        /// 한 번에 하나씩만 처리하도록 줄을 세워 순서를 보장한다.
+        /// 예전에는 요청을 큐에 세우고 코루틴으로 하나씩 처리했다. 씬 적재가 프레임을 넘겨 끝나기 때문에
+        /// "Echo 적재 → Echo 해제 → Intrusion 적재"처럼 같은 프레임에 요청이 몰리면 서로 뒤엉켰다
+        /// (회상 완료 시 압박이 Stable → Echo → Intrusion으로 연속 변해 실제로 발생했다).
+        /// 이제 처리가 SetActive 한 번이라 동기적으로 끝난다 — 뒤엉킬 틈 자체가 없어 큐를 지웠다.
         /// </remarks>
-        public void HandleRequest(OverlaySceneLoadRequested request)
-        {
-            pending.Enqueue((request.SceneName, request.Load));
-            if (!processing)
-            {
-                StartCoroutine(ProcessQueue());
-            }
-        }
+        public void HandleRequest(OverlaySceneLoadRequested request) => ApplyRequest(request.SceneName, request.Load);
 
-        private IEnumerator ProcessQueue()
+        /// <summary>오버레이 루트를 켜거나 끈다. 이름이 비었거나 루트가 없으면 아무 일도 하지 않는다.</summary>
+        public void ApplyRequest(string overlayName, bool load)
         {
-            processing = true;
-            while (pending.Count > 0)
-            {
-                var (sceneName, load) = pending.Dequeue();
-                yield return ApplyRequest(sceneName, load);
-            }
+            LastRequestedOverlay = overlayName ?? string.Empty;
+            LastRequestWasLoad = load;
 
-            processing = false;
+            var overlayRoot = FindOverlayRoot(overlayName);
+            if (overlayRoot != null) overlayRoot.SetActive(load);
         }
 
         /// <summary>
-        /// 실제 적재/해제를 수행한다. 테스트에서는 이 함수를 직접 호출해 완료 시점을 기다린다.
+        /// 열려 있는 씬들에서 오버레이 이름과 같은 <b>루트</b> 오브젝트를 찾는다. 없으면 null.
         /// </summary>
-        public IEnumerator ApplyRequest(string sceneName, bool load)
+        /// <remarks>
+        /// 루트만 본다. 아무 자식 오브젝트나 이름이 겹쳤다고 오버레이로 오인하면
+        /// 엉뚱한 물체가 통째로 꺼지는 사고가 난다 — 오버레이 루트는 씬 최상단에 둔다는 규약으로 막는다.
+        /// GetRootGameObjects는 꺼져 있는 루트도 돌려주므로, 평소 비활성인 오버레이도 찾을 수 있다.
+        /// </remarks>
+        public static GameObject FindOverlayRoot(string overlayName)
         {
-            LastRequestedScene = sceneName ?? string.Empty;
-            LastRequestWasLoad = load;
-            if (string.IsNullOrWhiteSpace(sceneName)) yield break;
+            if (string.IsNullOrWhiteSpace(overlayName)) return null;
 
-            var scene = SceneManager.GetSceneByName(sceneName);
-            if (load)
+            for (var index = 0; index < SceneManager.sceneCount; index++)
             {
-                // 이미 올라와 있으면 다시 올리지 않는다. 중복 적재는 같은 지형이 두 벌 생기는 사고다.
-                if (!scene.isLoaded) yield return SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
-                yield break;
+                var scene = SceneManager.GetSceneAt(index);
+                if (!scene.isLoaded) continue;
+
+                foreach (var root in scene.GetRootGameObjects())
+                {
+                    if (root.name == overlayName) return root;
+                }
             }
 
-            if (scene.isLoaded) yield return SceneManager.UnloadSceneAsync(sceneName);
+            return null;
         }
     }
 }

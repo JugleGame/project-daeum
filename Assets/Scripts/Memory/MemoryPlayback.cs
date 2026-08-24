@@ -22,7 +22,7 @@ namespace Daeume.Memory
     ///
     /// ■ 배치 방법
     /// 이 컴포넌트는 씬에 하나만 있으면 된다. Stage01_MemoryAnchor 프리팹이나 HUD 루트 어디든 좋다.
-    /// (Stage01PresentationBootstrap이 회상 앵커를 만들 때 함께 붙여 준다.)
+    /// (StagePresentationBootstrap이 회상 앵커를 만들 때 함께 붙여 준다.)
     /// </summary>
     public sealed class MemoryPlayback : MonoBehaviour
     {
