@@ -63,13 +63,13 @@ namespace Daeume.Tests.EditMode
             var pixelPerfectSettings = new SerializedObject(pixelPerfect);
             Assert.That(
                 pixelPerfectSettings.FindProperty("m_RefResolutionX").intValue,
-                Is.EqualTo(384));
+                Is.EqualTo(768));
             Assert.That(
                 pixelPerfectSettings.FindProperty("m_RefResolutionY").intValue,
-                Is.EqualTo(216));
+                Is.EqualTo(432));
             Assert.That(
                 pixelPerfectSettings.FindProperty("m_AssetsPPU").intValue,
-                Is.EqualTo(32));
+                Is.EqualTo(64));
 
             // 직교 크기의 주인은 PixelPerfectCamera다. StageCameraBounds는 세로 기준만 정한다.
             var orthographicSize =
