@@ -88,7 +88,7 @@ namespace Daeume.Tests.EditMode
                     if (renderer.gameObject.name != "Visual"
                         || renderer.sprite == null
                         || AssetDatabase.GetAssetPath(renderer.sprite)
-                            != "Assets/RoleB/Placeholders/BlockoutWhite.asset")
+                            != "Assets/Art/Sprites/FinalDaeume/Hero/Frames/idle_00.png")
                         continue;
 
                     var collider = renderer.GetComponentInParent<Collider2D>();
