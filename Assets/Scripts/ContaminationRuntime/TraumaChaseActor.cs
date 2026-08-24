@@ -67,6 +67,8 @@ namespace Daeume.ContaminationRuntime
 
             var position = (Vector2)transform.position;
             var radius = BodyRadius();
+            // 콜라이더가 루트에서 위로 올라가 있으므로 지형 검사도 그 중심에서 해야 한다.
+            var bodyOffset = BodyOffset();
 
             // ---- X: 감독이 지시한 목표 거리까지. 벽에 막히면 그 자리에 선다. ----
             // 예전에는 막힘 검사 없이 transform을 그대로 옮겨서 벽을 통과했다.
@@ -79,18 +81,15 @@ namespace Daeume.ContaminationRuntime
 
             var wall = Mathf.Approximately(moveX, 0f)
                 ? null
-                : FindTerrain(position, new Vector2(Mathf.Sign(moveX), 0f), radius + Mathf.Abs(moveX) + Skin);
+                : FindTerrain(position + bodyOffset, new Vector2(Mathf.Sign(moveX), 0f), radius + Mathf.Abs(moveX) + Skin);
 
-            // 거리 0 히트는 "이미 그 지형 안에 파묻혀 있다"는 뜻이므로 막힘으로 치지 않는다.
-            // Physics2D.Raycast는 콜라이더 안에서 시작하면 거리 0으로 즉시 맞았다고 알려 준다.
-            // 이걸 막힘으로 보면 파묻힌 상태에서 영원히 빠져나올 수 없다 — Stage 01은 트라우마가
-            // 경계벽(x 32.0~32.5) 안쪽인 x=32에 배치돼 있어서, 추격이 시작되자마자 굳어 버렸다.
-            var blocked = wall.HasValue && wall.Value.distance > 0f;
+            // 거리 0 히트는 FindTerrain에서 걸러내므로, 파묻힌 상태에서도 막힘으로 보지 않는다.
+            var blocked = wall.HasValue;
             if (!blocked) position.x = nextX;
             LastHorizontalMovement = position.x - transform.position.x;
 
             // ---- Y: 중력 / 벽타기 / 점프 ----
-            IsGrounded = verticalVelocity <= 0f && FindTerrain(position, Vector2.down, radius + Skin).HasValue;
+            IsGrounded = verticalVelocity <= 0f && FindTerrain(position + bodyOffset, Vector2.down, radius + Skin).HasValue;
 
             // 벽타기는 "플레이어가 위에 있을 때"만 한다.
             // 조건 없이 막히기만 하면 오르게 두었더니, 레벨 경계벽에 눌린 추격자가 벽을 타고
@@ -115,10 +114,10 @@ namespace Daeume.ContaminationRuntime
             if (moveY < 0f)
             {
                 // 한 프레임에 바닥을 뚫고 지나가지 않도록, 이동할 거리만큼 미리 살펴 바닥에 붙여 세운다.
-                var landing = FindTerrain(position, Vector2.down, radius + Mathf.Abs(moveY) + Skin);
+                var landing = FindTerrain(position + bodyOffset, Vector2.down, radius + Mathf.Abs(moveY) + Skin);
                 if (landing.HasValue)
                 {
-                    position.y = landing.Value.point.y + radius;
+                    position.y = landing.Value.point.y + radius - bodyOffset.y;
                     verticalVelocity = 0f;
                     moveY = 0f;
                     IsGrounded = true;
@@ -127,6 +126,15 @@ namespace Daeume.ContaminationRuntime
 
             position.y += moveY;
             transform.position = new Vector3(position.x, position.y, transform.position.z);
+        }
+
+        /// <summary>콜라이더 중심이 루트에서 얼마나 떨어져 있는지. 지형 검사 기준점 보정용.</summary>
+        private Vector2 BodyOffset()
+        {
+            if (body == null) body = GetComponent<CircleCollider2D>();
+            if (body == null) return Vector2.zero;
+            var scale = transform.lossyScale;
+            return new Vector2(body.offset.x * scale.x, body.offset.y * scale.y);
         }
 
         private float BodyRadius()
@@ -154,6 +162,11 @@ namespace Daeume.ContaminationRuntime
             {
                 var collider = hit.collider;
                 if (collider == null || collider.isTrigger) continue;
+                // 거리 0 히트는 "기준점이 이미 그 콜라이더 안에 있다"는 뜻이고, point가 기준점
+                // 그대로 돌아온다. 지형을 찾은 것으로 치면 벽에 파묻힌 채 착지했다고 판단해
+                // 그 자리에 굳거나 위로 밀려 올라간다. Stage 01은 트라우마 콜라이더 중심이
+                // 경계벽(x 32.0~32.5) 안에 걸쳐 있어 공중에 뜬 채로 움직였다.
+                if (hit.distance <= 0f) continue;
                 if (collider.transform == transform || collider.transform.IsChildOf(transform)) continue;
                 if (collider.GetComponentInParent<PlayerController>() != null) continue;
                 if (found && hit.distance >= nearest.distance) continue;

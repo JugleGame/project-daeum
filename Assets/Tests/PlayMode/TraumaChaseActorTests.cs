@@ -137,6 +137,43 @@ namespace Daeume.Tests.PlayMode
             Object.DestroyImmediate(wall);
         }
 
+        /// <summary>
+        /// #53: 콜라이더가 경계벽에 걸쳐 있어도 지면 위에 선다.
+        ///
+        /// Stage 01의 트라우마는 x=32에 있고 Boundary_Right가 x 32.0~32.5를 막고 있다.
+        /// 콜라이더 offset이 (0, 1)이라 중심이 벽 안에 들어가는데, 벽 안에서 시작한
+        /// 아래 방향 레이캐스트는 거리 0으로 즉시 맞았다고 알려 준다. 그걸 지형으로 치면
+        /// 착지한 것으로 판단해 공중에 뜬 채 좌우로만 움직였다.
+        /// </summary>
+        [Test]
+        public void Test_Trauma_LandsOnGroundWhileOverlappingBoundaryWall()
+        {
+            const float groundTop = -1f;
+            var ground = CreateSolid("Ground", new Vector2(28f, groundTop - 0.25f), new Vector2(16f, 0.5f));
+            var boundary = CreateSolid("Boundary_Right", new Vector2(32.25f, 1.5f), new Vector2(0.5f, 6f));
+
+            var actor = CreateActor(new Vector3(32f, 3f, 0f));
+            var body = actor.GetComponent<CircleCollider2D>();
+            body.radius = 1f;
+            body.offset = new Vector2(0f, 1f);   // 중심이 경계벽 안에 들어간다.
+
+            for (var step = 0; step < 200; step++)
+            {
+                actor.ApplyDirective(Directive(actor.transform.position, new Vector2(28f, groundTop)), 0.05f, 0f);
+                if (actor.IsGrounded) break;
+            }
+
+            Assert.That(actor.IsGrounded, Is.True, "경계벽에 걸쳐 있어도 착지해야 한다.");
+
+            // 콜라이더 하단(루트 + offset.y - radius = 루트)이 지면 윗면에 닿아야 한다.
+            Assert.That(actor.transform.position.y, Is.EqualTo(groundTop).Within(0.05f),
+                "트라우마가 지면 위에 서야 한다. 공중에 뜨면 회귀다.");
+
+            Object.DestroyImmediate(actor.gameObject);
+            Object.DestroyImmediate(ground);
+            Object.DestroyImmediate(boundary);
+        }
+
         private static TraumaChaseActor CreateActor(Vector3 position)
         {
             var actor = new GameObject("TraumaChaseActorTest").AddComponent<TraumaChaseActor>();

@@ -18,6 +18,7 @@ namespace Daeume.Stage
         [SerializeField] private Vector2 minimum = new(-2f, -2f);
         [SerializeField] private Vector2 maximum = new(28f, 4f);
         [SerializeField] private bool followVertical;
+        [SerializeField] private float fixedCameraY;
 
         private Transform target;
         private Camera targetCamera;
@@ -25,6 +26,7 @@ namespace Daeume.Stage
 
         public Vector2 Minimum => minimum;
         public Vector2 Maximum => maximum;
+        public float FixedCameraY => fixedCameraY;
 
         private void LateUpdate()
         {
@@ -60,8 +62,8 @@ namespace Daeume.Stage
             {
                 // Persistent 카메라는 씬을 바꿔도 살아남으므로 현재 Y를 그대로 두면
                 // 세로 추적 스테이지의 마지막 위치를 다음 횡스크롤 스테이지가 상속한다.
-                // 이 컴포넌트가 놓인 스테이지 루트의 Y를 해당 스테이지의 결정적 기준으로 쓴다.
-                position.y = transform.position.y;
+                // 스테이지마다 정해 둔 기준 높이를 그 스테이지의 결정적 값으로 쓴다.
+                position.y = fixedCameraY;
             }
 
             targetCamera.transform.position = position;

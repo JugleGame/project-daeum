@@ -26,6 +26,7 @@ namespace Daeume.Enemy
         private PressureStage pressureStage;
         private float lastPlayerX;
         private bool wasAttackedByPlayer;   // Reactive 잔재의 "선공당함" 기록
+        private Color bodyBaseColor = Color.white;
         private float nextTargetSearchTime; // 플레이어 탐색 재시도 시각(매 프레임 탐색 방지)
 
         protected float stateRemaining;      // 현재 상태(혹은 하위 단계)가 끝나기까지 남은 시간
@@ -66,6 +67,8 @@ namespace Daeume.Enemy
 
         protected virtual void Awake()
         {
+            if (bodyRenderer != null) bodyBaseColor = bodyRenderer.color;
+
             bodyCollider = GetComponent<Collider2D>();
             ForceTriggerBody();
             CurrentHealth = DataBase.MaxHealth;
@@ -107,6 +110,7 @@ namespace Daeume.Enemy
             if (bodyCollider == null) bodyCollider = GetComponent<Collider2D>();
             bodyCollider.enabled = true;
             ForceTriggerBody();
+            if (bodyRenderer != null) bodyRenderer.color = bodyBaseColor;
             EnterState(RemnantState.Idle);
         }
 
