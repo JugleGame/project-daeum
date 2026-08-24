@@ -36,9 +36,18 @@ namespace Daeume.Tests.PlayMode
             driver.Tick(0f);
             Assert.That(driver.CurrentState, Is.EqualTo(PlayerAnimationState.Airborne));
 
+            var surface = new GameObject("AnimationGrabbable").AddComponent<GrabbableSurface>();
+            Assert.That(controller.TryBeginGrab(surface), Is.True);
+            driver.Tick(0f);
+            Assert.That(driver.CurrentState, Is.EqualTo(PlayerAnimationState.Grab));
+
             combat.Attack();
             driver.Tick(0f);
             Assert.That(driver.CurrentState, Is.EqualTo(PlayerAnimationState.Attack));
+            driver.Tick(0.6f);
+            Assert.That(driver.CurrentState, Is.EqualTo(PlayerAnimationState.Attack));
+            driver.Tick(0.08f);
+            Assert.That(driver.CurrentState, Is.EqualTo(PlayerAnimationState.Grab));
 
             health.ApplyDamageAt(new DamageRequest(1), 1f);
             driver.Tick(0f);
@@ -49,6 +58,7 @@ namespace Daeume.Tests.PlayMode
             Assert.That(driver.CurrentState, Is.EqualTo(PlayerAnimationState.Dead));
 
             Object.DestroyImmediate(player);
+            Object.DestroyImmediate(surface.gameObject);
         }
 
         [Test]
@@ -94,18 +104,58 @@ namespace Daeume.Tests.PlayMode
         public void Test_Animation_TraumaMapsDirectiveToChase()
         {
             var traumaObject = new GameObject("AnimationTrauma");
+            var visual = new GameObject("Visual");
+            visual.transform.SetParent(traumaObject.transform);
+            var renderer = visual.AddComponent<SpriteRenderer>();
             var actor = traumaObject.AddComponent<TraumaChaseActor>();
             var driver = traumaObject.AddComponent<TraumaAnimationDriver>();
             driver.Tick();
             Assert.That(driver.CurrentState, Is.EqualTo(TraumaAnimationState.Idle));
 
+            traumaObject.transform.position = Vector3.right * 3f;
             actor.ApplyDirective(new ChaseDirectiveIssued(
                 "animation-test", Vector2.zero, Vector2.right * 3f,
-                3f, 2f, 7f, 4f, 5f), 0.1f, 3f);
+                3f, 2f, 7f, 4f, 5f), 0.1f, 1f);
             driver.Tick();
             Assert.That(driver.CurrentState, Is.EqualTo(TraumaAnimationState.Chase));
+            Assert.That(actor.LastHorizontalMovement, Is.LessThan(0f));
+            Assert.That(renderer.flipX, Is.False, "실제 왼쪽 이동과 왼쪽 authored-facing이 같으므로 반전하지 않는다.");
+
+            actor.ApplyDirective(new ChaseDirectiveIssued(
+                "animation-test", Vector2.right * 6f, Vector2.right * 3f,
+                3f, 2f, 7f, 4f, 5f), 0.1f, 1f);
+            driver.Tick();
+            Assert.That(actor.LastHorizontalMovement, Is.GreaterThan(0f));
+            Assert.That(renderer.flipX, Is.True, "실제 오른쪽 이동은 왼쪽 authored-facing을 반전해야 한다.");
 
             Object.DestroyImmediate(traumaObject);
+        }
+
+        [Test]
+        public void Test_Animation_TraumaMapsGrabToAttack()
+        {
+            var manager = new GameObject("AnimationManager").AddComponent<GameManager>();
+            var traumaObject = new GameObject("AnimationTrauma");
+            var visual = new GameObject("Visual");
+            visual.transform.SetParent(traumaObject.transform);
+            var renderer = visual.AddComponent<SpriteRenderer>();
+            traumaObject.AddComponent<TraumaChaseActor>();
+            var driver = traumaObject.AddComponent<TraumaAnimationDriver>();
+            var player = new GameObject("AnimationPlayer");
+            var contact = player.AddComponent<TraumaContactHandler>();
+
+            Assert.That(contact.BeginGrab(), Is.True);
+            driver.Tick(0f);
+            Assert.That(driver.CurrentState, Is.EqualTo(TraumaAnimationState.Attack));
+            Assert.That(renderer.flipX, Is.False, "수정된 Attack 원본은 머리와 팔이 모두 왼쪽을 향하므로 반전하지 않는다.");
+
+            driver.Tick(0.41f);
+            Assert.That(driver.CurrentState, Is.EqualTo(TraumaAnimationState.Idle));
+            Assert.That(renderer.flipX, Is.False, "Attack 종료 후에도 왼쪽 authored-facing을 유지해야 한다.");
+
+            Object.DestroyImmediate(player);
+            Object.DestroyImmediate(traumaObject);
+            Object.DestroyImmediate(manager.gameObject);
         }
     }
 }

@@ -1,3 +1,4 @@
+using System.IO;
 using System.Linq;
 using Daeume.ContaminationRuntime;
 using Daeume.Core;
@@ -18,6 +19,98 @@ namespace Daeume.Tests.EditMode
         private const string PlayerSpritePath = "Assets/Art/Sprites/FinalDaeume/Hero/Frames/idle_00.png";
         private const string RemnantSpritePath = "Assets/Art/Sprites/FinalDaeume/Trauma/Frames/idle_00.png";
         private const string TraumaSpritePath = "Assets/Art/Sprites/FinalDaeume/Trauma/Frames/idle_00.png";
+
+        [Test]
+        public void Test_Animation_TraumaFramesPreserveTransparentBackground()
+        {
+            var folder = "Assets/Art/Sprites/FinalDaeume/Trauma/Frames";
+            var paths = AssetDatabase.FindAssets("t:Texture2D", new[] { folder })
+                .Select(AssetDatabase.GUIDToAssetPath)
+                .OrderBy(path => path)
+                .ToArray();
+            Assert.That(paths, Has.Length.EqualTo(14));
+
+            foreach (var path in paths)
+            {
+                var texture = new Texture2D(2, 2, TextureFormat.RGBA32, false);
+                Assert.That(ImageConversion.LoadImage(texture, File.ReadAllBytes(Path.GetFullPath(path))), Is.True, path);
+                var pixels = texture.GetPixels32();
+                Assert.That(pixels[0].a, Is.Zero, $"{path} bottom-left alpha");
+                Assert.That(pixels[texture.width - 1].a, Is.Zero, $"{path} bottom-right alpha");
+                Assert.That(pixels[(texture.height - 1) * texture.width].a, Is.Zero, $"{path} top-left alpha");
+                Assert.That(pixels[pixels.Length - 1].a, Is.Zero, $"{path} top-right alpha");
+                Assert.That(pixels.Count(pixel => pixel.a > 0), Is.LessThan(pixels.Length * 0.75f), $"{path} transparent coverage");
+                Object.DestroyImmediate(texture);
+            }
+        }
+
+        [Test]
+        public void Test_Animation_HeroFramesHaveNoBrightNeutralBoundaryPixels()
+        {
+            var folder = "Assets/Art/Sprites/FinalDaeume/Hero/Frames";
+            var paths = AssetDatabase.FindAssets("t:Texture2D", new[] { folder })
+                .Select(AssetDatabase.GUIDToAssetPath)
+                .OrderBy(path => path)
+                .ToArray();
+            Assert.That(paths, Has.Length.EqualTo(31));
+
+            foreach (var path in paths)
+            {
+                var texture = new Texture2D(2, 2, TextureFormat.RGBA32, false);
+                Assert.That(ImageConversion.LoadImage(texture, File.ReadAllBytes(Path.GetFullPath(path))), Is.True, path);
+                var pixels = texture.GetPixels32();
+                var brightBoundaryCount = 0;
+                for (var y = 0; y < texture.height; y++)
+                {
+                    for (var x = 0; x < texture.width; x++)
+                    {
+                        var pixel = pixels[(y * texture.width) + x];
+                        if (pixel.a == 0 || !IsBrightNeutral(pixel) || !TouchesTransparency(pixels, texture.width, texture.height, x, y))
+                        {
+                            continue;
+                        }
+
+                        brightBoundaryCount++;
+                    }
+                }
+
+                Object.DestroyImmediate(texture);
+                Assert.That(brightBoundaryCount, Is.Zero, $"{path} contains bright neutral halo pixels");
+            }
+        }
+
+        [Test]
+        public void Test_Animation_TraumaFramesHaveNoBrightNeutralBoundaryPixels()
+        {
+            var folder = "Assets/Art/Sprites/FinalDaeume/Trauma/Frames";
+            var paths = AssetDatabase.FindAssets("t:Texture2D", new[] { folder })
+                .Select(AssetDatabase.GUIDToAssetPath)
+                .OrderBy(path => path)
+                .ToArray();
+            Assert.That(paths, Has.Length.EqualTo(14));
+
+            foreach (var path in paths)
+            {
+                var texture = new Texture2D(2, 2, TextureFormat.RGBA32, false);
+                Assert.That(ImageConversion.LoadImage(texture, File.ReadAllBytes(Path.GetFullPath(path))), Is.True, path);
+                var pixels = texture.GetPixels32();
+                var brightBoundaryCount = 0;
+                for (var y = 0; y < texture.height; y++)
+                {
+                    for (var x = 0; x < texture.width; x++)
+                    {
+                        var pixel = pixels[(y * texture.width) + x];
+                        if (pixel.a > 0 && IsBrightNeutral(pixel) && TouchesTransparency(pixels, texture.width, texture.height, x, y))
+                        {
+                            brightBoundaryCount++;
+                        }
+                    }
+                }
+
+                Object.DestroyImmediate(texture);
+                Assert.That(brightBoundaryCount, Is.Zero, $"{path} contains bright neutral halo pixels");
+            }
+        }
 
         [Test]
         public void Test_Animation_PrefabsUseCurrentSpritesAndControllers()
@@ -51,21 +144,23 @@ namespace Daeume.Tests.EditMode
         {
             AssertImporterFolder(
                 "Assets/Art/Sprites/FinalDaeume/Hero/Frames",
-                24,
+                31,
                 64f,
-                SpriteAlignment.BottomCenter);
+                SpriteAlignment.BottomCenter,
+                new Vector2Int(64, 64));
             AssertImporterFolder(
                 "Assets/Art/Sprites/FinalDaeume/Trauma/Frames",
                 14,
                 64f,
                 SpriteAlignment.Custom);
-            AssertFrameClip("Assets/Animations/Player/Player_Idle.anim", "FinalDaeume/Hero/Frames", 4, 6f, true);
-            AssertFrameClip("Assets/Animations/Player/Player_Move.anim", "FinalDaeume/Hero/Frames", 6, 10f, true);
-            AssertFrameClip("Assets/Animations/Player/Player_Attack.anim", "FinalDaeume/Hero/Frames", 6, 12f, false);
-            AssertFrameClip("Assets/Animations/Player/Player_Airborne.anim", "FinalDaeume/Hero/Frames", 4, 8f, false);
+            AssertFrameClip("Assets/Animations/Player/Player_Idle.anim", "FinalDaeume/Hero/Frames", 5, 6f, true);
+            AssertFrameClip("Assets/Animations/Player/Player_Move.anim", "FinalDaeume/Hero/Frames", 8, 10f, true);
+            AssertFrameClip("Assets/Animations/Player/Player_Attack.anim", "FinalDaeume/Hero/Frames", 8, 12f, false);
+            AssertFrameClip("Assets/Animations/Player/Player_Airborne.anim", "FinalDaeume/Hero/Frames", 6, 8f, false);
             AssertFrameClip("Assets/Animations/Player/Player_Grab.anim", "FinalDaeume/Hero/Frames", 4, 6f, true);
             AssertFrameClip("Assets/Animations/Enemy/Trauma_Idle.anim", "FinalDaeume/Trauma/Frames", 4, 5f, true);
             AssertFrameClip("Assets/Animations/Enemy/Trauma_Chase.anim", "FinalDaeume/Trauma/Frames", 6, 8f, true);
+            AssertFrameClip("Assets/Animations/Enemy/Trauma_Attack.anim", "FinalDaeume/Trauma/Frames", 4, 10f, false);
         }
 
         [Test]
@@ -261,7 +356,8 @@ namespace Daeume.Tests.EditMode
             string folder,
             int expectedCount,
             float expectedPixelsPerUnit,
-            SpriteAlignment expectedAlignment)
+            SpriteAlignment expectedAlignment,
+            Vector2Int? expectedDimensions = null)
         {
             var guids = AssetDatabase.FindAssets("t:Texture2D", new[] { folder });
             Assert.That(guids, Has.Length.EqualTo(expectedCount), $"{folder} imported frame count");
@@ -276,6 +372,14 @@ namespace Daeume.Tests.EditMode
                 Assert.That(importer.textureCompression, Is.EqualTo(TextureImporterCompression.Uncompressed), $"{path} compression");
                 Assert.That(importer.userData, Is.EqualTo("daeume-final-64ppu"), $"{path} source provenance");
 
+                if (expectedDimensions.HasValue)
+                {
+                    var texture = AssetDatabase.LoadAssetAtPath<Texture2D>(path);
+                    Assert.That(texture, Is.Not.Null, path);
+                    Assert.That(texture.width, Is.EqualTo(expectedDimensions.Value.x), $"{path} width");
+                    Assert.That(texture.height, Is.EqualTo(expectedDimensions.Value.y), $"{path} height");
+                }
+
                 var settings = new TextureImporterSettings();
                 importer.ReadTextureSettings(settings);
                 Assert.That(settings.spriteAlignment, Is.EqualTo((int)expectedAlignment), $"{path} alignment");
@@ -285,6 +389,31 @@ namespace Daeume.Tests.EditMode
                     Assert.That(settings.spritePivot.y, Is.InRange(0f, 0.1f), $"{path} bottom anchor pivot y");
                 }
             }
+        }
+
+        private static bool IsBrightNeutral(Color32 pixel)
+        {
+            var maximum = Mathf.Max(pixel.r, Mathf.Max(pixel.g, pixel.b));
+            var minimum = Mathf.Min(pixel.r, Mathf.Min(pixel.g, pixel.b));
+            var average = (pixel.r + pixel.g + pixel.b) / 3f;
+            return maximum - minimum <= 28 && average >= 72f;
+        }
+
+        private static bool TouchesTransparency(Color32[] pixels, int width, int height, int x, int y)
+        {
+            for (var offsetY = -1; offsetY <= 1; offsetY++)
+            {
+                for (var offsetX = -1; offsetX <= 1; offsetX++)
+                {
+                    if (offsetX == 0 && offsetY == 0) continue;
+                    var sampleX = x + offsetX;
+                    var sampleY = y + offsetY;
+                    if (sampleX < 0 || sampleX >= width || sampleY < 0 || sampleY >= height) continue;
+                    if (pixels[(sampleY * width) + sampleX].a == 0) return true;
+                }
+            }
+
+            return false;
         }
     }
 }

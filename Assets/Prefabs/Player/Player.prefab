@@ -519,5 +519,5 @@ MonoBehaviour:
   controller: {fileID: 0}
   combat: {fileID: 0}
   health: {fileID: 0}
-  attackHoldSeconds: 0.12
+  attackHoldSeconds: 0.67
   damagedHoldSeconds: 0.18

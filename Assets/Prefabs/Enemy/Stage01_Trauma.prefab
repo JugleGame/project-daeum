@@ -161,7 +161,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Daeume.ContaminationRuntime::Daeume.ContaminationRuntime.TraumaAnimationDriver
   animator: {fileID: 0}
   actor: {fileID: 0}
+  spriteRenderer: {fileID: 3870197452899508559}
   chaseSignalHoldSeconds: 0.15
+  attackHoldSeconds: 0.4
 --- !u!1 &7202050056739665674
 GameObject:
   m_ObjectHideFlags: 0

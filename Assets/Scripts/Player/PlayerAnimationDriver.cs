@@ -22,7 +22,7 @@ namespace Daeume.Player
         [SerializeField] private PlayerController controller;
         [SerializeField] private PlayerCombat combat;
         [SerializeField] private PlayerHealth health;
-        [SerializeField, Min(0f)] private float attackHoldSeconds = 0.12f;
+        [SerializeField, Min(0f)] private float attackHoldSeconds = 0.67f;
         [SerializeField, Min(0f)] private float damagedHoldSeconds = 0.18f;
 
         private int observedAttackSequence;

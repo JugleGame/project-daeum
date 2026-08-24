@@ -15,10 +15,10 @@
     "direction": "right",
     "canvas": [64, 64],
     "clips": {
-      "idle": { "prefix": "idle", "frameCount": 4, "fps": 6, "loop": true },
-      "move": { "prefix": "move", "frameCount": 6, "fps": 10, "loop": true },
-      "attack": { "prefix": "attack", "frameCount": 6, "fps": 12, "loop": false },
-      "jump": { "prefix": "jump", "frameCount": 4, "fps": 8, "loop": false },
+      "idle": { "prefix": "idle", "frameCount": 5, "fps": 6, "loop": true },
+      "move": { "prefix": "move", "frameCount": 8, "fps": 10, "loop": true },
+      "attack": { "prefix": "attack", "frameCount": 8, "fps": 12, "loop": false },
+      "jump": { "prefix": "jump", "frameCount": 6, "fps": 8, "loop": false },
       "grab": { "prefix": "grab", "frameCount": 4, "fps": 6, "loop": true }
     },
     "notes": {
@@ -35,8 +35,12 @@
     }
   },
   "provenance": {
-    "sourceWorkspace": "Game-Develop-Orchestration/var/assets/final/daeume",
-    "heroFrameCount": 24,
+    "sourceWorkspace": "Game-Develop-Orchestration/var/assets/assets/daeume/animations/player_consistent_v6",
+    "heroFrameCount": 31,
+    "heroSourceCanvas": [256, 256],
+    "heroUnityCanvas": [64, 64],
+    "heroResizeFilter": "NearestNeighbor",
+    "heroEdgeSanitization": "Bright neutral alpha-boundary pixels are remapped to the nearest dark opaque outline color during animation sync.",
     "traumaFrameCount": 14
   }
 }

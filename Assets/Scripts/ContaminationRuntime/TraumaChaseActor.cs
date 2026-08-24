@@ -18,6 +18,7 @@ namespace Daeume.ContaminationRuntime
     {
         public ChaseDirectiveIssued LastDirective { get; private set; }
         public int AppliedDirectiveCount { get; private set; }
+        public float LastHorizontalMovement { get; private set; }
 
         /// <summary>
         /// 지시를 받아 목표 지점 쪽으로 정해진 속도만큼 이동한다.
@@ -32,6 +33,7 @@ namespace Daeume.ContaminationRuntime
         {
             LastDirective = directive;
             AppliedDirectiveCount++;
+            LastHorizontalMovement = 0f;
             if (deltaTime <= 0f) return;
 
             var direction = Mathf.Approximately(directive.PursuerPosition.x, directive.PlayerPosition.x)
@@ -39,7 +41,9 @@ namespace Daeume.ContaminationRuntime
                 : Mathf.Sign(directive.PursuerPosition.x - directive.PlayerPosition.x);
             var targetX = directive.PlayerPosition.x + direction * Mathf.Max(0f, targetDistance);
             var target = new Vector2(targetX, transform.position.y);
+            var previousX = transform.position.x;
             transform.position = Vector2.MoveTowards(transform.position, target, directive.Speed * deltaTime);
+            LastHorizontalMovement = transform.position.x - previousX;
         }
     }
 }
