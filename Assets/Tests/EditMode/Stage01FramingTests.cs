@@ -22,13 +22,14 @@ namespace Daeume.Tests.EditMode
             var ground = FindNamedInScene<Tilemap>(stage, "GroundTilemap");
             Assert.That(cameraBounds, Is.Not.Null);
             Assert.That(ground, Is.Not.Null);
-            Assert.That(cameraBounds.OrthographicSize, Is.EqualTo(3.375f));
             Assert.That(cameraBounds.FixedCameraY, Is.EqualTo(1.875f));
 
             var groundRenderer = ground.GetComponent<TilemapRenderer>();
             Assert.That(groundRenderer, Is.Not.Null);
-            var cameraBottom = cameraBounds.FixedCameraY - cameraBounds.OrthographicSize;
-            Assert.That(cameraBottom, Is.EqualTo(groundRenderer.bounds.min.y).Within(0.001f));
+
+            // Persistent 씬을 열면 Stage01이 닫히므로 비교에 쓸 값을 먼저 붙잡아 둔다.
+            var fixedCameraY = cameraBounds.FixedCameraY;
+            var groundBottom = groundRenderer.bounds.min.y;
 
             var echoRoot = FindNamedInScene<Transform>(stage, "Stage01_Overlay_Echo");
             Assert.That(echoRoot, Is.Not.Null);
@@ -47,7 +48,6 @@ namespace Daeume.Tests.EditMode
                 OpenSceneMode.Single);
             var mainCamera = FindMainCamera(persistent);
             Assert.That(mainCamera, Is.Not.Null);
-            Assert.That(mainCamera.orthographicSize, Is.EqualTo(3.375f));
 
             Component pixelPerfect = null;
             foreach (var component in mainCamera.GetComponents<Component>())
@@ -67,6 +67,16 @@ namespace Daeume.Tests.EditMode
             Assert.That(
                 pixelPerfectSettings.FindProperty("m_RefResolutionY").intValue,
                 Is.EqualTo(216));
+            Assert.That(
+                pixelPerfectSettings.FindProperty("m_AssetsPPU").intValue,
+                Is.EqualTo(32));
+
+            // 직교 크기의 주인은 PixelPerfectCamera다. StageCameraBounds는 세로 기준만 정한다.
+            var orthographicSize =
+                pixelPerfectSettings.FindProperty("m_RefResolutionY").intValue
+                / (2f * pixelPerfectSettings.FindProperty("m_AssetsPPU").intValue);
+            Assert.That(mainCamera.orthographicSize, Is.EqualTo(orthographicSize).Within(0.001f));
+            Assert.That(fixedCameraY - orthographicSize, Is.EqualTo(groundBottom).Within(0.001f));
 
             SpriteRenderer playerVisual = null;
             Collider2D playerCollider = null;

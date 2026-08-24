@@ -9978,7 +9978,6 @@ MonoBehaviour:
   minimum: {x: -1.5, y: -2}
   maximum: {x: 28, y: 4}
   followVertical: 0
-  orthographicSize: 3.375
   fixedCameraY: 1.875
 --- !u!114 &1476572919
 MonoBehaviour:

@@ -68,7 +68,6 @@ namespace Daeume.UI
             if (camera != null)
             {
                 camera.orthographic = true;
-                camera.orthographicSize = 3.375f;
                 camera.backgroundColor = cameraBackground;
             }
 
