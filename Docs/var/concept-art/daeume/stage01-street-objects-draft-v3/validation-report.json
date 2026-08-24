@@ -1,0 +1,491 @@
+{
+  "source_sheet": "C:\\dev\\project-daeum\\Docs\\var\\concept-art\\daeume\\stage01-street-objects-draft-v3\\stage01-street-objects-imagegen-source.png",
+  "processed_sheet": "C:\\dev\\project-daeum\\Docs\\var\\concept-art\\daeume\\stage01-street-objects-draft-v3\\stage01-street-objects-processed.png",
+  "tilemap_validation_image": "C:\\dev\\project-daeum\\Docs\\var\\concept-art\\daeume\\stage01-street-objects-draft-v3\\stage01-street-objects-tilemap-validation.png",
+  "source_size": [
+    1536,
+    1024
+  ],
+  "downscale": {
+    "factor": 4,
+    "resampling": "NEAREST"
+  },
+  "palette": [
+    "#1a1119",
+    "#2b1e2a",
+    "#4a3142",
+    "#7d4a48",
+    "#b06b45",
+    "#e0954a",
+    "#f2c46b",
+    "#ffe8b0"
+  ],
+  "background_removal": {
+    "exterior_green_pixels_removed": 1343724,
+    "enclosed_green_pixels_removed": 28157
+  },
+  "processed_sheet_validation": {
+    "mode": "RGBA",
+    "size": [
+      384,
+      256
+    ],
+    "opaque_pixels": 12533,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "binary_alpha": true,
+    "transparent_pixels_normalized": true,
+    "opaque_palette_only": true,
+    "opaque_colors": [
+      "#1a1119",
+      "#2b1e2a",
+      "#4a3142",
+      "#7d4a48",
+      "#b06b45",
+      "#e0954a",
+      "#f2c46b",
+      "#ffe8b0"
+    ],
+    "opaque_green_dominant_pixels": 0,
+    "not_empty": true
+  },
+  "objects": [
+    {
+      "mode": "RGBA",
+      "size": [
+        102,
+        61
+      ],
+      "opaque_pixels": 4640,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "binary_alpha": true,
+      "transparent_pixels_normalized": true,
+      "opaque_palette_only": true,
+      "opaque_colors": [
+        "#1a1119",
+        "#2b1e2a",
+        "#4a3142",
+        "#7d4a48",
+        "#b06b45",
+        "#e0954a",
+        "#f2c46b"
+      ],
+      "opaque_green_dominant_pixels": 0,
+      "not_empty": true,
+      "order": 1,
+      "filename": "01-bus-stop-shelter.png",
+      "sheet_bbox": [
+        23,
+        24,
+        125,
+        85
+      ],
+      "source_margin_clear": true
+    },
+    {
+      "mode": "RGBA",
+      "size": [
+        65,
+        16
+      ],
+      "opaque_pixels": 555,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "binary_alpha": true,
+      "transparent_pixels_normalized": true,
+      "opaque_palette_only": true,
+      "opaque_colors": [
+        "#1a1119",
+        "#2b1e2a",
+        "#4a3142",
+        "#7d4a48",
+        "#b06b45",
+        "#e0954a"
+      ],
+      "opaque_green_dominant_pixels": 0,
+      "not_empty": true,
+      "order": 2,
+      "filename": "02-bus-stop-bench.png",
+      "sheet_bbox": [
+        155,
+        69,
+        220,
+        85
+      ],
+      "source_margin_clear": true
+    },
+    {
+      "mode": "RGBA",
+      "size": [
+        15,
+        56
+      ],
+      "opaque_pixels": 563,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "binary_alpha": true,
+      "transparent_pixels_normalized": true,
+      "opaque_palette_only": true,
+      "opaque_colors": [
+        "#1a1119",
+        "#2b1e2a",
+        "#4a3142",
+        "#7d4a48",
+        "#b06b45",
+        "#e0954a",
+        "#f2c46b"
+      ],
+      "opaque_green_dominant_pixels": 0,
+      "not_empty": true,
+      "order": 3,
+      "filename": "03-bus-stop-sign.png",
+      "sheet_bbox": [
+        256,
+        29,
+        271,
+        85
+      ],
+      "source_margin_clear": true
+    },
+    {
+      "mode": "RGBA",
+      "size": [
+        12,
+        68
+      ],
+      "opaque_pixels": 449,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "binary_alpha": true,
+      "transparent_pixels_normalized": true,
+      "opaque_palette_only": true,
+      "opaque_colors": [
+        "#1a1119",
+        "#2b1e2a",
+        "#4a3142",
+        "#7d4a48",
+        "#b06b45",
+        "#e0954a"
+      ],
+      "opaque_green_dominant_pixels": 0,
+      "not_empty": true,
+      "order": 4,
+      "filename": "04-utility-pole.png",
+      "sheet_bbox": [
+        323,
+        18,
+        335,
+        86
+      ],
+      "source_margin_clear": true
+    },
+    {
+      "mode": "RGBA",
+      "size": [
+        32,
+        53
+      ],
+      "opaque_pixels": 424,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "binary_alpha": true,
+      "transparent_pixels_normalized": true,
+      "opaque_palette_only": true,
+      "opaque_colors": [
+        "#1a1119",
+        "#2b1e2a",
+        "#4a3142",
+        "#7d4a48",
+        "#b06b45",
+        "#e0954a",
+        "#f2c46b",
+        "#ffe8b0"
+      ],
+      "opaque_green_dominant_pixels": 0,
+      "not_empty": true,
+      "order": 5,
+      "filename": "05-lamp-utility-pole.png",
+      "sheet_bbox": [
+        36,
+        101,
+        68,
+        154
+      ],
+      "source_margin_clear": true
+    },
+    {
+      "mode": "RGBA",
+      "size": [
+        75,
+        11
+      ],
+      "opaque_pixels": 261,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "binary_alpha": true,
+      "transparent_pixels_normalized": true,
+      "opaque_palette_only": true,
+      "opaque_colors": [
+        "#1a1119",
+        "#2b1e2a",
+        "#4a3142",
+        "#7d4a48",
+        "#b06b45"
+      ],
+      "opaque_green_dominant_pixels": 0,
+      "not_empty": true,
+      "order": 6,
+      "filename": "06-wire-straight.png",
+      "sheet_bbox": [
+        91,
+        127,
+        166,
+        138
+      ],
+      "source_margin_clear": true
+    },
+    {
+      "mode": "RGBA",
+      "size": [
+        78,
+        16
+      ],
+      "opaque_pixels": 271,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "binary_alpha": true,
+      "transparent_pixels_normalized": true,
+      "opaque_palette_only": true,
+      "opaque_colors": [
+        "#1a1119",
+        "#2b1e2a",
+        "#4a3142",
+        "#7d4a48",
+        "#b06b45",
+        "#e0954a"
+      ],
+      "opaque_green_dominant_pixels": 0,
+      "not_empty": true,
+      "order": 7,
+      "filename": "07-wire-sagging.png",
+      "sheet_bbox": [
+        186,
+        126,
+        264,
+        142
+      ],
+      "source_margin_clear": true
+    },
+    {
+      "mode": "RGBA",
+      "size": [
+        65,
+        30
+      ],
+      "opaque_pixels": 767,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "binary_alpha": true,
+      "transparent_pixels_normalized": true,
+      "opaque_palette_only": true,
+      "opaque_colors": [
+        "#1a1119",
+        "#2b1e2a",
+        "#4a3142",
+        "#7d4a48",
+        "#b06b45",
+        "#e0954a",
+        "#f2c46b"
+      ],
+      "opaque_green_dominant_pixels": 0,
+      "not_empty": true,
+      "order": 8,
+      "filename": "08-sidewalk-guardrail.png",
+      "sheet_bbox": [
+        290,
+        125,
+        355,
+        155
+      ],
+      "source_margin_clear": true
+    },
+    {
+      "mode": "RGBA",
+      "size": [
+        22,
+        41
+      ],
+      "opaque_pixels": 887,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "binary_alpha": true,
+      "transparent_pixels_normalized": true,
+      "opaque_palette_only": true,
+      "opaque_colors": [
+        "#1a1119",
+        "#2b1e2a",
+        "#4a3142",
+        "#7d4a48",
+        "#b06b45",
+        "#e0954a"
+      ],
+      "opaque_green_dominant_pixels": 0,
+      "not_empty": true,
+      "order": 9,
+      "filename": "09-street-trash-bin.png",
+      "sheet_bbox": [
+        41,
+        178,
+        63,
+        219
+      ],
+      "source_margin_clear": true
+    },
+    {
+      "mode": "RGBA",
+      "size": [
+        56,
+        25
+      ],
+      "opaque_pixels": 663,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "binary_alpha": true,
+      "transparent_pixels_normalized": true,
+      "opaque_palette_only": true,
+      "opaque_colors": [
+        "#1a1119",
+        "#2b1e2a",
+        "#4a3142",
+        "#7d4a48",
+        "#b06b45",
+        "#e0954a"
+      ],
+      "opaque_green_dominant_pixels": 0,
+      "not_empty": true,
+      "order": 10,
+      "filename": "10-fallen-road-sign.png",
+      "sheet_bbox": [
+        105,
+        194,
+        161,
+        219
+      ],
+      "source_margin_clear": true
+    },
+    {
+      "mode": "RGBA",
+      "size": [
+        74,
+        35
+      ],
+      "opaque_pixels": 2531,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "binary_alpha": true,
+      "transparent_pixels_normalized": true,
+      "opaque_palette_only": true,
+      "opaque_colors": [
+        "#1a1119",
+        "#2b1e2a",
+        "#4a3142",
+        "#7d4a48",
+        "#b06b45",
+        "#e0954a",
+        "#f2c46b"
+      ],
+      "opaque_green_dominant_pixels": 0,
+      "not_empty": true,
+      "order": 11,
+      "filename": "11-low-concrete-wall.png",
+      "sheet_bbox": [
+        189,
+        185,
+        263,
+        220
+      ],
+      "source_margin_clear": true
+    },
+    {
+      "mode": "RGBA",
+      "size": [
+        30,
+        30
+      ],
+      "opaque_pixels": 522,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "binary_alpha": true,
+      "transparent_pixels_normalized": true,
+      "opaque_palette_only": true,
+      "opaque_colors": [
+        "#1a1119",
+        "#2b1e2a",
+        "#4a3142",
+        "#7d4a48",
+        "#b06b45",
+        "#e0954a"
+      ],
+      "opaque_green_dominant_pixels": 0,
+      "not_empty": true,
+      "order": 12,
+      "filename": "12-wall-weed-vine.png",
+      "sheet_bbox": [
+        306,
+        189,
+        336,
+        219
+      ],
+      "source_margin_clear": true
+    }
+  ],
+  "automatic_checks": {
+    "object_count_is_12": true,
+    "row_major_filename_order": true,
+    "all_rgba": true,
+    "all_binary_alpha": true,
+    "all_transparent_pixels_normalized": true,
+    "all_opaque_pixels_in_palette": true,
+    "opaque_green_pixels_are_zero": true,
+    "no_object_empty": true,
+    "all_objects_clear_of_source_sheet_edges": true
+  },
+  "automatic_validation_passed": true,
+  "visual_review": {
+    "status": "passed",
+    "checks": [
+      "strict orthographic side elevation; no perspective/top-down/isometric",
+      "no clipping or overlaps",
+      "tilemap-scale, ground contact, pixel density, outline, lighting, material consistency"
+    ],
+    "notes": "All 12 sprites were reviewed at native scale on the repeated tileset floor; wires are suspended for scale review. No perspective, top-down, isometric, clipping, overlap, ground-contact, relative-scale, or style mismatch requiring regeneration was found.",
+    "regenerate_or_manual_cleanup": []
+  }
+}

@@ -1,0 +1,65 @@
+{
+  "layout": {
+    "columns": 8,
+    "rows": 4,
+    "order": "row-major"
+  },
+  "tile": {
+    "width": 16,
+    "height": 16,
+    "format": "RGBA"
+  },
+  "tileset": {
+    "width": 128,
+    "height": 64
+  },
+  "unity": {
+    "pixels_per_unit": 32,
+    "filter_mode": "Point",
+    "compression": "None"
+  },
+  "palette": [
+    "#1a1119",
+    "#2b1e2a",
+    "#4a3142",
+    "#7d4a48",
+    "#b06b45",
+    "#e0954a",
+    "#f2c46b",
+    "#ffe8b0"
+  ],
+  "tiles": [
+    "01-asphalt-base.png",
+    "02-asphalt-aggregate.png",
+    "03-asphalt-crack-fine.png",
+    "04-asphalt-crack-branch.png",
+    "05-asphalt-repair.png",
+    "06-asphalt-repair-worn.png",
+    "07-asphalt-line-short.png",
+    "08-asphalt-line-long.png",
+    "09-sidewalk-base.png",
+    "10-sidewalk-variant.png",
+    "11-sidewalk-joint.png",
+    "12-sidewalk-double-joint.png",
+    "13-sidewalk-crack.png",
+    "14-sidewalk-broken.png",
+    "15-sidewalk-drain-small.png",
+    "16-sidewalk-drain-wide.png",
+    "17-curb-base.png",
+    "18-curb-top-highlight.png",
+    "19-curb-front-dark.png",
+    "20-curb-broken.png",
+    "21-curb-left-end.png",
+    "22-curb-right-end.png",
+    "23-curb-ramp-left.png",
+    "24-curb-ramp-right.png",
+    "25-wall-center.png",
+    "26-wall-center-variant.png",
+    "27-wall-top.png",
+    "28-wall-bottom.png",
+    "29-wall-left-end.png",
+    "30-wall-right-end.png",
+    "31-wall-joint.png",
+    "32-wall-broken.png"
+  ]
+}
