@@ -1,3 +1,5 @@
+
+using Daeume.Stage;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -66,22 +68,26 @@ namespace Daeume.UI
             if (camera != null)
             {
                 camera.orthographic = true;
-                camera.orthographicSize = 4.21875f;
+                camera.orthographicSize = 3.375f;
                 camera.backgroundColor = cameraBackground;
             }
 
             foreach (var renderer in FindObjectsByType<SpriteRenderer>(FindObjectsSortMode.None))
             {
+                // Sky는 월드 조명과 무관하게 원본 색을 유지해야 한다.
+                // 그 외 Terrain/Background 스프라이트는 프리팹에 지정된 Lit 머티리얼을 보존한다.
+                // Sorting Layer만 보고 Unlit으로 덮어쓰면 벽처럼 조명을 받아야 하는 오브젝트가
+                // 주변 소품보다 밝게 떠 보인다.
+                if (renderer.GetComponent<StageSkyBackground>() != null)
+                {
+                    if (unlitMaterial != null) renderer.sharedMaterial = unlitMaterial;
+                    continue;
+                }
+
                 if (renderer.sortingLayerName == "Terrain")
-                {
                     renderer.color = EnsureValue(renderer.color, 0.5f);
-                    if (unlitMaterial != null) renderer.sharedMaterial = unlitMaterial;
-                }
                 else if (renderer.sortingLayerName == "Background")
-                {
                     renderer.color = EnsureValue(renderer.color, 0.22f);
-                    if (unlitMaterial != null) renderer.sharedMaterial = unlitMaterial;
-                }
             }
         }
 

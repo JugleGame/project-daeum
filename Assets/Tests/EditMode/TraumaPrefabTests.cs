@@ -26,6 +26,16 @@ namespace Daeume.Tests.EditMode
             Assert.That(visual, Is.Not.Null);
             Assert.That(visual.localScale.x, Is.GreaterThan(1f));
             Assert.That(visual.localScale.y, Is.GreaterThan(1f));
+
+            Assert.That(visual.gameObject.activeSelf, Is.True);
+            var renderer = visual.GetComponent<SpriteRenderer>();
+            Assert.That(renderer, Is.Not.Null);
+            Assert.That(renderer.enabled, Is.True);
+            Assert.That(renderer.sprite, Is.Not.Null);
+            Assert.That(
+                AssetDatabase.GetAssetPath(renderer.sprite),
+                Is.EqualTo("Assets/Art/Sprites/Trauma/TraumaBody.png"));
+
         }
     }
 }
