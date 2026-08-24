@@ -1,0 +1,11 @@
+{
+  "name": "Daeume.Tests.EditMode",
+  "rootNamespace": "Daeume.Tests.EditMode",
+  "references": [
+    "Daeume.Core", "Daeume.Flow", "Daeume.Player", "Daeume.Interaction", "Daeume.Prototype", "Daeume.Memory",
+    "Daeume.Contamination", "Daeume.ContaminationRuntime", "Daeume.Encounter", "Daeume.Enemy", "Daeume.Stage", "Daeume.Audio", "Unity.InputSystem"
+  ],
+  "includePlatforms": ["Editor"],
+  "optionalUnityReferences": ["TestAssemblies"],
+  "autoReferenced": false
+}

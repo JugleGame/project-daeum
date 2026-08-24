@@ -1,1 +1,1 @@
-{"name":"Daeume.Audio","rootNamespace":"Daeume.Audio","references":["Daeume.Core","Daeume.Contamination"],"autoReferenced":true}
+{"name": "Daeume.Audio", "rootNamespace": "Daeume.Audio", "references": ["Daeume.Core", "Daeume.Contamination", "Daeume.ContaminationRuntime", "Daeume.Flow", "Daeume.Encounter"], "autoReferenced": true}

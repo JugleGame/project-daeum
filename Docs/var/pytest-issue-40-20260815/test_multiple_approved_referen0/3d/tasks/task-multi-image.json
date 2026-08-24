@@ -1,0 +1,42 @@
+{
+  "provider": "meshy",
+  "taskId": "task-multi-image",
+  "phase": "generation",
+  "method": "image_to_3d",
+  "modelFormat": "glb",
+  "outputFormat": "glb",
+  "gameId": "default",
+  "featureId": "slime-art",
+  "assetId": "prop-green",
+  "requestPath": "C:\\Users\\jyp\\Documents\\GitHub\\Game-Develop-Orchestration\\var\\pytest-issue-40-20260815\\test_multiple_approved_referen0\\3d\\requests\\default\\prop-green__06e84ba2ae42.json",
+  "sourceSpecSha256": "06e84ba2ae423ed7559a24e51a362bc5be4eaaa743d12d8ed4c6b4198db3fd7a",
+  "animationRequired": false,
+  "textureRequired": true,
+  "texturePrompt": "matte stylized surface with readable color separation; colors: leaf green, cream; materials: soft matte body",
+  "textureStrategy": {
+    "mode": "generated_texture",
+    "reason": "multiple appearance regions, unique details, or no numeric material are declared"
+  },
+  "textureMaterial": null,
+  "normalPolicy": "explicit_hard",
+  "maxTriangles": 2500,
+  "referenceProvenance": {
+    "source": "gpt_image_api",
+    "humanApproved": true,
+    "sourcePromptSha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  },
+  "referenceImageCount": 3,
+  "createdAt": "2026-08-15T11:17:00.592912+00:00",
+  "referenceSetSha256": "5d9fbd9657de8e3db679f8ed802c6bceae4c9757b674c8c4bdd455df0963b2e0",
+  "providerMethod": "multi_image_to_3d",
+  "topology": "triangle",
+  "estimatedCredits": 20,
+  "creditEstimate": {
+    "credits": 20,
+    "operation": "multi_image_meshy_6_untextured",
+    "source": "https://docs.meshy.ai/en/api/pricing"
+  },
+  "balanceBefore": {
+    "balance": 1000
+  }
+}

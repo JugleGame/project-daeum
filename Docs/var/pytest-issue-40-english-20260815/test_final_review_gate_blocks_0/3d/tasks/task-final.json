@@ -1,0 +1,30 @@
+{
+  "provider": "meshy",
+  "taskId": "task-final",
+  "method": "retexture",
+  "phase": "retexture",
+  "status": "SUCCEEDED",
+  "assetPath": "C:\\Users\\jyp\\Documents\\GitHub\\Game-Develop-Orchestration\\var\\pytest-issue-40-english-20260815\\test_final_review_gate_blocks_0\\staged.glb",
+  "modelFormat": "glb",
+  "outputFormat": "glb",
+  "maxTriangles": 2500,
+  "normalPolicy": "mixed",
+  "textureStrategy": {
+    "mode": "generated_texture"
+  },
+  "provenance": {
+    "license": "generated",
+    "gameReadySha256": "408a88a98f9ab84087076576702b9bb269f0910004dad870b15b31217ad76414"
+  },
+  "finalVisualReview": {
+    "humanApproved": true,
+    "note": "silhouette and materials approved",
+    "reviewedAt": "2026-08-15T11:28:32.752433+00:00"
+  },
+  "unityAssetPath": "C:\\Users\\jyp\\Documents\\GitHub\\Game-Develop-Orchestration\\var\\pytest-issue-40-english-20260815\\test_final_review_gate_blocks_0\\staged.glb",
+  "inspection": {
+    "triangleBudgetPassed": true,
+    "gameReadyPassed": true
+  },
+  "completedAt": "2026-08-15T11:28:32.753437+00:00"
+}

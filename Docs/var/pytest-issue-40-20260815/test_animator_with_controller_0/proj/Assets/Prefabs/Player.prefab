@@ -1,0 +1,8 @@
+%YAML 1.1
+--- !u!95 &4242
+Animator:
+  m_ObjectHideFlags: 0
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 1234567890abcdef1234567890abcdef, type: 2}
+  m_CullingMode: 0

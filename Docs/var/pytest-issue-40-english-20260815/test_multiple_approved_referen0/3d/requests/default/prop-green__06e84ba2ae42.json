@@ -1,0 +1,138 @@
+{
+  "requestId": "prop-green__06e84ba2ae42",
+  "gameId": "default",
+  "featureId": "slime-art",
+  "createdAt": "2026-08-15T11:28:32.682294+00:00",
+  "assetSpec": {
+    "assetId": "prop-green",
+    "assetName": "Green prop",
+    "assetType": "prop",
+    "gameplayRole": "a readable ranch encounter",
+    "design": {
+      "description": "A rounded prop with a clear silhouette",
+      "style": "cute stylized 3D",
+      "proportions": "compact and broad",
+      "colors": [
+        "leaf green",
+        "cream"
+      ],
+      "form": {
+        "silhouette": "a compact readable outline",
+        "primaryVolumes": [
+          "one rounded body"
+        ],
+        "partRelationships": [
+          "eyes remain attached to the front of the body"
+        ],
+        "surfaceFeatures": [
+          "preserve intentional recesses and protrusions"
+        ],
+        "bevelPolicy": [
+          "bevel only silhouette-defining hard edges"
+        ]
+      },
+      "materials": [
+        "soft matte body"
+      ],
+      "preserve": [
+        "round silhouette"
+      ],
+      "exclude": [
+        "text",
+        "weapons"
+      ]
+    },
+    "geometry": {
+      "maxTriangles": 2500,
+      "separateMeshes": [],
+      "shading": {
+        "normalPolicy": "explicit_hard",
+        "faceOrientation": "outward",
+        "smoothingRules": [
+          "split normals across silhouette-defining hard edges"
+        ]
+      },
+      "integrity": {
+        "forbidDegenerateFaces": true,
+        "forbidDuplicateFaces": true,
+        "forbidCoplanarOverlaps": true,
+        "preserveHardEdgeSplits": true
+      }
+    },
+    "output": {
+      "format": "glb",
+      "scale": 1.0,
+      "pivot": "ground center",
+      "pivotPolicy": "ground_center",
+      "collider": "single capsule"
+    },
+    "texture": {
+      "required": true,
+      "description": "matte stylized surface with readable color separation",
+      "maps": [
+        "base color"
+      ]
+    },
+    "animation": {
+      "required": false,
+      "rigType": "",
+      "clips": []
+    },
+    "generation": {
+      "method": "image_to_3d"
+    },
+    "validation": {
+      "requirements": [
+        "silhouette matches the specification",
+        "triangle budget passes"
+      ]
+    }
+  },
+  "textureStrategy": {
+    "mode": "generated_texture",
+    "reason": "multiple appearance regions, unique details, or no numeric material are declared"
+  },
+  "generationPrompt": {
+    "assetId": "prop-green",
+    "method": "image_to_3d",
+    "sourceSpecSha256": "06e84ba2ae423ed7559a24e51a362bc5be4eaaa743d12d8ed4c6b4198db3fd7a",
+    "prompt": "Create Green prop, a prop used for a readable ranch encounter. A rounded prop with a clear silhouette Silhouette: a compact readable outline. Primary volumes: one rounded body. Part relationships: eyes remain attached to the front of the body. Surface features: preserve intentional recesses and protrusions. Bevel only: bevel only silhouette-defining hard edges. Use cute stylized 3D style with compact and broad proportions. Colors: leaf green, cream. Materials: soft matte body. Texture: matte stylized surface with readable color separation; maps base color. Keep the mesh at or below 2500 triangles and export glb. Normals explicit_hard; faces outward; smoothing split normals across silhouette-defining hard edges. Topology integrity: no degenerate or duplicate faces, no coplanar overlaps, and preserve hard-edge vertex/normal splits through triangulation and export. Use scale 1.0, pivot ground center (ground_center); preserve that origin after export, and use collider plan single capsule. Preserve: round silhouette. Exclude: text, weapons.",
+    "validationRequirements": [
+      "silhouette matches the specification",
+      "triangle budget passes"
+    ]
+  },
+  "referenceSearchPrompt": {
+    "assetId": "prop-green",
+    "sourceSpecSha256": "06e84ba2ae423ed7559a24e51a362bc5be4eaaa743d12d8ed4c6b4198db3fd7a",
+    "required": true,
+    "queries": [
+      "Green prop cute stylized 3D 3D turnaround reference",
+      "Green prop compact and broad proportions material reference"
+    ],
+    "requiredViews": [
+      "front",
+      "side",
+      "back"
+    ],
+    "viewPrompts": {
+      "front": "Green prop, A rounded prop with a clear silhouette cute stylized 3D style, compact and broad proportions, colors leaf green, cream. Design for at most 2500 triangles: model only the silhouette and primary volumes; represent repeated or tiny non-silhouette details as flat color or normal-map information instead of raised geometry, front orthographic view, neutral pose, unobstructed parts, plain background, consistent lighting, minimal perspective distortion",
+      "side": "Green prop, A rounded prop with a clear silhouette cute stylized 3D style, compact and broad proportions, colors leaf green, cream. Design for at most 2500 triangles: model only the silhouette and primary volumes; represent repeated or tiny non-silhouette details as flat color or normal-map information instead of raised geometry, side orthographic view, neutral pose, unobstructed parts, plain background, consistent lighting, minimal perspective distortion",
+      "back": "Green prop, A rounded prop with a clear silhouette cute stylized 3D style, compact and broad proportions, colors leaf green, cream. Design for at most 2500 triangles: model only the silhouette and primary volumes; represent repeated or tiny non-silhouette details as flat color or normal-map information instead of raised geometry, back orthographic view, neutral pose, unobstructed parts, plain background, consistent lighting, minimal perspective distortion"
+    }
+  },
+  "provenance": {
+    "assetId": "prop-green",
+    "assetType": "prop",
+    "modelFormat": "glb",
+    "sourceSpecSha256": "06e84ba2ae423ed7559a24e51a362bc5be4eaaa743d12d8ed4c6b4198db3fd7a",
+    "generationPromptSha256": "64a89efb770d12c20606541c7e398768fc75475394b32fc1bda46c52ff9622de",
+    "referenceSearchPromptSha256": "7cfe9ba9179c4c1d53b98e2fe4d5c680f4c3d381ccc4d394c4e607c9425afd94"
+  },
+  "status": "submitted",
+  "provider": {
+    "name": "meshy",
+    "taskId": "task-multi-image",
+    "phase": "generation"
+  }
+}

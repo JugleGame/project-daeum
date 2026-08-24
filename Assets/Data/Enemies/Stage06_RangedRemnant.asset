@@ -1,0 +1,49 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d570a8038ca65d4992cf24afd62d9a2, type: 3}
+  m_Name: Stage06_RangedRemnant
+  m_EditorClassIdentifier: Daeume.Enemy::Daeume.Enemy.RangedRemnantData
+  enemyId: remnant-stage06-ranged
+  maxHealth: 3
+  contactDamage: 1
+  detectionRange: 7
+  attackRange: 4.5
+  moveSpeed: 1.6
+  alertSeconds: 0.25
+  attackTelegraphSeconds: 0.8
+  attackRecoverySeconds: 0.9
+  hitStunSeconds: 0.18
+  stageNumber: 6
+  visualTraitTags: 0
+  mimicsPlayerMotion: 0
+  reactive: 0
+  fragmentTraceTowardTraumaRatio: 0
+  pressureProfiles:
+  - stage: 0
+    moveSpeedMultiplier: 1
+    telegraphMultiplier: 1
+    watchesTrauma: 0
+    detectionRangeMultiplier: 1
+    retreatDirectionBias: 1
+  - stage: 1
+    moveSpeedMultiplier: 1.08
+    telegraphMultiplier: 0.85
+    watchesTrauma: 1
+    detectionRangeMultiplier: 1
+    retreatDirectionBias: 1
+  - stage: 2
+    moveSpeedMultiplier: 1.16
+    telegraphMultiplier: 0.7
+    watchesTrauma: 1
+    detectionRangeMultiplier: 1
+    retreatDirectionBias: 1
+  retreatTriggerRange: 1.5

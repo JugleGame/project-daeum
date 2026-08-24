@@ -1,0 +1,41 @@
+{
+  "provider": "meshy",
+  "taskId": "task-image",
+  "phase": "generation",
+  "method": "image_to_3d",
+  "modelFormat": "glb",
+  "outputFormat": "glb",
+  "gameId": "slime-ranch",
+  "featureId": "slime-art",
+  "assetId": "slime-green",
+  "requestPath": "C:\\Users\\jyp\\Documents\\GitHub\\Game-Develop-Orchestration\\var\\pytest-issue-40-20260815\\test_duplicate_spec_blocks_sec0\\3d\\requests\\slime-ranch\\slime-green__54d6097f906d.json",
+  "sourceSpecSha256": "54d6097f906d87f838c2e2146a82dd949c37638d98303e8f67582a7127f8c539",
+  "animationRequired": true,
+  "textureRequired": true,
+  "texturePrompt": "matte stylized surface with readable color separation; colors: leaf green, cream; materials: soft matte body",
+  "textureStrategy": {
+    "mode": "generated_texture",
+    "reason": "multiple appearance regions, unique details, or no numeric material are declared"
+  },
+  "textureMaterial": null,
+  "normalPolicy": "mixed",
+  "maxTriangles": 2500,
+  "referenceProvenance": {
+    "source": "gpt_image_api",
+    "humanApproved": true
+  },
+  "referenceImageCount": 1,
+  "createdAt": "2026-08-15T11:17:00.783846+00:00",
+  "referenceSetSha256": "283e63c46df505810559b9708d95f2c2cdcc8305f2d408e2e1d6bf1601843206",
+  "providerMethod": "image_to_3d",
+  "topology": "triangle",
+  "estimatedCredits": 5,
+  "creditEstimate": {
+    "credits": 5,
+    "operation": "image_smart_topology_untextured",
+    "source": "https://docs.meshy.ai/en/api/pricing"
+  },
+  "balanceBefore": {
+    "balance": 1000
+  }
+}

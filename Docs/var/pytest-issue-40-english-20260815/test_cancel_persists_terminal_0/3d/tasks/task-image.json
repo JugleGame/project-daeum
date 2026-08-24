@@ -1,0 +1,10 @@
+{
+  "provider": "meshy",
+  "taskId": "task-image",
+  "method": "image_to_3d",
+  "status": "CANCELED",
+  "canceledAt": "2026-08-15T11:28:32.902632+00:00",
+  "cancelEvidence": {
+    "result": "ok"
+  }
+}

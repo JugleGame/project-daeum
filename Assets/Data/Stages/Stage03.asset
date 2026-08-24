@@ -1,0 +1,48 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0567ce6f5126b5847ae6bf0323dfc8d5, type: 3}
+  m_Name: Stage03
+  m_EditorClassIdentifier: Daeume.Stage::Daeume.Stage.StageData
+  stageId: 3
+  location: "\uB3D9\uC544\uB9AC\uC2E4 \u2014 \uC785\uAD6C, \uB4B7\uBC29, \uC5F0\uC2B5\uC2E4\uACFC
+    \uC870\uC6A9\uD55C \uAD6C\uC11D"
+  memoryId: memory-stage03-fragment-01
+  memoryTitle: "\uAE30\uC5B5\uC758 \uC870\uAC01 #3 \u2014 \uB3D9\uC544\uB9AC\uC2E4"
+  memoryPresentationId: memory-presentation-stage03-club-speaker
+  emotionalRole: 1
+  encounterIds:
+  - stage03.encounter.01
+  - stage03.encounter.02
+  - stage03.encounter.03
+  contaminationVariantId: Stage03_Overlay_Intrusion
+  primaryContaminationChannels: 000000000100000003000000
+  contaminationMeaning: "\uB530\uB73B\uD588\uB358 \uB3D9\uC544\uB9AC\uC2E4\uC758
+    \uC18C\uB9AC\uC640 \uC0AC\uBB3C\uC774 \uC5B4\uAE0B\uB09C \uBC15\uC790\uB85C \uACB9\uCE58\uBA70,
+    \uAC00\uAE4C\uC6CC\uC9C4 \uAE30\uC5B5\uC744 \uC783\uC744\uAE4C \uB450\uB824\uC6B4
+    \uB9C8\uC74C\uC744 \uB4DC\uB7EC\uB0B8\uB2E4."
+  hospitalImageryDirectness: 0
+  chaseId: chase-stage03-club-room-shelf-return
+  chaseMeaning: "\uC804\uD22C \uC911 \uBC30\uC6B4 \uD754\uB4E4\uB9AC\uB294 \uC120\uBC18\uC758
+    \uC608\uACE0\uC640 \uBC00\uCCD0\uC9D0\uC744 \uB418\uC9DA\uC5B4 \uD1B5\uACFC\uD558\uBA70,
+    \uD3B8\uC548\uD588\uB358 \uACF5\uAC04\uC774 \uCD94\uACA9 \uACBD\uB85C\uB85C \uB4A4\uC9D1\uD78C\uB2E4."
+  targetChaseSeconds: 42
+  lengthCategory: 1
+  targetPlaytimeMinutes: 15
+  clueIds:
+  - clue-stage03-set-list
+  - clue-stage03-speaker-note
+  explorationIntensity: 2
+  memoryIntensity: 4
+  encounterIntensity: 4
+  contaminationIntensity: 3
+  chaseIntensity: 3
+  nextStageId: 4

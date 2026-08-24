@@ -1,0 +1,39 @@
+{
+  "game_id": "t-pixellab-images",
+  "assets": {
+    "t-pixellab-images__f-1__prop__e2370538": {
+      "asset_id": "t-pixellab-images__f-1__prop__e2370538",
+      "feature_id": "f-1",
+      "kind": "prop",
+      "prompt": "a rock",
+      "provider_prompt": "a rock; single centered isolated object, connected silhouette, visible support",
+      "status": "pending",
+      "asset_path": "C:\\Users\\jyp\\Documents\\GitHub\\Game-Develop-Orchestration\\var\\pytest-issue-40-english-20260815\\test_generate_2d_sprite_report0\\assets\\t-pixellab-images\\f-1_prop_e2370538.png",
+      "created_at": "2026-08-15T11:28:32.959832+00:00",
+      "reviewed_at": null,
+      "review_note": null,
+      "provenance": {
+        "method": "pixellab-mcp",
+        "generator": "https://api.pixellab.ai/mcp",
+        "tool": "create_image",
+        "kind": "prop",
+        "derived_from": "seed=1477609874 feature=f-1",
+        "usage": {
+          "type": "generations",
+          "generations": 1.0
+        },
+        "prompt": {
+          "originalCharacters": 6,
+          "composedCharacters": 78,
+          "characterDelta": 72,
+          "removedStructuredClauses": []
+        },
+        "expected_size": [
+          128,
+          128
+        ],
+        "commercial_use": "see PixelLab terms of service"
+      }
+    }
+  }
+}
