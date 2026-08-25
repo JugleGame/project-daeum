@@ -13,6 +13,7 @@ using UnityEngine.TestTools;
 namespace Daeume.Tests.PlayMode
 {
     /// <summary>Issue #13: Stage 03 진입 → 전투 → 회상 → 추격 흐름을 검증한다.</summary>
+    [Ignore("3스테이지 재구성(#56)으로 Stage03_Base를 빌드에서 내렸다. 씬을 이름으로 로드할 수 없다.")]
     public sealed class Stage03FlowTests
     {
         [UnityTest]

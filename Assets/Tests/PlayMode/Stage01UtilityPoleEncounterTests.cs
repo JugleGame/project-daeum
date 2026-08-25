@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Linq;
 using Daeume.Encounter;
 using Daeume.Player;
 using NUnit.Framework;
@@ -20,7 +21,8 @@ namespace Daeume.Tests.PlayMode
             yield return null;
 
             var player = Object.FindAnyObjectByType<PlayerController>();
-            var encounter = Object.FindAnyObjectByType<EncounterController>();
+            var encounter = Object.FindObjectsByType<EncounterController>(FindObjectsSortMode.None)
+                .Single(controller => controller.Data.EncounterId == "stage01.encounter.01");
             var tilemapCollider = Object.FindAnyObjectByType<TilemapCollider2D>();
             var pole = GameObject.Find("05-lamp-utility-pole");
             var poleCollider = pole.transform.Find("Visual").GetComponent<BoxCollider2D>();

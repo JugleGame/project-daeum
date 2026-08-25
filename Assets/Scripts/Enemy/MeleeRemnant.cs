@@ -79,11 +79,17 @@ namespace Daeume.Enemy
             }
 
             // 좌우로만 이동한다. 근접형은 점프하지 않는 단순 추적이며, 이게 슬라이스 범위다.
+            // 다만 막힘 검사는 한다. 없으면 경계벽과 잠긴 출구를 그대로 통과했다.
             var position = transform.position;
-            position.x = Mathf.MoveTowards(
+            var nextX = Mathf.MoveTowards(
                 position.x,
                 TargetX,
                 DataBase.MoveSpeed * Profile.MoveSpeedMultiplier * deltaTime);
+
+            var moveX = nextX - position.x;
+            if (IsBlockedTowards(moveX)) return;
+
+            position.x = nextX;
             transform.position = position;
         }
 

@@ -12,6 +12,7 @@ using UnityEngine.TestTools;
 
 namespace Daeume.Tests.PlayMode
 {
+    [Ignore("3스테이지 재구성(#56)으로 Stage04_Base를 빌드에서 내렸다. 씬을 이름으로 로드할 수 없다.")]
     public sealed class Stage04FlowTests
     {
         [UnityTest]

@@ -38,6 +38,11 @@ namespace Daeume.Core
             ["prompt.continue"] = "계속",
             ["prompt.memory.skip"] = "건너뛰기",
 
+            // 스테이지 진입 독백 (StageOpeningLine). 번호순으로 한 줄씩 떴다가 사라진다.
+            // 없는 번호가 나오면 멈추므로, 줄을 늘리려면 다음 번호를 이어서 넣으면 된다.
+            ["stage.opening.stage01.01"] = "무슨 일이 일어난 거지…?",
+            ["stage.opening.stage01.02"] = "오른쪽으로 가 볼까?",
+
             // HUD 상시 표기
             ["hud.health"] = "체력",
             ["hud.chase"] = "도망치세요",

@@ -174,9 +174,11 @@ namespace Daeume.Tests.EditMode
                 trauma.gameObject,
                 "Assets/Prefabs/Enemy/Stage01_Trauma.prefab");
 
+            // Encounter는 3개다. 셋 다 같은 적 프리팹을 쓰므로 대표로 첫 번째를 검사한다.
             var encounter = stage.GetRootGameObjects()
                 .SelectMany(root => root.GetComponentsInChildren<EncounterController>(true))
-                .Single();
+                .OrderBy(controller => controller.Data.EncounterId)
+                .First();
             var serializedEncounter = new SerializedObject(encounter);
             var enemyPrefab = serializedEncounter.FindProperty("enemyPrefab").objectReferenceValue as MeleeRemnant;
             Assert.That(enemyPrefab, Is.Not.Null, "Stage01 encounter enemy prefab");

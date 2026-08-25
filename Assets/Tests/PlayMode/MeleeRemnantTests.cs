@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Linq;
 using Daeume.Contamination;
 using Daeume.Core;
 using Daeume.Encounter;
@@ -128,7 +129,8 @@ namespace Daeume.Tests.PlayMode
             yield return null;
 
             var combat = Object.FindAnyObjectByType<PlayerCombat>();
-            var encounter = Object.FindAnyObjectByType<EncounterController>();
+            var encounter = Object.FindObjectsByType<EncounterController>(FindObjectsSortMode.None)
+                .Single(controller => controller.Data.EncounterId == "stage01.encounter.01");
             Assert.That(combat, Is.Not.Null);
             Assert.That(encounter, Is.Not.Null);
             Assert.That(encounter.TryActivate(), Is.True);
@@ -140,7 +142,7 @@ namespace Daeume.Tests.PlayMode
             remnant.SetTarget(combat.transform);
             AdvanceToAttack(remnant, remnant.Data);
             Assert.That(remnant.State, Is.EqualTo(RemnantState.Attack));
-            Assert.That(remnant.transform.Find("AttackTelegraph").GetComponent<SpriteRenderer>().enabled, Is.True);
+            Assert.That(remnant.IsTelegraphing, Is.True);
 
             Assert.That(combat.Attack(), Is.EqualTo(1));
             Assert.That(combat.Attack(), Is.EqualTo(1));

@@ -17,10 +17,19 @@ namespace Daeume.ContaminationRuntime
     {
         public const string CheckpointId = "Stage01_Chase";
 
+        /// <summary>
+        /// 이 씬이 저장할 추격 체크포인트 ID. Stage10·Stage13이 같은 컴포넌트를 재사용하므로
+        /// 스테이지마다 달라야 한다. 비워 두면 <see cref="CheckpointId"/> 기본값을 쓴다.
+        /// </summary>
+        [SerializeField] private string checkpointId = CheckpointId;
+
         [SerializeField] private ContaminationDirector director;
         [SerializeField] private SceneFlowController flow;
         [SerializeField] private Transform player;
         [SerializeField] private GameObject trauma;
+
+        /// <summary>실제로 저장에 쓰는 체크포인트 ID. 씬에서 비워 두면 기본 상수로 되돌아간다.</summary>
+        public string ActiveCheckpointId => string.IsNullOrEmpty(checkpointId) ? CheckpointId : checkpointId;
 
         public ContaminationDirector Director => director;
         public bool ChaseStarted { get; private set; }
@@ -68,7 +77,7 @@ namespace Daeume.ContaminationRuntime
             // 체크포인트는 추격이 실제로 시작된 뒤 저장한다.
             // 그래야 추격 중 사망 시 "회상을 다시 보지 않고" 같은 지점에서 재개된다(spec-011).
             var health = player == null ? 3 : player.GetComponent<PlayerHealth>()?.CurrentHealth ?? 3;
-            flow?.SaveChaseCheckpoint(CheckpointId, player == null ? Vector2.zero : (Vector2)player.position, health, director.VariantId);
+            flow?.SaveChaseCheckpoint(ActiveCheckpointId, player == null ? Vector2.zero : (Vector2)player.position, health, director.VariantId);
 
             ChaseStarted = true;
             return true;
