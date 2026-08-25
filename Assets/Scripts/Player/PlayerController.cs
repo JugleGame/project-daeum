@@ -200,6 +200,15 @@ namespace Daeume.Player
         {
             // ClampMagnitude: 대각선 입력이 1보다 커져 더 빨라지는 현상을 막는다.
             moveInput = Vector2.ClampMagnitude(value, 1f);
+
+            // 공격 동작 중에는 바라보는 방향도 고정한다. 제자리에 선 채로 스프라이트만 홱 돌면
+            // 이동을 막은 의미가 없다. 입력 자체는 계속 기록해 두므로, 공격이 끝나는 즉시
+            // 누르고 있던 방향으로 이어서 움직인다.
+            if (combat != null && combat.IsAttacking)
+            {
+                return;
+            }
+
             if (!Mathf.Approximately(moveInput.x, 0f))
             {
                 // 입력이 0일 때는 방향을 유지한다. 멈춰 섰다고 정면이 바뀌면 상호작용 대상이 튄다.
