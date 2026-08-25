@@ -36,8 +36,8 @@ namespace Daeume.ContaminationRuntime
         [SerializeField, Min(0f)] private float jumpSpeed = 13f;
         [SerializeField, Min(0f)] private float climbSpeed = 5f;
 
-        // 플레이어가 이만큼 위에 있으면 뛴다. 너무 작게 잡으면 평지에서도 계속 튀어 오른다.
-        [SerializeField, Min(0f)] private float jumpTriggerHeight = 0.6f;
+        // 점프로 넘을 수 있는지 판단할 때 정점 높이에서 얼마나 여유를 두고 살필지.
+        [SerializeField, Min(0f)] private float clearanceMargin = 0.1f;
 
         private float verticalVelocity;
         private CircleCollider2D body;
@@ -91,10 +91,15 @@ namespace Daeume.ContaminationRuntime
             // ---- Y: 중력 / 벽타기 / 점프 ----
             IsGrounded = verticalVelocity <= 0f && FindTerrain(position + bodyOffset, Vector2.down, radius + Skin).HasValue;
 
-            // 벽타기는 "플레이어가 위에 있을 때"만 한다.
+            // 앞을 막은 것이 점프로 넘을 수 있는 높이인가.
+            var clearable = blocked && CanClearObstacle(position + bodyOffset, moveX, radius);
+
+            // 벽타기는 "점프로는 못 넘는 벽"이고 "플레이어가 위에 있을 때"만 한다.
+            // 넘을 수 있는 벽까지 타고 오르면 플레이어가 점프하는 순간 같이 올라와,
+            // 점프에 반응해 따라오는 예전 그림이 그대로 남는다.
             // 조건 없이 막히기만 하면 오르게 두었더니, 레벨 경계벽에 눌린 추격자가 벽을 타고
             // 화면 밖까지 끝없이 올라가 공중에 떠 버렸다(#12에서 실제로 발생).
-            IsClimbing = blocked && directive.PlayerPosition.y > position.y;
+            IsClimbing = blocked && !clearable && directive.PlayerPosition.y > position.y;
 
             if (IsClimbing)
             {
@@ -102,8 +107,10 @@ namespace Daeume.ContaminationRuntime
             }
             else if (IsGrounded)
             {
-                // 평지에서는 서 있고, 플레이어가 뚜렷하게 위에 있을 때만 뛴다.
-                verticalVelocity = directive.PlayerPosition.y - position.y > jumpTriggerHeight ? jumpSpeed : 0f;
+                // 평지에서는 서 있는다. 앞이 막혔고 그 장애물을 넘을 수 있을 때만 뛴다.
+                // 플레이어의 y는 보지 않는다. 예전에는 플레이어가 점프할 때마다 같이 뛰어올라
+                // 추격을 피하는 것이 지나치게 쉬웠다.
+                verticalVelocity = clearable ? jumpSpeed : 0f;
             }
             else
             {
@@ -126,6 +133,25 @@ namespace Daeume.ContaminationRuntime
 
             position.y += moveY;
             transform.position = new Vector3(position.x, position.y, transform.position.z);
+        }
+
+        /// <summary>점프 한 번으로 올라갈 수 있는 최대 높이.</summary>
+        private float MaxJumpHeight() => gravity <= 0f ? 0f : jumpSpeed * jumpSpeed / (2f * gravity);
+
+        /// <summary>앞을 막은 것이 점프로 넘을 수 있는 높이인지.</summary>
+        /// <remarks>
+        /// 점프 정점 높이에서 같은 방향으로 한 번 더 살펴본다. 그 자리가 비어 있으면 장애물의
+        /// 윗면이 정점 아래라는 뜻이므로 넘어갈 수 있다.
+        ///
+        /// 이 확인이 없으면 레벨 경계벽처럼 넘을 수 없는 벽 앞에서 영원히 제자리 점프를 한다
+        /// (Test_Trauma_DoesNotClimbBoundaryWallWhenPlayerIsNotAbove가 막는 상황이다).
+        /// </remarks>
+        private bool CanClearObstacle(Vector2 origin, float moveX, float radius)
+        {
+            if (Mathf.Approximately(moveX, 0f)) return false;
+
+            var probe = origin + Vector2.up * (MaxJumpHeight() - clearanceMargin);
+            return !FindTerrain(probe, new Vector2(Mathf.Sign(moveX), 0f), radius + Mathf.Abs(moveX) + Skin).HasValue;
         }
 
         /// <summary>콜라이더 중심이 루트에서 얼마나 떨어져 있는지. 지형 검사 기준점 보정용.</summary>
