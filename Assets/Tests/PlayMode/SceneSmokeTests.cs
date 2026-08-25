@@ -32,6 +32,7 @@ namespace Daeume.Tests.PlayMode
             Assert.Fail("Boot did not load Persistent and Title within 180 frames.");
         }
 
+        [Ignore("3스테이지 재구성(#56)으로 RoleAPrototype을 빌드에서 내렸다. 씬을 이름으로 로드할 수 없다.")]
         [UnityTest]
         public IEnumerator Test_PrototypeScene_LoadsWithoutConsoleErrors()
         {
@@ -44,6 +45,7 @@ namespace Daeume.Tests.PlayMode
             LogAssert.NoUnexpectedReceived();
         }
 
+        [Ignore("3스테이지 재구성(#56)으로 RoleAPrototype을 빌드에서 내렸다. 씬을 이름으로 로드할 수 없다.")]
         [UnityTest]
         public IEnumerator Test_PrototypePlayer_LandsOnGround()
         {
@@ -70,6 +72,7 @@ namespace Daeume.Tests.PlayMode
             LogAssert.NoUnexpectedReceived();
         }
 
+        [Ignore("3스테이지 재구성(#56)으로 RoleAPrototype을 빌드에서 내렸다. 씬을 이름으로 로드할 수 없다.")]
         [UnityTest]
         public IEnumerator Test_PrototypeCheckpoint_ActivatesOnContactAndRestoresPlayer()
         {

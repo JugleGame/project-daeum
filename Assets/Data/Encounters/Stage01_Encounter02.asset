@@ -10,18 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6d686f4fe5ec2494ab9516842f4498c0, type: 3}
-  m_Name: Stage01_Encounter01
+  m_Name: Stage01_Encounter02
   m_EditorClassIdentifier: Daeume.Encounter::Daeume.Encounter.EncounterData
-  encounterId: stage01.encounter.01
-  triggerMarkerId: stage01.encounter.01.trigger
+  encounterId: stage01.encounter.02
+  triggerMarkerId: stage01.encounter.02.trigger
   triggerAreaSize: {x: 2, y: 3}
   enemyType: 0
   spawnMarkerIds:
-  - stage01.remnant.spawn.01
-  - stage01.remnant.spawn.02
-  spawnCount: 1
+  - stage01.remnant.spawn.03
+  - stage01.remnant.spawn.04
+  spawnCount: 2
   waveCount: 1
   clearCondition: 0
-  lockExit: 0
-  exitMarkerId: stage01.encounter.01.exit
+  lockExit: 1
+  exitMarkerId: stage01.encounter.02.exit
   terrainHazardIds: []

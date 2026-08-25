@@ -11,6 +11,7 @@ using UnityEngine.TestTools;
 
 namespace Daeume.Tests.PlayMode
 {
+    [Ignore("3스테이지 재구성(#56)으로 Stage03_Base를 빌드에서 내렸다. 세로 스테이지가 다시 생기는 #57에서 Stage10 기준으로 되살린다.")]
     public sealed class CameraStateResetTests
     {
         private const float StageOneVerticalPosition = 0f;
