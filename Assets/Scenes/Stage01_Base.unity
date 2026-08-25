@@ -402,6 +402,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 18184511}
     m_Modifications:
+    - target: {fileID: 2301375452452467567, guid: 99eab4d4f9213134c9cce0a410867471, type: 3}
+      propertyPath: m_UseRendererSilhouette
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2731592257863208270, guid: 99eab4d4f9213134c9cce0a410867471, type: 3}
       propertyPath: m_Name
       value: 01-bus-stop-shelter
@@ -705,6 +709,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 18184511}
     m_Modifications:
+    - target: {fileID: 1054436774427272448, guid: 9d17bab4d142e544e87d4bebcaf391bd, type: 3}
+      propertyPath: m_UseRendererSilhouette
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2787545973328092308, guid: 9d17bab4d142e544e87d4bebcaf391bd, type: 3}
       propertyPath: m_Name
       value: 04-utility-pole (3)
@@ -1189,6 +1197,10 @@ PrefabInstance:
       propertyPath: m_ShadowGroup
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 8273607608950421270, guid: ef30f999c5d081f46b7d741646b0fdcb, type: 3}
+      propertyPath: m_UseRendererSilhouette
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1329,6 +1341,10 @@ PrefabInstance:
     - target: {fileID: 4980443237257314273, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
       propertyPath: m_ShadowGroup
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4980443237257314273, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
+      propertyPath: m_UseRendererSilhouette
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7656270996131087748, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1579,6 +1595,10 @@ PrefabInstance:
       propertyPath: m_ShadowGroup
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 8273607608950421270, guid: ef30f999c5d081f46b7d741646b0fdcb, type: 3}
+      propertyPath: m_UseRendererSilhouette
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1699,6 +1719,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3104145899300913421, guid: 2dd66304d1325dc46869a8474211d9c8, type: 3}
+      propertyPath: m_UseRendererSilhouette
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3323698511620230847, guid: 2dd66304d1325dc46869a8474211d9c8, type: 3}
       propertyPath: m_Name
       value: 07-wire-sagging
@@ -1768,6 +1792,10 @@ PrefabInstance:
     - target: {fileID: 8273607608950421270, guid: ef30f999c5d081f46b7d741646b0fdcb, type: 3}
       propertyPath: m_ShadowGroup
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8273607608950421270, guid: ef30f999c5d081f46b7d741646b0fdcb, type: 3}
+      propertyPath: m_UseRendererSilhouette
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2345,6 +2373,10 @@ PrefabInstance:
       propertyPath: m_ShadowGroup
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 8273607608950421270, guid: ef30f999c5d081f46b7d741646b0fdcb, type: 3}
+      propertyPath: m_UseRendererSilhouette
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2370,6 +2402,10 @@ PrefabInstance:
     - target: {fileID: 4980443237257314273, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
       propertyPath: m_ShadowGroup
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4980443237257314273, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
+      propertyPath: m_UseRendererSilhouette
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7656270996131087748, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2440,6 +2476,10 @@ PrefabInstance:
     - target: {fileID: 4980443237257314273, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
       propertyPath: m_ShadowGroup
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4980443237257314273, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
+      propertyPath: m_UseRendererSilhouette
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4980443237257314273, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
       propertyPath: managedReferences[5554845448362262754].m_FlipX
@@ -2700,6 +2740,10 @@ PrefabInstance:
       propertyPath: m_ShadowGroup
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 8273607608950421270, guid: ef30f999c5d081f46b7d741646b0fdcb, type: 3}
+      propertyPath: m_UseRendererSilhouette
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2869,6 +2913,10 @@ PrefabInstance:
     - target: {fileID: 4980443237257314273, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
       propertyPath: m_ShadowGroup
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4980443237257314273, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
+      propertyPath: m_UseRendererSilhouette
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4980443237257314273, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
       propertyPath: managedReferences[5554845448362262754].m_FlipX
@@ -3291,6 +3339,10 @@ PrefabInstance:
       propertyPath: m_ShadowGroup
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 8273607608950421270, guid: ef30f999c5d081f46b7d741646b0fdcb, type: 3}
+      propertyPath: m_UseRendererSilhouette
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3356,6 +3408,10 @@ PrefabInstance:
     - target: {fileID: 8273607608950421270, guid: ef30f999c5d081f46b7d741646b0fdcb, type: 3}
       propertyPath: m_ShadowGroup
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8273607608950421270, guid: ef30f999c5d081f46b7d741646b0fdcb, type: 3}
+      propertyPath: m_UseRendererSilhouette
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -3463,6 +3519,10 @@ PrefabInstance:
     - target: {fileID: 4980443237257314273, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
       propertyPath: m_ShadowGroup
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4980443237257314273, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
+      propertyPath: m_UseRendererSilhouette
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4980443237257314273, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
       propertyPath: managedReferences[5554845448362262754].m_FlipX
@@ -3794,6 +3854,10 @@ PrefabInstance:
       propertyPath: m_ShadowGroup
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 8273607608950421270, guid: ef30f999c5d081f46b7d741646b0fdcb, type: 3}
+      propertyPath: m_UseRendererSilhouette
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -4029,6 +4093,10 @@ PrefabInstance:
       propertyPath: m_ShadowGroup
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 8273607608950421270, guid: ef30f999c5d081f46b7d741646b0fdcb, type: 3}
+      propertyPath: m_UseRendererSilhouette
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -4091,6 +4159,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4846874895527488001, guid: 548dfb645d3a7a944a563b2ce47cd66b, type: 3}
+      propertyPath: m_UseRendererSilhouette
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -4124,6 +4196,10 @@ PrefabInstance:
     - target: {fileID: 4980443237257314273, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
       propertyPath: m_ShadowGroup
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4980443237257314273, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
+      propertyPath: m_UseRendererSilhouette
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4980443237257314273, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
       propertyPath: managedReferences[5554845448362262754].m_FlipX
@@ -4513,6 +4589,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6631539966205004607, guid: 03a6e28e42b08ce46a2e6897b7429d60, type: 3}
+      propertyPath: m_UseRendererSilhouette
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -4578,6 +4658,10 @@ PrefabInstance:
     - target: {fileID: 8273607608950421270, guid: ef30f999c5d081f46b7d741646b0fdcb, type: 3}
       propertyPath: m_ShadowGroup
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8273607608950421270, guid: ef30f999c5d081f46b7d741646b0fdcb, type: 3}
+      propertyPath: m_UseRendererSilhouette
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -4829,6 +4913,10 @@ PrefabInstance:
       propertyPath: m_ShadowGroup
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 8273607608950421270, guid: ef30f999c5d081f46b7d741646b0fdcb, type: 3}
+      propertyPath: m_UseRendererSilhouette
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -4850,6 +4938,10 @@ PrefabInstance:
     - target: {fileID: 4980443237257314273, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
       propertyPath: m_ShadowGroup
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4980443237257314273, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
+      propertyPath: m_UseRendererSilhouette
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7656270996131087748, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
       propertyPath: m_LocalPosition.x
@@ -5135,6 +5227,10 @@ PrefabInstance:
       propertyPath: m_ShadowGroup
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 8273607608950421270, guid: ef30f999c5d081f46b7d741646b0fdcb, type: 3}
+      propertyPath: m_UseRendererSilhouette
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -5259,6 +5355,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2735981086547804227, guid: 2a4a014db62625045916aa83a040def8, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6164477146010257624, guid: 2a4a014db62625045916aa83a040def8, type: 3}
+      propertyPath: m_UseRendererSilhouette
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6844093313735381026, guid: 2a4a014db62625045916aa83a040def8, type: 3}
@@ -8027,6 +8127,10 @@ PrefabInstance:
       propertyPath: m_ShadowGroup
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 8273607608950421270, guid: ef30f999c5d081f46b7d741646b0fdcb, type: 3}
+      propertyPath: m_UseRendererSilhouette
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -8157,6 +8261,10 @@ PrefabInstance:
       propertyPath: m_ShadowGroup
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 4980443237257314273, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
+      propertyPath: m_UseRendererSilhouette
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7656270996131087748, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
       propertyPath: m_LocalPosition.x
       value: 14.95
@@ -8219,6 +8327,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 18184511}
     m_Modifications:
+    - target: {fileID: 1054436774427272448, guid: 9d17bab4d142e544e87d4bebcaf391bd, type: 3}
+      propertyPath: m_UseRendererSilhouette
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2787545973328092308, guid: 9d17bab4d142e544e87d4bebcaf391bd, type: 3}
       propertyPath: m_Name
       value: 04-utility-pole
@@ -8338,6 +8450,10 @@ PrefabInstance:
     - target: {fileID: 4980443237257314273, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
       propertyPath: m_ShadowGroup
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4980443237257314273, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
+      propertyPath: m_UseRendererSilhouette
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4980443237257314273, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
       propertyPath: managedReferences[5554845448362262754].m_FlipX
@@ -8518,6 +8634,10 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4980443237257314273, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
+      propertyPath: m_UseRendererSilhouette
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4980443237257314273, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
       propertyPath: managedReferences[5554845448362262754].m_FlipX
       value: 1
       objectReference: {fileID: 0}
@@ -8662,6 +8782,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: 03-bus-stop-sign
       objectReference: {fileID: 0}
+    - target: {fileID: 8698741061904110823, guid: 7e702c8026ab1474080270be51d931a9, type: 3}
+      propertyPath: m_UseRendererSilhouette
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -8796,6 +8920,10 @@ PrefabInstance:
       propertyPath: m_ShadowGroup
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 8273607608950421270, guid: ef30f999c5d081f46b7d741646b0fdcb, type: 3}
+      propertyPath: m_UseRendererSilhouette
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -8909,6 +9037,10 @@ PrefabInstance:
     - target: {fileID: 4980443237257314273, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
       propertyPath: m_ShadowGroup
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4980443237257314273, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
+      propertyPath: m_UseRendererSilhouette
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7656270996131087748, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
       propertyPath: m_LocalScale.x
@@ -9063,6 +9195,10 @@ PrefabInstance:
       propertyPath: m_ShadowGroup
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 4980443237257314273, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
+      propertyPath: m_UseRendererSilhouette
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7656270996131087748, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.57092786
@@ -9140,6 +9276,10 @@ PrefabInstance:
     - target: {fileID: 4980443237257314273, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
       propertyPath: m_ShadowGroup
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4980443237257314273, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
+      propertyPath: m_UseRendererSilhouette
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7656270996131087748, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
       propertyPath: m_LocalPosition.x
@@ -9250,6 +9390,10 @@ PrefabInstance:
     - target: {fileID: 8273607608950421270, guid: ef30f999c5d081f46b7d741646b0fdcb, type: 3}
       propertyPath: m_ShadowGroup
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8273607608950421270, guid: ef30f999c5d081f46b7d741646b0fdcb, type: 3}
+      propertyPath: m_UseRendererSilhouette
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -9418,6 +9562,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 18184511}
     m_Modifications:
+    - target: {fileID: 1054436774427272448, guid: 9d17bab4d142e544e87d4bebcaf391bd, type: 3}
+      propertyPath: m_UseRendererSilhouette
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2787545973328092308, guid: 9d17bab4d142e544e87d4bebcaf391bd, type: 3}
       propertyPath: m_Name
       value: 04-utility-pole (2)
@@ -9741,6 +9889,10 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4980443237257314273, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
+      propertyPath: m_UseRendererSilhouette
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4980443237257314273, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
       propertyPath: managedReferences[5554845448362262754].m_FlipX
       value: 1
       objectReference: {fileID: 0}
@@ -9893,6 +10045,10 @@ PrefabInstance:
       propertyPath: m_ShadowGroup
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 8273607608950421270, guid: ef30f999c5d081f46b7d741646b0fdcb, type: 3}
+      propertyPath: m_UseRendererSilhouette
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -9914,6 +10070,10 @@ PrefabInstance:
     - target: {fileID: 4980443237257314273, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
       propertyPath: m_ShadowGroup
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4980443237257314273, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
+      propertyPath: m_UseRendererSilhouette
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7656270996131087748, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
       propertyPath: m_LocalScale.x
@@ -10139,6 +10299,10 @@ PrefabInstance:
       propertyPath: m_ShadowGroup
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 4980443237257314273, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
+      propertyPath: m_UseRendererSilhouette
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7656270996131087748, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
       propertyPath: m_LocalPosition.x
       value: 25.22
@@ -10201,6 +10365,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 18184511}
     m_Modifications:
+    - target: {fileID: 1054436774427272448, guid: 9d17bab4d142e544e87d4bebcaf391bd, type: 3}
+      propertyPath: m_UseRendererSilhouette
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2787545973328092308, guid: 9d17bab4d142e544e87d4bebcaf391bd, type: 3}
       propertyPath: m_Name
       value: 04-utility-pole (1)
@@ -10274,6 +10442,10 @@ PrefabInstance:
     - target: {fileID: 4980443237257314273, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
       propertyPath: m_ShadowGroup
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4980443237257314273, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
+      propertyPath: m_UseRendererSilhouette
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4980443237257314273, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
       propertyPath: managedReferences[5554845448362262754].m_FlipX
@@ -10639,6 +10811,10 @@ PrefabInstance:
       propertyPath: m_ShadowGroup
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 8273607608950421270, guid: ef30f999c5d081f46b7d741646b0fdcb, type: 3}
+      propertyPath: m_UseRendererSilhouette
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -10704,6 +10880,10 @@ PrefabInstance:
     - target: {fileID: 8273607608950421270, guid: ef30f999c5d081f46b7d741646b0fdcb, type: 3}
       propertyPath: m_ShadowGroup
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8273607608950421270, guid: ef30f999c5d081f46b7d741646b0fdcb, type: 3}
+      propertyPath: m_UseRendererSilhouette
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -10852,6 +11032,10 @@ PrefabInstance:
     - target: {fileID: 4980443237257314273, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
       propertyPath: m_ShadowGroup
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4980443237257314273, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
+      propertyPath: m_UseRendererSilhouette
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4980443237257314273, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
       propertyPath: managedReferences[5554845448362262754].m_FlipX
@@ -11366,6 +11550,10 @@ PrefabInstance:
     - target: {fileID: 8273607608950421270, guid: ef30f999c5d081f46b7d741646b0fdcb, type: 3}
       propertyPath: m_ShadowGroup
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8273607608950421270, guid: ef30f999c5d081f46b7d741646b0fdcb, type: 3}
+      propertyPath: m_UseRendererSilhouette
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
