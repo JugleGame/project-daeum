@@ -42,4 +42,4 @@ MonoBehaviour:
   encounterIntensity: 2
   contaminationIntensity: 2
   chaseIntensity: 3
-  nextStageId: 2
+  nextStageId: 10

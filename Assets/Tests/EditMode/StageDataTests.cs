@@ -39,7 +39,7 @@ namespace Daeume.Tests.EditMode
 
             Assert.That(data.ValidateData(), Is.Empty);
             Assert.That(data.StageId, Is.EqualTo(1));
-            Assert.That(data.NextStageId, Is.EqualTo(2));
+            Assert.That(data.NextStageId, Is.EqualTo(10));
             Assert.That(data.HospitalImageryDirectness, Is.InRange(0, 4));
             Assert.That(data.EncounterIds, Is.Not.Empty);
             Assert.That(data.EncounterIds.Distinct().Count(), Is.EqualTo(data.EncounterIds.Count));
