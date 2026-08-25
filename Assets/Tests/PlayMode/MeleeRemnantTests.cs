@@ -142,7 +142,7 @@ namespace Daeume.Tests.PlayMode
             remnant.SetTarget(combat.transform);
             AdvanceToAttack(remnant, remnant.Data);
             Assert.That(remnant.State, Is.EqualTo(RemnantState.Attack));
-            Assert.That(remnant.transform.Find("AttackTelegraph").GetComponent<SpriteRenderer>().enabled, Is.True);
+            Assert.That(remnant.IsTelegraphing, Is.True);
 
             Assert.That(combat.Attack(), Is.EqualTo(1));
             Assert.That(combat.Attack(), Is.EqualTo(1));

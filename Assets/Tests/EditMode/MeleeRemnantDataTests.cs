@@ -42,9 +42,9 @@ namespace Daeume.Tests.EditMode
             Assert.That(prefabRemnant, Is.Not.Null);
             Assert.That(prefabRemnant.Data, Is.Not.Null);
             Assert.That(prefabRemnant.GetComponent<Collider2D>(), Is.Not.Null);
-            var telegraph = prefab.transform.Find("AttackTelegraph").GetComponent<SpriteRenderer>();
-            Assert.That(telegraph, Is.Not.Null);
-            Assert.That(telegraph.enabled, Is.False);
+            // 공격 예고는 스프라이트가 아니라 "0.9초 동안 제자리에 멈춰 선다"로 전달한다.
+            // 발밑으로 삐져나오던 빨간 막대는 실루엣과 겹쳐 읽히지 않아 걷어냈다.
+            Assert.That(prefab.transform.Find("AttackTelegraph"), Is.Null);
 
             var scene = EditorSceneManager.OpenScene(ScenePath, OpenSceneMode.Additive);
             try
