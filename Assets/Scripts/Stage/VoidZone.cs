@@ -20,7 +20,29 @@ namespace Daeume.Stage
 
         private void OnTriggerEnter2D(Collider2D other)
         {
-            if (IsPlayer(other)) GameManager.Instance?.Events.Publish(new PlayerFellOutOfBounds());
+            if (IsPlayer(other)) GameManager.Instance?.Events.Publish(new PlayerFellOutOfBounds(ResolveRecoveryPosition()));
+        }
+
+        /// <summary>
+        /// 레벨이 선언한 낙사 복귀 지점을 찾는다. 없으면 null을 돌려주고, 그때는 흐름 쪽이
+        /// 예전처럼 저장된 위치로 되돌린다.
+        /// </summary>
+        /// <remarks>
+        /// 마커를 여기서 찾는 이유: 복귀를 결정하는 SceneFlowController(Daeume.Flow)는 StageMarker를
+        /// 볼 수 없다. Flow가 Daeume.Stage를 참조하면 Stage → Player → Flow 순환이 생긴다.
+        /// VoidZone은 StageMarker와 같은 asmdef라 순환 없이 마커를 읽을 수 있다.
+        ///
+        /// 낙사는 자주 일어나는 일이 아니라 매번 전체 탐색을 해도 부담이 없다. 대신 캐시를 두면
+        /// 씬을 다시 올렸을 때 파괴된 마커를 붙들고 있게 되므로 그쪽이 오히려 위험하다.
+        /// </remarks>
+        private static Vector2? ResolveRecoveryPosition()
+        {
+            foreach (var marker in FindObjectsByType<StageMarker>(FindObjectsSortMode.None))
+            {
+                if (marker.Kind == StageMarkerKind.FallRecovery) return marker.transform.position;
+            }
+
+            return null;
         }
 
         /// <summary>
