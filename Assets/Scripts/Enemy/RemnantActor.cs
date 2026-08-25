@@ -38,6 +38,14 @@ namespace Daeume.Enemy
         /// <summary>지형 검사에 주는 여유 두께. 0이면 벽에 닿았는지 판정이 프레임마다 깜빡인다.</summary>
         private const float TerrainSkin = 0.02f;
 
+        /// <summary>낙하 가속도. TraumaChaseActor와 같은 값을 쓴다.</summary>
+        private const float Gravity = 30f;
+
+        /// <summary>낙하 속도 상한. 없으면 한 프레임에 지형을 통과해 버린다.</summary>
+        private const float MaxFallSpeed = 22f;
+
+        private float verticalVelocity;
+
         protected float stateRemaining;      // 현재 상태(혹은 하위 단계)가 끝나기까지 남은 시간
         protected bool attackResolved;       // 이번 공격에서 피해 판정을 이미 했는가
 
@@ -185,6 +193,62 @@ namespace Daeume.Enemy
                     }
                     break;
             }
+
+            ApplyGravity(step);
+        }
+
+        /// <summary>발밑 지형을 찾아 그 위에 세운다. 없으면 떨어진다.</summary>
+        /// <remarks>
+        /// 잔재는 Rigidbody2D 없이 transform으로만 움직이고, 그동안 y는 아무도 건드리지 않았다.
+        /// 그래서 스폰된 높이에 그대로 굳어, 계단 위에서 나온 잔재가 평지의 플레이어를 쫓아올 때
+        /// 공중에 뜬 채로 따라왔다. TraumaChaseActor가 이미 같은 문제를 같은 방식으로 풀고 있어
+        /// 그 구조를 그대로 가져온다.
+        ///
+        /// 몸통 콜라이더는 trigger라 물리 엔진이 받쳐 주지 않는다. 지형은 직접 찾아야 한다.
+        /// </remarks>
+        private void ApplyGravity(float deltaTime)
+        {
+            if (deltaTime <= 0f) return;
+            if (bodyCollider == null) bodyCollider = GetComponent<Collider2D>();
+            if (bodyCollider == null) return;
+
+            var bounds = bodyCollider.bounds;
+            var footOffset = transform.position.y - bounds.min.y;
+            var fall = Mathf.Abs(verticalVelocity) * deltaTime;
+            var ground = FindGroundBelow(bounds.center, bounds.extents.y + fall + TerrainSkin);
+
+            if (ground.HasValue && verticalVelocity <= 0f)
+            {
+                transform.position = new Vector3(transform.position.x, ground.Value + footOffset, transform.position.z);
+                verticalVelocity = 0f;
+                return;
+            }
+
+            verticalVelocity = Mathf.Max(-MaxFallSpeed, verticalVelocity - Gravity * deltaTime);
+            transform.position += new Vector3(0f, verticalVelocity * deltaTime, 0f);
+        }
+
+        /// <summary>발밑에서 가장 가까운 지형의 윗면. 없으면 null.</summary>
+        /// <remarks>
+        /// 지형으로 치지 않는 것은 IsBlockedTowards와 같다 - 자기 자신, 트리거, 그리고 플레이어.
+        /// 거리 0 히트도 무시한다. 기준점이 이미 콜라이더 안에 있다는 뜻이라, 지형을 찾은 것으로
+        /// 치면 벽에 파묻힌 채 굳는다.
+        /// </remarks>
+        private float? FindGroundBelow(Vector2 origin, float distance)
+        {
+            var hits = Physics2D.RaycastAll(origin, Vector2.down, distance);
+            var best = float.NegativeInfinity;
+
+            for (var index = 0; index < hits.Length; index++)
+            {
+                var hit = hits[index];
+                if (hit.collider == null || hit.collider.isTrigger || hit.distance <= 0f) continue;
+                if (hit.collider.transform == transform || hit.collider.transform.IsChildOf(transform)) continue;
+                if (FindDamageable(hit.collider.transform)?.TargetKind == DamageTargetKind.Player) continue;
+                if (hit.point.y > best) best = hit.point.y;
+            }
+
+            return float.IsNegativeInfinity(best) ? (float?)null : best;
         }
 
         public DamageResult ApplyDamage(DamageRequest request)
