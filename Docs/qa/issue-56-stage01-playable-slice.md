@@ -23,7 +23,8 @@
 | x | 대상 | 비고 |
 |---:|---|---|
 | -8.75 | `Terrain/Boundary_Left` | 보이지 않는 벽, 타일맵 왼쪽 끝 바깥 |
-| -3.03 | `Signal_Exit_01` (문·표지 비주얼) | 추격 중 맥동. 탈출 트리거와 2유닛 어긋나 있음(보류, 아래 참고) |
+| -3.03 | `Signal_Exit_01` | 임시 문·표지 비주얼은 꺼 둠. 신호 데이터만 남는다 |
+| -1.0 | (탈출 판정) | 아래 `EscapeMarker` 행 참고 |
 | -1.0 | `EscapeMarker` / `Stage01_ChaseEscapeTrigger` | 탈출 지점 |
 | 0 | `StartMarker` | 플레이어 시작 |
 | 3.36~4.26 | `05-lamp-utility-pole` 매달림 영역 | `GrabbableSurface` + 트리거, 지면 위 0.11~1.31 |
@@ -62,16 +63,20 @@
 
 ## 탈출구 맥동
 
-추격이 시작되면 `Signal_Exit_01`의 `DoorVisual`이 초록빛으로 맥동한다(`ChaseExitPulse`).
+추격이 시작되면 `01-bus-stop-shelter`(x = 0)가 노란빛으로 맥동한다(`ChaseExitPulse`).
 회상 지점의 맥동(`MemoryAnchorPulse`)과 같은 규칙을 재사용해 "빛나는 것 = 목표"로 읽히게 한다.
 추격 전에는 맥동하지 않는다. 아직 갈 수 없는 곳을 미리 가리키면 탐색 동선이 망가진다.
 
 두 맥동은 `SpritePulse`(`Daeume.Core`)를 함께 쓴다. 색을 흔드는 방법은 한 곳에만 있고,
 언제 맥동할지만 각자 정한다.
 
-`DoorVisual`·`SignVisual`의 sorting layer를 `Default`에서 `Object`로 올렸다. `Default`는 가장 낮은
-층이라 배경 벽 뒤에 가려 실제로는 보이지 않았다. `Object`는 `Character`보다 아래라 플레이어가
-문 앞을 지나간다.
+탈출 판정 자체는 그대로 `Stage01_ChaseEscapeTrigger`(x = -1)가 하고, 추격 중인지는
+`StageOneChaseController.CompleteAtEscape`가 판단한다. 정류장 바로 왼쪽이라 정류장을 지나치는
+즉시 닿는다.
+
+`Signal_Exit_01`의 임시 문·표지 비주얼(흰 사각형 + 초록 표지 + "▣ EXIT" 글자)은 껐다. 정류장이
+탈출구 역할을 대신하므로 화면에 두 개의 출구 표시가 생긴다. `ChaseRouteSignal` 데이터는 남겨
+둔다(경로 신호 검사 테스트가 읽는다).
 
 ## 진입 독백
 
