@@ -28,8 +28,11 @@ namespace Daeume.Enemy
         private bool wasAttackedByPlayer;   // Reactive 잔재의 "선공당함" 기록
         private Color bodyBaseColor = Color.white;
 
-        /// <summary>피격 경직 동안 덧입히는 색. 알파는 Animator가 쥐고 있어 rgb만 바꾼다.</summary>
-        private static readonly Color HitFlashColor = new(1f, 0.35f, 0.35f, 1f);
+        /// <summary>피격 점멸이 한 번 켜지거나 꺼져 있는 시간.</summary>
+        private const float HitBlinkHalfPeriod = 0.08f;
+
+        /// <summary>점멸이 켜진 순간의 알파. 0으로 두면 사라진 것처럼 보여 맞았다는 신호가 안 된다.</summary>
+        private const float HitBlinkAlpha = 0.25f;
         private float nextTargetSearchTime; // 플레이어 탐색 재시도 시각(매 프레임 탐색 방지)
 
         protected float stateRemaining;      // 현재 상태(혹은 하위 단계)가 끝나기까지 남은 시간
@@ -170,6 +173,7 @@ namespace Daeume.Enemy
                     break;
                 case RemnantState.Hit:
                     stateRemaining -= step;
+                    TickHitBlink();
                     if (stateRemaining <= 0f)
                     {
                         EnterState(TargetInRange(DataBase.DetectionRange * Profile.DetectionRangeMultiplier)
@@ -236,7 +240,7 @@ namespace Daeume.Enemy
             attackResolved = false;
             IsYielding = false;
             SetTelegraph(false);
-            ApplyHitFlash(value == RemnantState.Hit);
+            if (value != RemnantState.Hit) SetBodyAlpha(1f);
             switch (value)
             {
                 case RemnantState.Alert:
@@ -253,17 +257,27 @@ namespace Daeume.Enemy
             }
         }
 
-        /// <summary>피격 경직 동안 몸을 붉게 물들인다. 맞았다는 사실을 색으로도 알린다.</summary>
+        /// <summary>피격 경직 동안 몸을 깜빡여 맞았다는 사실을 알린다.</summary>
         /// <remarks>
-        /// 알파는 건드리지 않는다. Remnant 클립들이 Visual.m_Color.a를 애니메이션하고 있어
-        /// 여기서 알파를 쓰면 Animator와 매 프레임 싸운다. rgb는 Dead 클립 말고는 아무도 잡지
-        /// 않으므로 코드가 칠한 값이 그대로 남는다.
+        /// 왜 색이 아니라 알파인가: 잔재 스프라이트는 픽셀 평균이 rgb(31, 24, 28)인 검은 실루엣이다.
+        /// SpriteRenderer.color는 곱셈이라 검은 픽셀에 빨강을 곱해도 검정 그대로다.
+        /// 알파를 낮추면 밝은 하늘 배경이 비쳐 실루엣이 옅어지므로 실제로 눈에 띈다.
+        ///
+        /// 남은 경직 시간을 반주기로 나눈 몫의 홀짝으로 켜고 끈다. 별도 타이머를 두지 않아도
+        /// 경직이 끝나는 순간 점멸도 함께 끝난다.
         /// </remarks>
-        private void ApplyHitFlash(bool active)
+        private void TickHitBlink()
         {
             if (bodyRenderer == null) return;
-            var target = active ? HitFlashColor : bodyBaseColor;
-            bodyRenderer.color = new Color(target.r, target.g, target.b, bodyRenderer.color.a);
+            var lit = Mathf.FloorToInt(Mathf.Max(0f, stateRemaining) / HitBlinkHalfPeriod) % 2 == 0;
+            SetBodyAlpha(lit ? HitBlinkAlpha : 1f);
+        }
+
+        private void SetBodyAlpha(float value)
+        {
+            if (bodyRenderer == null) return;
+            var color = bodyRenderer.color;
+            bodyRenderer.color = new Color(color.r, color.g, color.b, value);
         }
 
         private void Die()
