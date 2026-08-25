@@ -1320,7 +1320,7 @@ Transform:
   m_GameObject: {fileID: 293876028}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 9, y: -0.9375, z: 0}
+  m_LocalPosition: {x: 10.4, y: -0.9375, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -8797,8 +8797,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d89dda3ec5f2644e8e7369daa3c8737, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Daeume.Stage::Daeume.Stage.StageCameraBounds
-  minimum: {x: -1.5, y: -2}
-  maximum: {x: 28, y: 4}
+  minimum: {x: -8.25, y: -2}
+  maximum: {x: 31.75, y: 4}
   followVertical: 0
   fixedCameraY: 1.875
 --- !u!114 &1476572919
@@ -9059,6 +9059,14 @@ PrefabInstance:
     - target: {fileID: 2644041999069881510, guid: f528b1e06b731e843b72cbee9e668972, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4114057821818254100, guid: f528b1e06b731e843b72cbee9e668972, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.28
+      objectReference: {fileID: 0}
+    - target: {fileID: 4114057821818254100, guid: f528b1e06b731e843b72cbee9e668972, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.2975
       objectReference: {fileID: 0}
     - target: {fileID: 8778937480090682463, guid: f528b1e06b731e843b72cbee9e668972, type: 3}
       propertyPath: m_Name
@@ -10149,7 +10157,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1885099626
 Transform:
   m_ObjectHideFlags: 0
@@ -10810,7 +10818,7 @@ Transform:
   m_GameObject: {fileID: 2075298871}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 7, y: -0.9375, z: 0}
+  m_LocalPosition: {x: 6.2, y: -0.9375, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
