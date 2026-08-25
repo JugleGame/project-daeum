@@ -512,7 +512,7 @@ MonoBehaviour:
   jumpAction: {fileID: 0}
   grabAction: {fileID: 0}
   moveSpeed: 5
-  jumpVelocity: 6.5
+  jumpVelocity: 4.5
   airControl: 0.75
   grabHoldSeconds: 1.5
   groundProbe: {fileID: 6574249883668948628}

@@ -30,7 +30,7 @@ namespace Daeume.Player
         [SerializeField] private InputActionReference jumpAction;
         [SerializeField] private InputActionReference grabAction;
         [SerializeField, Min(0f)] private float moveSpeed = 5f;
-        [SerializeField, Min(0f)] private float jumpVelocity = 6.5f;
+        [SerializeField, Min(0f)] private float jumpVelocity = 4.5f;
         [SerializeField, Range(0f, 1f)] private float airControl = 0.75f;   // 공중에서의 조작 비율(1이면 지상과 동일)
         [SerializeField, Min(0.01f)] private float grabHoldSeconds = 1.5f;  // spec-002의 GrabHoldSeconds
         [SerializeField] private Transform groundProbe;                     // 발밑 검사 위치(자식 오브젝트)
