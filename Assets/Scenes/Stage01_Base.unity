@@ -1194,8 +1194,16 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8273607608950421270, guid: ef30f999c5d081f46b7d741646b0fdcb, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8273607608950421270, guid: ef30f999c5d081f46b7d741646b0fdcb, type: 3}
       propertyPath: m_ShadowGroup
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8273607608950421270, guid: ef30f999c5d081f46b7d741646b0fdcb, type: 3}
+      propertyPath: m_CastsShadows
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8273607608950421270, guid: ef30f999c5d081f46b7d741646b0fdcb, type: 3}
       propertyPath: m_UseRendererSilhouette
@@ -1339,8 +1347,16 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4980443237257314273, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4980443237257314273, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
       propertyPath: m_ShadowGroup
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4980443237257314273, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
+      propertyPath: m_CastsShadows
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4980443237257314273, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
       propertyPath: m_UseRendererSilhouette
@@ -1592,8 +1608,16 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8273607608950421270, guid: ef30f999c5d081f46b7d741646b0fdcb, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8273607608950421270, guid: ef30f999c5d081f46b7d741646b0fdcb, type: 3}
       propertyPath: m_ShadowGroup
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8273607608950421270, guid: ef30f999c5d081f46b7d741646b0fdcb, type: 3}
+      propertyPath: m_CastsShadows
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8273607608950421270, guid: ef30f999c5d081f46b7d741646b0fdcb, type: 3}
       propertyPath: m_UseRendererSilhouette
@@ -1790,8 +1814,16 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8273607608950421270, guid: ef30f999c5d081f46b7d741646b0fdcb, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8273607608950421270, guid: ef30f999c5d081f46b7d741646b0fdcb, type: 3}
       propertyPath: m_ShadowGroup
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8273607608950421270, guid: ef30f999c5d081f46b7d741646b0fdcb, type: 3}
+      propertyPath: m_CastsShadows
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8273607608950421270, guid: ef30f999c5d081f46b7d741646b0fdcb, type: 3}
       propertyPath: m_UseRendererSilhouette
@@ -2370,8 +2402,16 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8273607608950421270, guid: ef30f999c5d081f46b7d741646b0fdcb, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8273607608950421270, guid: ef30f999c5d081f46b7d741646b0fdcb, type: 3}
       propertyPath: m_ShadowGroup
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8273607608950421270, guid: ef30f999c5d081f46b7d741646b0fdcb, type: 3}
+      propertyPath: m_CastsShadows
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8273607608950421270, guid: ef30f999c5d081f46b7d741646b0fdcb, type: 3}
       propertyPath: m_UseRendererSilhouette
@@ -2400,8 +2440,16 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4980443237257314273, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4980443237257314273, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
       propertyPath: m_ShadowGroup
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4980443237257314273, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
+      propertyPath: m_CastsShadows
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4980443237257314273, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
       propertyPath: m_UseRendererSilhouette
@@ -2474,8 +2522,16 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4980443237257314273, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4980443237257314273, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
       propertyPath: m_ShadowGroup
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4980443237257314273, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
+      propertyPath: m_CastsShadows
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4980443237257314273, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
       propertyPath: m_UseRendererSilhouette
@@ -2737,8 +2793,16 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8273607608950421270, guid: ef30f999c5d081f46b7d741646b0fdcb, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8273607608950421270, guid: ef30f999c5d081f46b7d741646b0fdcb, type: 3}
       propertyPath: m_ShadowGroup
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8273607608950421270, guid: ef30f999c5d081f46b7d741646b0fdcb, type: 3}
+      propertyPath: m_CastsShadows
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8273607608950421270, guid: ef30f999c5d081f46b7d741646b0fdcb, type: 3}
       propertyPath: m_UseRendererSilhouette
@@ -2911,8 +2975,16 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4980443237257314273, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4980443237257314273, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
       propertyPath: m_ShadowGroup
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4980443237257314273, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
+      propertyPath: m_CastsShadows
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4980443237257314273, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
       propertyPath: m_UseRendererSilhouette
@@ -3336,8 +3408,16 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8273607608950421270, guid: ef30f999c5d081f46b7d741646b0fdcb, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8273607608950421270, guid: ef30f999c5d081f46b7d741646b0fdcb, type: 3}
       propertyPath: m_ShadowGroup
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8273607608950421270, guid: ef30f999c5d081f46b7d741646b0fdcb, type: 3}
+      propertyPath: m_CastsShadows
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8273607608950421270, guid: ef30f999c5d081f46b7d741646b0fdcb, type: 3}
       propertyPath: m_UseRendererSilhouette
@@ -3406,8 +3486,16 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8273607608950421270, guid: ef30f999c5d081f46b7d741646b0fdcb, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8273607608950421270, guid: ef30f999c5d081f46b7d741646b0fdcb, type: 3}
       propertyPath: m_ShadowGroup
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8273607608950421270, guid: ef30f999c5d081f46b7d741646b0fdcb, type: 3}
+      propertyPath: m_CastsShadows
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8273607608950421270, guid: ef30f999c5d081f46b7d741646b0fdcb, type: 3}
       propertyPath: m_UseRendererSilhouette
@@ -3517,8 +3605,16 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4980443237257314273, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4980443237257314273, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
       propertyPath: m_ShadowGroup
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4980443237257314273, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
+      propertyPath: m_CastsShadows
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4980443237257314273, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
       propertyPath: m_UseRendererSilhouette
@@ -3851,8 +3947,16 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8273607608950421270, guid: ef30f999c5d081f46b7d741646b0fdcb, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8273607608950421270, guid: ef30f999c5d081f46b7d741646b0fdcb, type: 3}
       propertyPath: m_ShadowGroup
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8273607608950421270, guid: ef30f999c5d081f46b7d741646b0fdcb, type: 3}
+      propertyPath: m_CastsShadows
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8273607608950421270, guid: ef30f999c5d081f46b7d741646b0fdcb, type: 3}
       propertyPath: m_UseRendererSilhouette
@@ -4090,8 +4194,16 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8273607608950421270, guid: ef30f999c5d081f46b7d741646b0fdcb, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8273607608950421270, guid: ef30f999c5d081f46b7d741646b0fdcb, type: 3}
       propertyPath: m_ShadowGroup
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8273607608950421270, guid: ef30f999c5d081f46b7d741646b0fdcb, type: 3}
+      propertyPath: m_CastsShadows
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8273607608950421270, guid: ef30f999c5d081f46b7d741646b0fdcb, type: 3}
       propertyPath: m_UseRendererSilhouette
@@ -4194,8 +4306,16 @@ PrefabInstance:
       value: 1004
       objectReference: {fileID: 0}
     - target: {fileID: 4980443237257314273, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4980443237257314273, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
       propertyPath: m_ShadowGroup
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4980443237257314273, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
+      propertyPath: m_CastsShadows
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4980443237257314273, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
       propertyPath: m_UseRendererSilhouette
@@ -4656,8 +4776,16 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8273607608950421270, guid: ef30f999c5d081f46b7d741646b0fdcb, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8273607608950421270, guid: ef30f999c5d081f46b7d741646b0fdcb, type: 3}
       propertyPath: m_ShadowGroup
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8273607608950421270, guid: ef30f999c5d081f46b7d741646b0fdcb, type: 3}
+      propertyPath: m_CastsShadows
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8273607608950421270, guid: ef30f999c5d081f46b7d741646b0fdcb, type: 3}
       propertyPath: m_UseRendererSilhouette
@@ -4910,8 +5038,16 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8273607608950421270, guid: ef30f999c5d081f46b7d741646b0fdcb, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8273607608950421270, guid: ef30f999c5d081f46b7d741646b0fdcb, type: 3}
       propertyPath: m_ShadowGroup
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8273607608950421270, guid: ef30f999c5d081f46b7d741646b0fdcb, type: 3}
+      propertyPath: m_CastsShadows
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8273607608950421270, guid: ef30f999c5d081f46b7d741646b0fdcb, type: 3}
       propertyPath: m_UseRendererSilhouette
@@ -4936,8 +5072,16 @@ PrefabInstance:
     m_TransformParent: {fileID: 1129555412}
     m_Modifications:
     - target: {fileID: 4980443237257314273, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4980443237257314273, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
       propertyPath: m_ShadowGroup
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4980443237257314273, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
+      propertyPath: m_CastsShadows
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4980443237257314273, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
       propertyPath: m_UseRendererSilhouette
@@ -5224,8 +5368,16 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8273607608950421270, guid: ef30f999c5d081f46b7d741646b0fdcb, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8273607608950421270, guid: ef30f999c5d081f46b7d741646b0fdcb, type: 3}
       propertyPath: m_ShadowGroup
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8273607608950421270, guid: ef30f999c5d081f46b7d741646b0fdcb, type: 3}
+      propertyPath: m_CastsShadows
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8273607608950421270, guid: ef30f999c5d081f46b7d741646b0fdcb, type: 3}
       propertyPath: m_UseRendererSilhouette
@@ -8124,8 +8276,16 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8273607608950421270, guid: ef30f999c5d081f46b7d741646b0fdcb, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8273607608950421270, guid: ef30f999c5d081f46b7d741646b0fdcb, type: 3}
       propertyPath: m_ShadowGroup
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8273607608950421270, guid: ef30f999c5d081f46b7d741646b0fdcb, type: 3}
+      propertyPath: m_CastsShadows
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8273607608950421270, guid: ef30f999c5d081f46b7d741646b0fdcb, type: 3}
       propertyPath: m_UseRendererSilhouette
@@ -8258,8 +8418,16 @@ PrefabInstance:
     m_TransformParent: {fileID: 1129555412}
     m_Modifications:
     - target: {fileID: 4980443237257314273, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4980443237257314273, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
       propertyPath: m_ShadowGroup
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4980443237257314273, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
+      propertyPath: m_CastsShadows
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4980443237257314273, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
       propertyPath: m_UseRendererSilhouette
@@ -8448,8 +8616,16 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4980443237257314273, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4980443237257314273, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
       propertyPath: m_ShadowGroup
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4980443237257314273, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
+      propertyPath: m_CastsShadows
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4980443237257314273, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
       propertyPath: m_UseRendererSilhouette
@@ -8630,8 +8806,16 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4980443237257314273, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4980443237257314273, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
       propertyPath: m_ShadowGroup
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4980443237257314273, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
+      propertyPath: m_CastsShadows
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4980443237257314273, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
       propertyPath: m_UseRendererSilhouette
@@ -8917,8 +9101,16 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8273607608950421270, guid: ef30f999c5d081f46b7d741646b0fdcb, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8273607608950421270, guid: ef30f999c5d081f46b7d741646b0fdcb, type: 3}
       propertyPath: m_ShadowGroup
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8273607608950421270, guid: ef30f999c5d081f46b7d741646b0fdcb, type: 3}
+      propertyPath: m_CastsShadows
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8273607608950421270, guid: ef30f999c5d081f46b7d741646b0fdcb, type: 3}
       propertyPath: m_UseRendererSilhouette
@@ -9035,8 +9227,16 @@ PrefabInstance:
     m_TransformParent: {fileID: 1129555412}
     m_Modifications:
     - target: {fileID: 4980443237257314273, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4980443237257314273, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
       propertyPath: m_ShadowGroup
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4980443237257314273, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
+      propertyPath: m_CastsShadows
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4980443237257314273, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
       propertyPath: m_UseRendererSilhouette
@@ -9192,8 +9392,16 @@ PrefabInstance:
     m_TransformParent: {fileID: 1129555412}
     m_Modifications:
     - target: {fileID: 4980443237257314273, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4980443237257314273, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
       propertyPath: m_ShadowGroup
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4980443237257314273, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
+      propertyPath: m_CastsShadows
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4980443237257314273, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
       propertyPath: m_UseRendererSilhouette
@@ -9274,8 +9482,16 @@ PrefabInstance:
     m_TransformParent: {fileID: 1129555412}
     m_Modifications:
     - target: {fileID: 4980443237257314273, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4980443237257314273, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
       propertyPath: m_ShadowGroup
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4980443237257314273, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
+      propertyPath: m_CastsShadows
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4980443237257314273, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
       propertyPath: m_UseRendererSilhouette
@@ -9388,8 +9604,16 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8273607608950421270, guid: ef30f999c5d081f46b7d741646b0fdcb, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8273607608950421270, guid: ef30f999c5d081f46b7d741646b0fdcb, type: 3}
       propertyPath: m_ShadowGroup
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8273607608950421270, guid: ef30f999c5d081f46b7d741646b0fdcb, type: 3}
+      propertyPath: m_CastsShadows
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8273607608950421270, guid: ef30f999c5d081f46b7d741646b0fdcb, type: 3}
       propertyPath: m_UseRendererSilhouette
@@ -9885,8 +10109,16 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4980443237257314273, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4980443237257314273, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
       propertyPath: m_ShadowGroup
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4980443237257314273, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
+      propertyPath: m_CastsShadows
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4980443237257314273, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
       propertyPath: m_UseRendererSilhouette
@@ -10042,8 +10274,16 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8273607608950421270, guid: ef30f999c5d081f46b7d741646b0fdcb, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8273607608950421270, guid: ef30f999c5d081f46b7d741646b0fdcb, type: 3}
       propertyPath: m_ShadowGroup
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8273607608950421270, guid: ef30f999c5d081f46b7d741646b0fdcb, type: 3}
+      propertyPath: m_CastsShadows
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8273607608950421270, guid: ef30f999c5d081f46b7d741646b0fdcb, type: 3}
       propertyPath: m_UseRendererSilhouette
@@ -10068,8 +10308,16 @@ PrefabInstance:
     m_TransformParent: {fileID: 1129555412}
     m_Modifications:
     - target: {fileID: 4980443237257314273, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4980443237257314273, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
       propertyPath: m_ShadowGroup
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4980443237257314273, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
+      propertyPath: m_CastsShadows
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4980443237257314273, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
       propertyPath: m_UseRendererSilhouette
@@ -10296,8 +10544,16 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4980443237257314273, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4980443237257314273, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
       propertyPath: m_ShadowGroup
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4980443237257314273, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
+      propertyPath: m_CastsShadows
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4980443237257314273, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
       propertyPath: m_UseRendererSilhouette
@@ -10440,8 +10696,16 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4980443237257314273, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4980443237257314273, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
       propertyPath: m_ShadowGroup
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4980443237257314273, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
+      propertyPath: m_CastsShadows
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4980443237257314273, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
       propertyPath: m_UseRendererSilhouette
@@ -10808,8 +11072,16 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8273607608950421270, guid: ef30f999c5d081f46b7d741646b0fdcb, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8273607608950421270, guid: ef30f999c5d081f46b7d741646b0fdcb, type: 3}
       propertyPath: m_ShadowGroup
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8273607608950421270, guid: ef30f999c5d081f46b7d741646b0fdcb, type: 3}
+      propertyPath: m_CastsShadows
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8273607608950421270, guid: ef30f999c5d081f46b7d741646b0fdcb, type: 3}
       propertyPath: m_UseRendererSilhouette
@@ -10878,8 +11150,16 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8273607608950421270, guid: ef30f999c5d081f46b7d741646b0fdcb, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8273607608950421270, guid: ef30f999c5d081f46b7d741646b0fdcb, type: 3}
       propertyPath: m_ShadowGroup
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8273607608950421270, guid: ef30f999c5d081f46b7d741646b0fdcb, type: 3}
+      propertyPath: m_CastsShadows
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8273607608950421270, guid: ef30f999c5d081f46b7d741646b0fdcb, type: 3}
       propertyPath: m_UseRendererSilhouette
@@ -11030,8 +11310,16 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4980443237257314273, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4980443237257314273, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
       propertyPath: m_ShadowGroup
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4980443237257314273, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
+      propertyPath: m_CastsShadows
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4980443237257314273, guid: 048cd33d5ab42df45b873307a860d872, type: 3}
       propertyPath: m_UseRendererSilhouette
@@ -11548,8 +11836,16 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8273607608950421270, guid: ef30f999c5d081f46b7d741646b0fdcb, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8273607608950421270, guid: ef30f999c5d081f46b7d741646b0fdcb, type: 3}
       propertyPath: m_ShadowGroup
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8273607608950421270, guid: ef30f999c5d081f46b7d741646b0fdcb, type: 3}
+      propertyPath: m_CastsShadows
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8273607608950421270, guid: ef30f999c5d081f46b7d741646b0fdcb, type: 3}
       propertyPath: m_UseRendererSilhouette
