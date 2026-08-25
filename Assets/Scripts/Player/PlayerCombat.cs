@@ -37,6 +37,7 @@ namespace Daeume.Player
 
         public bool PlayerAggression { get; private set; }
         public int AttackSequence { get; private set; }
+        public bool CombatEnabled { get; private set; } = true;
 
         private void Awake()
         {
@@ -90,7 +91,7 @@ namespace Daeume.Player
             // spec-005: 회상 재생 중에는 전투 피해가 발생하지 않는다.
             // spec-001: 실패/클리어 상태에서도 조작이 진행에 개입하면 안 된다.
             // 상태 확인을 공격 진입점 한 곳에서만 하므로, 입력·테스트·AI 어느 경로로 불러도 같은 규칙이 적용된다.
-            if (!IsCombatAllowed())
+            if (!CombatEnabled || !IsCombatAllowed())
             {
                 return 0;
             }
@@ -151,6 +152,9 @@ namespace Daeume.Player
 
         /// <summary>Encounter가 끝나거나 리셋될 때 선공 여부를 초기화한다.</summary>
         public void ResetAggression() => PlayerAggression = false;
+
+        /// <summary>무기를 내려놓은 뒤에는 공격 입력과 판정을 한 진입점에서 막는다.</summary>
+        public void SetCombatEnabled(bool enabled) => CombatEnabled = enabled;
 
         private IEnumerator FlashSwipe()
         {

@@ -209,6 +209,27 @@ namespace Daeume.Flow
             saveSystem.Save(currentData, maxHealth);
         }
 
+        /// <summary>Stage13의 무벌점 loop 진행과 영구 무장 해제를 즉시 저장한다.</summary>
+        public void SaveStageThirteenProgress(int loopCount, bool weaponLowered)
+        {
+            currentData.StageThirteenLoopCount = Mathf.Clamp(loopCount, 0, 4);
+            currentData.WeaponLowered = weaponLowered;
+            saveSystem.Save(currentData, maxHealth);
+        }
+
+        /// <summary>수용 엔딩을 저장한 뒤 기존 content 교체 경로로 Title에 복귀한다.</summary>
+        public bool CompleteEnding()
+        {
+            if (!plan.TryBeginTransition()) return false;
+            currentData.EndingCompleted = true;
+            currentData.CheckpointId = string.Empty;
+            currentData.ContaminationVariantId = string.Empty;
+            currentData.PressureStage = "Stable";
+            saveSystem.Save(currentData, maxHealth);
+            StartCoroutine(LoadTitleAfterGameOver());
+            return true;
+        }
+
         /// <summary>
         /// 접근성 설정을 저장한다. (spec-013)
         /// 설정은 SaveSystem이 진행 슬롯과 별개 파일로 관리하므로, 새 게임을 시작하기 전(타이틀)에도
