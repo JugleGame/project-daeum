@@ -50,6 +50,9 @@ namespace Daeume.Player
 
         public bool IsGrounded => grounded;
         public bool IsGrabbing { get; private set; }
+
+        /// <summary>몸통 스프라이트. 피격 점멸처럼 색을 건드리는 연출이 함께 쓴다.</summary>
+        public SpriteRenderer VisualRenderer => visualRenderer;
         public float GrabHoldSeconds => grabHoldSeconds;
         public float HorizontalInput => moveInput.x;
         public float FacingDirection { get; private set; } = 1f;  // 1=오른쪽, -1=왼쪽. 상호작용 대상 선택에도 쓰인다.

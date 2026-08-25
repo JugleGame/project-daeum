@@ -27,6 +27,9 @@ namespace Daeume.Enemy
         private float lastPlayerX;
         private bool wasAttackedByPlayer;   // Reactive 잔재의 "선공당함" 기록
         private Color bodyBaseColor = Color.white;
+
+        /// <summary>피격 경직 동안 덧입히는 색. 알파는 Animator가 쥐고 있어 rgb만 바꾼다.</summary>
+        private static readonly Color HitFlashColor = new(1f, 0.35f, 0.35f, 1f);
         private float nextTargetSearchTime; // 플레이어 탐색 재시도 시각(매 프레임 탐색 방지)
 
         protected float stateRemaining;      // 현재 상태(혹은 하위 단계)가 끝나기까지 남은 시간
@@ -233,6 +236,7 @@ namespace Daeume.Enemy
             attackResolved = false;
             IsYielding = false;
             SetTelegraph(false);
+            ApplyHitFlash(value == RemnantState.Hit);
             switch (value)
             {
                 case RemnantState.Alert:
@@ -247,6 +251,19 @@ namespace Daeume.Enemy
                     stateRemaining = DataBase.HitStunSeconds;
                     break;
             }
+        }
+
+        /// <summary>피격 경직 동안 몸을 붉게 물들인다. 맞았다는 사실을 색으로도 알린다.</summary>
+        /// <remarks>
+        /// 알파는 건드리지 않는다. Remnant 클립들이 Visual.m_Color.a를 애니메이션하고 있어
+        /// 여기서 알파를 쓰면 Animator와 매 프레임 싸운다. rgb는 Dead 클립 말고는 아무도 잡지
+        /// 않으므로 코드가 칠한 값이 그대로 남는다.
+        /// </remarks>
+        private void ApplyHitFlash(bool active)
+        {
+            if (bodyRenderer == null) return;
+            var target = active ? HitFlashColor : bodyBaseColor;
+            bodyRenderer.color = new Color(target.r, target.g, target.b, bodyRenderer.color.a);
         }
 
         private void Die()
