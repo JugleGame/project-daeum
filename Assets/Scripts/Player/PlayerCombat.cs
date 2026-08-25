@@ -27,6 +27,7 @@ namespace Daeume.Player
         [SerializeField] private SpriteRenderer swipeVisual;              // 공격 판정 범위를 잠깐 보여 주는 블록아웃 표시
         [SerializeField, Min(0f)] private float swipeVisibleSeconds = 0.12f;
         [SerializeField, Min(0f)] private float attackLockSeconds = 0.67f;   // 공격 중 이동이 잠기는 시간(Player_Attack 길이)
+        [SerializeField, Min(0f)] private float attackWindupSeconds = 0.25f; // 입력에서 타격 판정까지의 예비 동작 시간
 
         // 한 번의 공격에서 같은 대상을 두 번 때리지 않게 기록해 두는 집합.
         // 적의 몸에 콜라이더가 여러 개면(몸통+예고 표시) 같은 적이 두 번 검출되기 때문에 꼭 필요하다.
@@ -36,6 +37,7 @@ namespace Daeume.Player
         private float attackOriginOffsetX;   // 공격 원점의 좌우 거리(절댓값). 바라보는 방향에 따라 부호만 바꾼다.
         private Coroutine swipeRoutine;
         private float attackLockRemaining;
+        private float windupRemaining = -1f;   // 음수면 대기 중인 공격이 없다는 뜻이다.
 
         public bool PlayerAggression { get; private set; }
         public int AttackSequence { get; private set; }
@@ -81,6 +83,7 @@ namespace Daeume.Player
         private void Update()
         {
             attackLockRemaining = Mathf.Max(0f, attackLockRemaining - Time.deltaTime);
+            TickWindup(Time.deltaTime);
 
             // 바라보는 방향에 맞춰 공격 판정 위치를 좌우로 뒤집는다.
             // 이 처리가 없으면 왼쪽을 보고 있어도 오른쪽 허공을 때린다(실제로 발생했던 버그다).
@@ -93,11 +96,53 @@ namespace Daeume.Player
 
             if (attack != null && attack.WasPressedThisFrame())
             {
-                Attack();
+                BeginAttack();
             }
         }
 
+        /// <summary>예비 동작 시간을 줄이고, 다 되면 타격을 판정한다.</summary>
+        private void TickWindup(float deltaTime)
+        {
+            if (windupRemaining < 0f) return;
+
+            windupRemaining -= Mathf.Max(0f, deltaTime);
+            if (windupRemaining > 0f) return;
+
+            windupRemaining = -1f;
+
+            // 예비 동작 사이에 회상이 시작되거나 스테이지가 끝났을 수 있다. 판정 직전에 다시 확인한다.
+            if (IsCombatAllowed()) ResolveAttack();
+        }
+
+        /// <summary>
+        /// 입력으로 공격을 시작한다. 연출을 먼저 띄우고 타격은 예비 동작 뒤에 판정한다.
+        /// </summary>
+        /// <remarks>
+        /// 예전에는 버튼을 누른 프레임에 피해가 들어갔다. 휘두르는 그림은 0.667초에 걸쳐 나오는데
+        /// 판정만 먼저 끝나서 "때리기 전에 맞는" 그림이 됐다.
+        ///
+        /// 동작 중 재입력은 무시한다. 무시하지 않으면 연타로 예비 동작을 건너뛰며
+        /// 애니메이션이 계속 처음부터 다시 재생된다.
+        /// </remarks>
+        public bool BeginAttack()
+        {
+            if (!IsCombatAllowed() || IsAttacking)
+            {
+                return false;
+            }
+
+            AttackSequence++;
+            attackLockRemaining = attackLockSeconds;
+            windupRemaining = attackWindupSeconds;
+            return true;
+        }
+
         /// <summary>공격을 1회 수행하고, 실제로 피해를 입힌 잔재 수를 돌려준다.</summary>
+        /// <remarks>
+        /// 예비 동작 없이 그 자리에서 판정까지 끝낸다. 시간을 직접 다루지 않는 호출자
+        /// (테스트, 스크립트로 거는 공격)를 위한 동기 경로다.
+        /// 사람이 누르는 입력은 BeginAttack을 거쳐 예비 동작 뒤에 판정된다.
+        /// </remarks>
         public int Attack()
         {
             // spec-005: 회상 재생 중에는 전투 피해가 발생하지 않는다.
@@ -110,7 +155,13 @@ namespace Daeume.Player
 
             AttackSequence++;
             attackLockRemaining = attackLockSeconds;
+            windupRemaining = -1f;   // 대기 중이던 예비 동작이 있으면 이 공격이 대신한다.
+            return ResolveAttack();
+        }
 
+        /// <summary>타격 판정만 수행한다. 연출 시작(AttackSequence)과 잠금은 호출자가 이미 처리했다.</summary>
+        private int ResolveAttack()
+        {
             damaged.Clear();
             var center = attackOrigin == null ? transform.position : attackOrigin.position;
             var hits = Physics2D.OverlapCircleAll(center, attackRadius, targetMask);
