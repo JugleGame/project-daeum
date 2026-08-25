@@ -28,15 +28,14 @@
 | 0 | `StartMarker` | 플레이어 시작 |
 | 3.36~4.26 | `05-lamp-utility-pole` 매달림 영역 | `GrabbableSurface` + 트리거, 지면 위 0.11~1.31 |
 | 4.65 | Encounter01 트리거 | `lockExit: false` (학습용, 출구를 막지 않는다) |
-| 7 / 9 | `RemnantSpawnMarker_01` / `_02` | Encounter01 스폰 |
-| 8 | `Stage01_WarningPulse` | 지형 해저드 |
+| 6.2 / 10.4 | `RemnantSpawnMarker_01` / `_02` | Encounter01 스폰 |
 | 11 | `EncounterExitMarker` / `EncounterExitLock` | Encounter01 출구 |
 | 13.6 / 14.25 | `Signal_DeadEnd_01` / `Stage01_ChaseDeadEndBackoffZone` | 추격 전용 |
 | 15 | Encounter02 트리거 | `spawnCount 2`, `waveCount 1`, `lockExit: true` |
-| 17 / 18.5 | `RemnantSpawnMarker_03` / `_04` | Encounter02 스폰 |
+| 16.5 / 19.4 | `RemnantSpawnMarker_03` / `_04` | Encounter02 스폰 |
 | 20 | `Encounter02ExitMarker` / `EncounterExitLock02` | Encounter02 출구 |
 | 22 | Encounter03 트리거 | `spawnCount 2`, `waveCount 2`, `lockExit: true` |
-| 23.5 / 25 | `RemnantSpawnMarker_05` / `_06` | Encounter03 스폰 |
+| 23.2 / 25.6 | `RemnantSpawnMarker_05` / `_06` | Encounter03 스폰 |
 | 26 | `Encounter03ExitMarker` / `EncounterExitLock03` | Encounter03 출구 |
 | 26 | `Signal_Left_01` | 왼쪽 도주 신호 |
 | 27 | `MemoryAnchorMarker` | 회상 지점 |
@@ -46,17 +45,34 @@
 
 추격 구간(29 → -1)에는 Encounter를 두지 않는다. 도주 중 전투는 원안 규칙 위반이다.
 
-## 점프력 하향
+## 점프력
 
-`PlayerController.jumpVelocity`를 `8` → `6.5`로 낮췄다. 스크립트 기본값과
-`Assets/Prefabs/Player/Player.prefab`의 직렬화 값을 함께 고쳤다(프리팹 값이 실제로 쓰인다).
-`gravityScale: 1` 기준 도달 높이는 `6.5² / (2 × 9.81) ≈ 2.15`유닛이다.
+`PlayerController.jumpVelocity`는 `4.5`로 확정한다. 스크립트 기본값과
+`Assets/Prefabs/Player/Player.prefab`의 직렬화 값이 같다(프리팹 값이 실제로 쓰인다).
+`gravityScale: 1` 기준 도달 높이는 `4.5² / (2 × 9.81) ≈ 1.03`유닛이다.
+
+낮게 잡은 것은 의도다. 벽을 한 번에 넘지 못하게 해서 **매달림을 여러 번 쓰도록** 유도한다.
+매달림 영역(`05-lamp-utility-pole`)의 아래쪽은 지면 위 0.11유닛이라 한 번의 점프로 붙잡을 수 있다.
 
 - 지면이 평지 한 층이라 도달 불가 지형이 생기지 않는다.
-- 매달림 영역 최상단은 지면 위 1.31유닛이라 2.15유닛 안에 든다.
-- `TraumaChaseActor.jumpSpeed = 13`은 건드리지 않았다. 추격자가 지형을 못 넘으면 추격이 성립하지 않는다.
+- `TraumaChaseActor`의 `jumpSpeed = 13`, `gravity = 30`이라 추격자의 도달 높이는 `13² / (2 × 30) ≈ 2.82`유닛이다.
+  추격자는 플레이어가 못 넘는 벽도 한 번에 넘는다. 추격자가 지형에 막히면 추격 자체가 성립하지 않아 그대로 둔다.
 
 이 값은 #57(Stage10) · #58(Stage13) 지형 설계의 전제로 쓴다.
+
+## 진입 독백
+
+`StageOpeningLine`(HUD 프리팹 `Stage01_Presentation`)이 스테이지에 처음 들어선 순간 화면 가운데에
+독백을 한 줄씩 띄웠다가 지운다. 원고는 `StringTable`의 `stage.opening.stage01.01`부터 번호순이며,
+없는 번호가 나오면 멈춘다.
+
+| 순서 | 문구 | 목적 |
+|---:|---|---|
+| 01 | 무슨 일이 일어난 거지…? | 잔재·트라우마 등장의 개연성. 이야기를 모르는 플레이어에게 "지금이 비정상"임을 먼저 알린다 |
+| 02 | 오른쪽으로 가 볼까? | 진행 방향 유도. 별도 튜토리얼 문구 없이 오른쪽으로 움직이게 한다 |
+
+한 줄당 페이드 인 0.6초 · 유지 2.2초 · 페이드 아웃 0.6초, 줄 사이 0.35초.
+스테이지 번호로 기억하므로 같은 씬이 다시 로드돼도 두 번 재생하지 않는다.
 
 ## 안내 표시
 
