@@ -940,6 +940,7 @@ GameObject:
   m_Component:
   - component: {fileID: 211437001}
   - component: {fileID: 211437002}
+  - component: {fileID: 211437003}
   m_Layer: 0
   m_Name: DoorVisual
   m_TagString: Untagged
@@ -1007,8 +1008,8 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: 1004
+  m_SortingLayer: 4
   m_SortingOrder: 6
   m_MaskInteraction: 0
   m_Sprite: {fileID: 0}
@@ -2826,6 +2827,21 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7986318510027570602, guid: ef30f999c5d081f46b7d741646b0fdcb, type: 3}
   m_PrefabInstance: {fileID: 507666630}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &211437003
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 211437000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d92b3a7c48e41f0ba5d0e6913c72af8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Daeume.ContaminationRuntime::Daeume.ContaminationRuntime.ChaseExitPulse
+  target: {fileID: 211437002}
+  peakColor: {r: 0.9, g: 1.8, b: 1.3, a: 1}
+  cycleSeconds: 1
 --- !u!1 &588779021
 GameObject:
   m_ObjectHideFlags: 0
@@ -11476,8 +11492,8 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: 1004
+  m_SortingLayer: 4
   m_SortingOrder: 7
   m_MaskInteraction: 0
   m_Sprite: {fileID: -2919469710021749664, guid: 5576e6b4b40375a4b911a110a9858c6f, type: 2}
