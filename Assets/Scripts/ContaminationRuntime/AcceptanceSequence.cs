@@ -28,6 +28,8 @@ namespace Daeume.ContaminationRuntime
         [SerializeField] private float loopWrapX = 28f;
         [SerializeField] private float loopReturnX;
         [SerializeField, Range(20f, 30f)] private float minimumRunawaySeconds = 20f;
+        [SerializeField, Min(0f)] private float traumaLoopDelaySeconds = 1.5f;
+        [SerializeField, Min(0f)] private float traumaLoopSpawnOffsetX = 3f;
 
         [Header("Pressure reversal")]
         [SerializeField, Min(0.1f)] private float collapseDistance = 24f;
@@ -58,12 +60,14 @@ namespace Daeume.ContaminationRuntime
         private bool weaponLowered;
         private bool endingStarted;
         private bool promptVisible;
+        private Coroutine traumaLoopRespawn;
         private PressureStage pressure = PressureStage.Collapse;
 
         public int LoopCount => loopCount;
         public bool TraumaWaiting => loopCount >= MaximumLoopCount;
         public bool WeaponLowered => weaponLowered;
         public bool EndingStarted => endingStarted;
+        public bool TraumaLoopRespawning => traumaLoopRespawn != null;
         public PressureStage Pressure => pressure;
         public float CurrentLightIntensity => globalLight == null ? -1f : globalLight.intensity;
         public Color CurrentLightColor => globalLight == null ? Color.clear : globalLight.color;
@@ -96,6 +100,7 @@ namespace Daeume.ContaminationRuntime
 
         private void OnDisable()
         {
+            CancelTraumaLoopRespawn();
             SetPrompt(false);
             interact?.Disable();
         }
@@ -164,12 +169,14 @@ namespace Daeume.ContaminationRuntime
         }
 
         public void ConfigureForTest(Transform playerTransform, Transform traumaTransform, PlayerCombat playerCombat,
-            TraumaContactHandler contact)
+            TraumaContactHandler contact, ContaminationDirector chaseDirector = null, float loopDelaySeconds = -1f)
         {
             player = playerTransform;
             trauma = traumaTransform;
             combat = playerCombat;
             traumaContact = contact;
+            if (chaseDirector != null) director = chaseDirector;
+            if (loopDelaySeconds >= 0f) traumaLoopDelaySeconds = loopDelaySeconds;
         }
 
         private void UpdateRunawayLoop()
@@ -190,6 +197,41 @@ namespace Daeume.ContaminationRuntime
             player.position = position;
             if (playerBody != null) playerBody.position = position;
             if (runawaySeconds >= minimumRunawaySeconds) RegisterRunawayLoop();
+            BeginTraumaLoopRespawn();
+        }
+
+        private void BeginTraumaLoopRespawn()
+        {
+            if (trauma == null || !isActiveAndEnabled) return;
+            if (traumaLoopRespawn != null) StopCoroutine(traumaLoopRespawn);
+            traumaLoopRespawn = StartCoroutine(RespawnTraumaAfterLoop());
+        }
+
+        private IEnumerator RespawnTraumaAfterLoop()
+        {
+            director?.SetMovementSuppressed(true);
+            trauma.gameObject.SetActive(false);
+            yield return new WaitForSeconds(traumaLoopDelaySeconds);
+
+            if (trauma != null)
+            {
+                var position = trauma.position;
+                position.x = loopWrapX + traumaLoopSpawnOffsetX;
+                trauma.position = position;
+                trauma.gameObject.SetActive(true);
+            }
+
+            director?.SetMovementSuppressed(TraumaWaiting);
+            traumaLoopRespawn = null;
+        }
+
+        private void CancelTraumaLoopRespawn()
+        {
+            if (traumaLoopRespawn == null) return;
+            StopCoroutine(traumaLoopRespawn);
+            traumaLoopRespawn = null;
+            if (trauma != null && !trauma.gameObject.activeSelf) trauma.gameObject.SetActive(true);
+            director?.SetMovementSuppressed(TraumaWaiting);
         }
 
         private void ApplyHint(int stage)
@@ -327,7 +369,7 @@ namespace Daeume.ContaminationRuntime
             if (traumaContact == null) traumaContact = FindAnyObjectByType<TraumaContactHandler>();
             if (player == null) player = FindAnyObjectByType<PlayerController>()?.transform;
             if (trauma == null) trauma = FindAnyObjectByType<TraumaChaseActor>(FindObjectsInactive.Include)?.transform;
-            if (trauma != null && !trauma.gameObject.activeSelf) trauma.gameObject.SetActive(true);
+            if (trauma != null && !trauma.gameObject.activeSelf && !TraumaLoopRespawning) trauma.gameObject.SetActive(true);
             if (globalLight == null) globalLight = FindAnyObjectByType<Light2D>();
             if (skyBackground == null)
                 skyBackground = GameObject.Find("StageSkyBackground")?.GetComponent<SpriteRenderer>();

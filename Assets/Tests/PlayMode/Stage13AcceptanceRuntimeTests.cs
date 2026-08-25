@@ -152,5 +152,41 @@ namespace Daeume.Tests.PlayMode
             Assert.That(sequence.CreditKey, Is.EqualTo("ending.credit"));
             Object.Destroy(sequence.gameObject);
         }
+
+        [UnityTest]
+        public IEnumerator Test_Ending_TraumaReappearsFromRightAfterLoopDelay()
+        {
+            var player = new GameObject("Player");
+            var playerBody = player.AddComponent<Rigidbody2D>();
+            playerBody.gravityScale = 0f;
+            var trauma = new GameObject("Trauma");
+            var director = new GameObject("ContaminationDirector").AddComponent<ContaminationDirector>();
+            var sequence = new GameObject("AcceptanceSequence").AddComponent<AcceptanceSequence>();
+            sequence.ConfigureForTest(player.transform, trauma.transform, null, null, director, 0.2f);
+
+            player.transform.position = new Vector3(-9f, 0f, 0f);
+            playerBody.position = player.transform.position;
+            playerBody.linearVelocity = Vector2.left;
+            yield return null;
+
+            Assert.That(player.transform.position.x, Is.EqualTo(28f).Within(0.01f));
+            Assert.That(sequence.TraumaLoopRespawning, Is.True);
+            Assert.That(trauma.activeSelf, Is.False);
+            Assert.That(director.MovementSuppressed, Is.True);
+
+            yield return new WaitForSeconds(0.05f);
+            Assert.That(trauma.activeSelf, Is.False, "재등장 지연이 끝나기 전에 Trauma가 나타났다.");
+
+            yield return new WaitForSeconds(0.2f);
+            Assert.That(sequence.TraumaLoopRespawning, Is.False);
+            Assert.That(trauma.activeSelf, Is.True);
+            Assert.That(trauma.transform.position.x, Is.EqualTo(31f).Within(0.01f));
+            Assert.That(director.MovementSuppressed, Is.False);
+
+            Object.Destroy(player);
+            Object.Destroy(trauma);
+            Object.Destroy(director.gameObject);
+            Object.Destroy(sequence.gameObject);
+        }
     }
 }
