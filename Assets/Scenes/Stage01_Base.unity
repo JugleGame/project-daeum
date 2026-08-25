@@ -9022,6 +9022,22 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1383319153}
     m_Modifications:
+    - target: {fileID: 162429553441089126, guid: f528b1e06b731e843b72cbee9e668972, type: 3}
+      propertyPath: m_SortingLayer
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 162429553441089126, guid: f528b1e06b731e843b72cbee9e668972, type: 3}
+      propertyPath: m_SortingOrder
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 162429553441089126, guid: f528b1e06b731e843b72cbee9e668972, type: 3}
+      propertyPath: m_SortingLayerID
+      value: 1004
+      objectReference: {fileID: 0}
+    - target: {fileID: 162429553441089126, guid: f528b1e06b731e843b72cbee9e668972, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 418749e7997a1244d8b25e3f4c6bee3f, type: 2}
     - target: {fileID: 2644041999069881510, guid: f528b1e06b731e843b72cbee9e668972, type: 3}
       propertyPath: m_LocalPosition.x
       value: 8
