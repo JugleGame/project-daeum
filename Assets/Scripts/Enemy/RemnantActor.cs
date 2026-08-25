@@ -215,7 +215,7 @@ namespace Daeume.Enemy
             var bounds = bodyCollider.bounds;
             var footOffset = transform.position.y - bounds.min.y;
             var fall = Mathf.Abs(verticalVelocity) * deltaTime;
-            var ground = FindGroundBelow(bounds.center, bounds.extents.y + fall + TerrainSkin);
+            var ground = FindGroundBelow(bounds.center, bounds.extents.y + fall + TerrainSkin, bounds.size.x * 0.5f);
 
             if (ground.HasValue && verticalVelocity <= 0f)
             {
@@ -234,7 +234,7 @@ namespace Daeume.Enemy
         /// 거리 0 히트도 무시한다. 기준점이 이미 콜라이더 안에 있다는 뜻이라, 지형을 찾은 것으로
         /// 치면 벽에 파묻힌 채 굳는다.
         /// </remarks>
-        private float? FindGroundBelow(Vector2 origin, float distance)
+        private float? FindGroundBelow(Vector2 origin, float distance, float minimumWidth)
         {
             var hits = Physics2D.RaycastAll(origin, Vector2.down, distance);
             var best = float.NegativeInfinity;
@@ -245,6 +245,11 @@ namespace Daeume.Enemy
                 if (hit.collider == null || hit.collider.isTrigger || hit.distance <= 0f) continue;
                 if (hit.collider.transform == transform || hit.collider.transform.IsChildOf(transform)) continue;
                 if (FindDamageable(hit.collider.transform)?.TargetKind == DamageTargetKind.Player) continue;
+
+                // 발보다 좁은 것 위에는 설 수 없다. 이 조건이 없으면 가로등 기둥(폭 0.28)
+                // 꼭대기를 밟고 공중에 선다. 기둥은 앞을 막으라고 있는 것이지 발판이 아니다.
+                if (hit.collider.bounds.size.x < minimumWidth) continue;
+
                 if (hit.point.y > best) best = hit.point.y;
             }
 
