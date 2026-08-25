@@ -1023,7 +1023,7 @@ Transform:
   m_GameObject: {fileID: 174144895}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 33.35, y: 0.85, z: 0}
+  m_LocalPosition: {x: 33, y: 1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1890,7 +1890,7 @@ GameObject:
   - component: {fileID: 293876029}
   - component: {fileID: 293876030}
   m_Layer: 0
-  m_Name: Stage10_DashSpawn_01_01_Unused
+  m_Name: Stage10_DashSpawn_02_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1923,7 +1923,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a613bc43d7b7624fb57223774858ad3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Daeume.Stage::Daeume.Stage.StageMarker
-  markerId: stage10.remnant.dash.01.01
+  markerId: stage10.remnant.dash.02.01
   kind: 2
 --- !u!1 &308818827
 GameObject:
@@ -3761,7 +3761,7 @@ GameObject:
   - component: {fileID: 772757249}
   - component: {fileID: 772757250}
   m_Layer: 0
-  m_Name: Stage10_MeleeSpawn_01_02_Unused
+  m_Name: Stage10_MeleeSpawn_01_02
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3776,7 +3776,7 @@ Transform:
   m_GameObject: {fileID: 772757248}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 9.7, y: -0.75, z: 0}
+  m_LocalPosition: {x: 8.5, y: -0.75, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -4962,7 +4962,7 @@ Transform:
   m_GameObject: {fileID: 871070876}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 34.7, y: 0.85, z: 0}
+  m_LocalPosition: {x: 35, y: 1.9, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -6114,7 +6114,7 @@ Transform:
   m_GameObject: {fileID: 1059099877}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 36.05, y: 0.85, z: 0}
+  m_LocalPosition: {x: 37, y: 1.9, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -6448,8 +6448,7 @@ MonoBehaviour:
   meleeSpawnPoints:
   - {fileID: 174144896}
   - {fileID: 871070877}
-  dashSpawnPoints:
-  - {fileID: 1249122479}
+  dashSpawnPoints: []
   exitLock: {fileID: 1288306582}
   rangedPrefab: {fileID: 6380738538305627701, guid: 13845b2d9978bf84f87d09aa1393b5c2, type: 3}
   rangedData: {fileID: 11400000, guid: 77bf3a045b532034483135d5496794d3, type: 2}
@@ -6565,13 +6564,14 @@ MonoBehaviour:
   meleePrefab: {fileID: 5812826928894789305, guid: 681d95969784cd94f87113968171d15e, type: 3}
   dashPrefab: {fileID: 6691518434600192516, guid: d0af47ef51a47db4e8203ebfdf492f92, type: 3}
   dashData: {fileID: 11400000, guid: fed37bf6f6a07fc459c6667e01689c6b, type: 2}
-  meleeSpawnPoints: []
+  meleeSpawnPoints:
+  - {fileID: 2075298872}
+  - {fileID: 772757249}
   dashSpawnPoints: []
   exitLock: {fileID: 2097100239}
   rangedPrefab: {fileID: 6380738538305627701, guid: 13845b2d9978bf84f87d09aa1393b5c2, type: 3}
   rangedData: {fileID: 11400000, guid: 77bf3a045b532034483135d5496794d3, type: 2}
-  rangedSpawnPoints:
-  - {fileID: 2075298872}
+  rangedSpawnPoints: []
 --- !u!1 &1124658688
 GameObject:
   m_ObjectHideFlags: 0
@@ -7071,8 +7071,6 @@ Transform:
   - {fileID: 308818828}
   - {fileID: 777093831}
   - {fileID: 1220650333}
-  - {fileID: 1237480227}
-  - {fileID: 1249122479}
   - {fileID: 1361712396}
   - {fileID: 1112570482}
   - {fileID: 1134009488}
@@ -7432,52 +7430,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!1 &1237480226
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1237480227}
-  - component: {fileID: 1237480228}
-  m_Layer: 0
-  m_Name: Stage10_DashSpawn_02_01
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1237480227
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1237480226}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 28, y: 0.05, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1185739697}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1237480228
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1237480226}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a613bc43d7b7624fb57223774858ad3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Daeume.Stage::Daeume.Stage.StageMarker
-  markerId: stage10.remnant.dash.02.01
-  kind: 2
 --- !u!1001 &1241714518
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7540,52 +7492,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 361296824350400245, guid: 2dd66304d1325dc46869a8474211d9c8, type: 3}
   m_PrefabInstance: {fileID: 1241714518}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1249122478
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1249122479}
-  - component: {fileID: 1249122480}
-  m_Layer: 0
-  m_Name: Stage10_DashSpawn_03_01
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1249122479
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1249122478}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 32, y: 0.85, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1185739697}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1249122480
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1249122478}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a613bc43d7b7624fb57223774858ad3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Daeume.Stage::Daeume.Stage.StageMarker
-  markerId: stage10.remnant.dash.03.01
-  kind: 2
 --- !u!1001 &1254723215
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8893,7 +8799,7 @@ MonoBehaviour:
   meleeSpawnPoints:
   - {fileID: 1220650333}
   dashSpawnPoints:
-  - {fileID: 1237480227}
+  - {fileID: 293876029}
   exitLock: {fileID: 227250089}
   rangedPrefab: {fileID: 6380738538305627701, guid: 13845b2d9978bf84f87d09aa1393b5c2, type: 3}
   rangedData: {fileID: 11400000, guid: 77bf3a045b532034483135d5496794d3, type: 2}
@@ -16712,7 +16618,7 @@ GameObject:
   - component: {fileID: 2075298872}
   - component: {fileID: 2075298873}
   m_Layer: 0
-  m_Name: Stage10_RangedSpawn_01_01
+  m_Name: Stage10_MeleeSpawn_01_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -16745,7 +16651,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a613bc43d7b7624fb57223774858ad3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Daeume.Stage::Daeume.Stage.StageMarker
-  markerId: stage10.remnant.ranged.01.01
+  markerId: stage10.remnant.melee.01.01
   kind: 2
 --- !u!1001 &2077361049
 PrefabInstance:

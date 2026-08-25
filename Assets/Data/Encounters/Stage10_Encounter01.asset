@@ -17,8 +17,9 @@ MonoBehaviour:
   triggerAreaSize: {x: 5, y: 3}
   enemyType: 0
   spawnMarkerIds:
-  - stage10.remnant.ranged.01.01
-  spawnCount: 1
+  - stage10.remnant.melee.01.01
+  - stage10.remnant.melee.01.02
+  spawnCount: 2
   waveCount: 1
   clearCondition: 0
   lockExit: 1

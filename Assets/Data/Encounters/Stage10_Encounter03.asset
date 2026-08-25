@@ -19,9 +19,8 @@ MonoBehaviour:
   spawnMarkerIds:
   - stage10.remnant.melee.03.01
   - stage10.remnant.melee.03.02
-  - stage10.remnant.dash.03.01
   - stage10.remnant.ranged.03.01
-  spawnCount: 4
+  spawnCount: 3
   waveCount: 1
   clearCondition: 0
   lockExit: 1
