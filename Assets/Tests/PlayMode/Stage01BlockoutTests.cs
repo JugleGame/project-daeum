@@ -76,16 +76,26 @@ namespace Daeume.Tests.PlayMode
             yield return WaitForGrounded(player);
             Assert.That(body.position.y, Is.GreaterThan(-1.5f));
 
+            // 경계는 카메라 중심이 아니라 화면에 담겨도 되는 세계 좌표의 끝이다.
+            // 카메라 중심이 어디까지 갈 수 있는지는 화면 반너비를 뺀 값이며, 그 계산은
+            // StageCameraBounds가 소유한다(종횡비가 달라져도 같은 규칙이 적용된다).
+            StageCameraBounds.ResolveCameraLimits(camera, bounds.Minimum, bounds.Maximum, out var lower, out var upper);
+
             body.position = new Vector2(100f, 0f);
             Physics2D.SyncTransforms();
             yield return new WaitForFixedUpdate();
             yield return null;
-            Assert.That(camera.transform.position.x, Is.EqualTo(bounds.Maximum.x).Within(.01f));
+            Assert.That(camera.transform.position.x, Is.EqualTo(upper.x).Within(.01f));
+            Assert.That(camera.transform.position.x + camera.orthographicSize * camera.aspect,
+                Is.LessThanOrEqualTo(bounds.Maximum.x + .01f), "화면 오른쪽 끝이 콘텐츠 밖을 비추면 안 된다.");
+
             body.position = new Vector2(-100f, 0f);
             Physics2D.SyncTransforms();
             yield return new WaitForFixedUpdate();
             yield return null;
-            Assert.That(camera.transform.position.x, Is.EqualTo(bounds.Minimum.x).Within(.01f));
+            Assert.That(camera.transform.position.x, Is.EqualTo(lower.x).Within(.01f));
+            Assert.That(camera.transform.position.x - camera.orthographicSize * camera.aspect,
+                Is.GreaterThanOrEqualTo(bounds.Minimum.x - .01f), "화면 왼쪽 끝이 콘텐츠 밖을 비추면 안 된다.");
             LogAssert.NoUnexpectedReceived();
         }
 
