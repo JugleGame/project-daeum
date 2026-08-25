@@ -77,7 +77,8 @@ namespace Daeume.ContaminationRuntime
             // 체크포인트는 추격이 실제로 시작된 뒤 저장한다.
             // 그래야 추격 중 사망 시 "회상을 다시 보지 않고" 같은 지점에서 재개된다(spec-011).
             var health = player == null ? 3 : player.GetComponent<PlayerHealth>()?.CurrentHealth ?? 3;
-            flow?.SaveChaseCheckpoint(ActiveCheckpointId, player == null ? Vector2.zero : (Vector2)player.position, health, director.VariantId);
+            flow?.SaveChaseCheckpoint(string.IsNullOrWhiteSpace(checkpointId) ? CheckpointId : checkpointId,
+                player == null ? Vector2.zero : (Vector2)player.position, health, director.VariantId);
 
             ChaseStarted = true;
             return true;
