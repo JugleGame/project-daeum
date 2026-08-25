@@ -42,11 +42,34 @@ namespace Daeume.Memory
         private MemoryAnchor active;
         private float nextInputTime;
 
-        private void Awake()
+        private void Awake() => ResolveActions();
+
+        /// <summary>
+        /// 입력 액션을 찾아 둔다. 이미 찾았으면 아무 일도 하지 않는다.
+        /// </summary>
+        /// <remarks>
+        /// Awake에서 한 번만 찾으면 안 된다. 이 컴포넌트는 StagePresentationBootstrap이 회상 앵커를
+        /// 만들면서 코드로 붙이는데, 그 시점에 Persistent 씬의 PlayerInput이 아직 없을 수 있다.
+        /// 그러면 advance가 영원히 null로 남아 회상이 첫 문장에서 멈춘다 - 상호작용 키를 눌러도
+        /// 아무 반응이 없고, MemoryCompleted가 발행되지 않아 추격과 탈출까지 전부 막힌다.
+        /// 그래서 아직 못 찾았으면 Update에서 계속 다시 시도한다.
+        /// </remarks>
+        private void ResolveActions()
         {
+            if (advance != null && skip != null) return;
+
             var playerInput = FindAnyObjectByType<PlayerInput>();
-            advance = advanceAction == null ? playerInput?.actions?.FindAction(AdvanceActionName) : advanceAction.action;
-            skip = skipAction == null ? playerInput?.actions?.FindAction(SkipActionName) : skipAction.action;
+            if (advance == null)
+            {
+                advance = advanceAction == null ? playerInput?.actions?.FindAction(AdvanceActionName) : advanceAction.action;
+                advance?.Enable();
+            }
+
+            if (skip == null)
+            {
+                skip = skipAction == null ? playerInput?.actions?.FindAction(SkipActionName) : skipAction.action;
+                skip?.Enable();
+            }
         }
 
         private void OnEnable()
@@ -63,6 +86,8 @@ namespace Daeume.Memory
 
         private void Update()
         {
+            ResolveActions();
+
             // 회상 중이 아니면 아무 일도 하지 않는다. 상태 확인이 이 스크립트의 유일한 진입 조건이다.
             if (GameManager.Instance == null || GameManager.Instance.StageState != StageState.Memory)
             {
