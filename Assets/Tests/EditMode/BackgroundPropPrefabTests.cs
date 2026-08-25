@@ -68,7 +68,10 @@ namespace Daeume.Tests.EditMode
                 Assert.That(renderer.sortingLayerName, Is.EqualTo("Far"), spec.PrefabPath);
                 Assert.That(renderer.sortingOrder, Is.Zero, spec.PrefabPath);
                 Assert.That(renderer.sharedMaterial, Is.Not.Null, spec.PrefabPath);
-                Assert.That(renderer.sharedMaterial.name, Is.EqualTo("Player_Unlit"), spec.PrefabPath);
+
+                // 배경 소품도 스테이지 조명을 받아야 한다. Unlit이면 Global Light 2D가 만든
+                // 저녁 톤을 무시하고 혼자 밝게 떠서 앞쪽 소품·타일맵과 따로 논다.
+                Assert.That(renderer.sharedMaterial.name, Is.EqualTo("Stage01_Map_SpriteLit"), spec.PrefabPath);
 
                 Assert.That(visual.localPosition.x, Is.EqualTo(0f).Within(0.0001f), spec.PrefabPath);
                 Assert.That(visual.localPosition.y, Is.EqualTo(sprite.bounds.extents.y).Within(0.0001f), spec.PrefabPath);
