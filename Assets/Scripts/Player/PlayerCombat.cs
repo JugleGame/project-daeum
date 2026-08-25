@@ -126,6 +126,13 @@ namespace Daeume.Player
         /// </remarks>
         public bool BeginAttack()
         {
+            // 매달린 동안에는 공격 입력을 받지 않는다. 벽을 잡은 자세에서 휘두르면
+            // 이동·방향이 잠긴 채로 매달리기까지 겹쳐 어느 동작인지 읽히지 않는다.
+            if (controller != null && controller.IsGrabbing)
+            {
+                return false;
+            }
+
             if (!IsCombatAllowed() || IsAttacking)
             {
                 return false;
