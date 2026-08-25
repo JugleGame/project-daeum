@@ -39,6 +39,7 @@ namespace Daeume.Player
         [SerializeField] private SpriteRenderer visualRenderer;             // 바라보는 방향을 뒤집을 스프라이트
 
         private Rigidbody2D body;
+        private PlayerCombat combat;
         private InputAction move;
         private InputAction jump;
         private InputAction grab;
@@ -63,6 +64,7 @@ namespace Daeume.Player
         private void Awake()
         {
             body = GetComponent<Rigidbody2D>();
+            combat = GetComponentInChildren<PlayerCombat>(true);
             if (visualRenderer == null) visualRenderer = GetComponentInChildren<SpriteRenderer>();
 
             // 수정: 예전에는 붙잡기 해제 시 중력 배율을 1로 "고정 대입"했다.
@@ -171,6 +173,15 @@ namespace Daeume.Player
                 // 매달린 동안에는 일반 이동을 하지 않는다.
                 // spec-002가 허용한 행동은 "점프로 이탈 / 아래 입력으로 낙하 / 시간 만료 자동 낙하" 뿐이다.
                 TickGrab(Time.fixedDeltaTime, moveInput.y < -0.5f);
+                return;
+            }
+
+            if (combat != null && combat.IsAttacking)
+            {
+                // 공격 동작이 끝날 때까지 제자리에 선다. 달리면서 공격하면 다리가 멈춘 공격 자세로
+                // 미끄러져 애니메이션이 고장 난 것처럼 보였다.
+                // y는 여기서도 건드리지 않는다. 공중에서 공격해도 중력은 그대로 작동해야 한다.
+                body.linearVelocity = new Vector2(0f, body.linearVelocity.y);
                 return;
             }
 

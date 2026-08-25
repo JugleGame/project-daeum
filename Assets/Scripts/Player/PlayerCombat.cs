@@ -26,6 +26,7 @@ namespace Daeume.Player
         [SerializeField] private string encounterId = "Stage01_Encounter01";
         [SerializeField] private SpriteRenderer swipeVisual;              // 공격 판정 범위를 잠깐 보여 주는 블록아웃 표시
         [SerializeField, Min(0f)] private float swipeVisibleSeconds = 0.12f;
+        [SerializeField, Min(0f)] private float attackLockSeconds = 0.67f;   // 공격 중 이동이 잠기는 시간(Player_Attack 길이)
 
         // 한 번의 공격에서 같은 대상을 두 번 때리지 않게 기록해 두는 집합.
         // 적의 몸에 콜라이더가 여러 개면(몸통+예고 표시) 같은 적이 두 번 검출되기 때문에 꼭 필요하다.
@@ -34,9 +35,19 @@ namespace Daeume.Player
         private PlayerController controller;
         private float attackOriginOffsetX;   // 공격 원점의 좌우 거리(절댓값). 바라보는 방향에 따라 부호만 바꾼다.
         private Coroutine swipeRoutine;
+        private float attackLockRemaining;
 
         public bool PlayerAggression { get; private set; }
         public int AttackSequence { get; private set; }
+
+        /// <summary>공격 동작이 끝나기 전인가. PlayerController가 이 값을 보고 이동을 막는다.</summary>
+        /// <remarks>
+        /// 예전에는 달리면서 공격하면 다리가 멈춘 공격 자세로 미끄러져 "애니메이션이 멈췄다"로 보였다.
+        /// 시간은 Player_Attack 클립 길이(0.667초)에 맞춘다. PlayerAnimationDriver의
+        /// attackHoldSeconds와 값이 같지만 역할이 다르다 - 저쪽은 어떤 상태를 그릴지,
+        /// 이쪽은 움직일 수 있는지를 정한다. 연출만 늘리고 조작은 그대로 두는 조정이 가능해야 한다.
+        /// </remarks>
+        public bool IsAttacking => attackLockRemaining > 0f;
 
         private void Awake()
         {
@@ -69,6 +80,8 @@ namespace Daeume.Player
 
         private void Update()
         {
+            attackLockRemaining = Mathf.Max(0f, attackLockRemaining - Time.deltaTime);
+
             // 바라보는 방향에 맞춰 공격 판정 위치를 좌우로 뒤집는다.
             // 이 처리가 없으면 왼쪽을 보고 있어도 오른쪽 허공을 때린다(실제로 발생했던 버그다).
             if (attackOrigin != null && controller != null)
@@ -96,6 +109,7 @@ namespace Daeume.Player
             }
 
             AttackSequence++;
+            attackLockRemaining = attackLockSeconds;
 
             damaged.Clear();
             var center = attackOrigin == null ? transform.position : attackOrigin.position;
