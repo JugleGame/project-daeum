@@ -153,9 +153,16 @@ namespace Daeume.Tests.PlayMode
             yield return SceneManager.LoadSceneAsync("Stage01_Base", LoadSceneMode.Single);
             var authored = Object.FindObjectsByType<EncounterController>(FindObjectsSortMode.None);
             var hazards = Object.FindObjectsByType<WarningPulseHazard>(FindObjectsSortMode.None);
-            Assert.That(authored, Has.Length.EqualTo(1));
-            Assert.That(authored[0].Data, Is.Not.Null);
-            Assert.That(authored[0].Data.ValidateData(out var error), Is.True, error);
+            Assert.That(authored, Has.Length.EqualTo(3));
+            foreach (var controller in authored)
+            {
+                Assert.That(controller.Data, Is.Not.Null);
+                Assert.That(controller.Data.ValidateData(out var error), Is.True, error);
+            }
+
+            Assert.That(
+                authored.Select(controller => controller.Data.EncounterId).OrderBy(id => id),
+                Is.EqualTo(new[] { "stage01.encounter.01", "stage01.encounter.02", "stage01.encounter.03" }));
             Assert.That(hazards, Has.Length.GreaterThanOrEqualTo(1));
 
             var cleanup = SceneManager.CreateScene("EncounterTestCleanup");

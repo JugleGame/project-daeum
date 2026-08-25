@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Linq;
 using Daeume.Contamination;
 using Daeume.Core;
 using Daeume.Encounter;
@@ -128,7 +129,8 @@ namespace Daeume.Tests.PlayMode
             yield return null;
 
             var combat = Object.FindAnyObjectByType<PlayerCombat>();
-            var encounter = Object.FindAnyObjectByType<EncounterController>();
+            var encounter = Object.FindObjectsByType<EncounterController>(FindObjectsSortMode.None)
+                .Single(controller => controller.Data.EncounterId == "stage01.encounter.01");
             Assert.That(combat, Is.Not.Null);
             Assert.That(encounter, Is.Not.Null);
             Assert.That(encounter.TryActivate(), Is.True);

@@ -51,7 +51,9 @@ namespace Daeume.Tests.PlayMode
             }
             Assert.That(body.position.y, Is.GreaterThan(jumpStartY + .25f));
 
-            var grabSurface = GameObject.Find("GrabWall_Zone").GetComponent<GrabbableSurface>();
+            // 매달림 표면은 blockout 벽이 아니라 가로등 프리팹(05-lamp-utility-pole)이 갖는다.
+            var grabSurface = Object.FindAnyObjectByType<GrabbableSurface>();
+            Assert.That(grabSurface, Is.Not.Null, "Stage01에 GrabbableSurface가 없다.");
             player.SetGroundedForTest(false);
             Assert.That(player.TryBeginGrab(grabSurface), Is.True);
             Assert.That(player.IsGrabbing, Is.True);
@@ -68,10 +70,11 @@ namespace Daeume.Tests.PlayMode
             var bounds = Object.FindAnyObjectByType<StageCameraBounds>();
             var camera = Camera.main;
 
-            body.position = new Vector2(8f, -2.5f);
+            // blockout 발판을 걷어 낸 뒤로 Stage01의 지면은 GroundTilemap 하나뿐이다(윗면 y = -1).
+            body.position = new Vector2(8f, 1.5f);
             body.linearVelocity = Vector2.down;
             yield return WaitForGrounded(player);
-            Assert.That(body.position.y, Is.GreaterThan(-4.1f));
+            Assert.That(body.position.y, Is.GreaterThan(-1.5f));
 
             body.position = new Vector2(100f, 0f);
             Physics2D.SyncTransforms();

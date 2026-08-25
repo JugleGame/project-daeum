@@ -1,5 +1,4 @@
 using System.Linq;
-using Daeume.Player;
 using Daeume.Stage;
 using NUnit.Framework;
 using UnityEditor.SceneManagement;
@@ -36,28 +35,6 @@ namespace Daeume.Tests.EditMode
             Assert.That(markers.Select(marker => marker.Kind), Does.Contain(StageMarkerKind.MemoryAnchor));
             Assert.That(markers.Select(marker => marker.Kind), Does.Contain(StageMarkerKind.ChaseStart));
             Assert.That(markers.Select(marker => marker.Kind), Does.Contain(StageMarkerKind.Escape));
-        }
-
-        [Test]
-        public void Test_Stage01_BlockoutUsesCompatibleCollidersAndAuthoredRecoveryRoute()
-        {
-            var scene = EditorSceneManager.OpenScene(ScenePath, OpenSceneMode.Single);
-            var startGround = Find(scene, "Ground_Start");
-            var recoveryFloor = Find(scene, "FallRecovery_Floor");
-            var oneWay = Find(scene, "OneWayPlatform");
-            var grabZone = Find(scene, "GrabWall_Zone");
-
-            Assert.That(startGround.GetComponent<BoxCollider2D>().isTrigger, Is.False);
-            Assert.That(recoveryFloor.GetComponent<BoxCollider2D>().isTrigger, Is.False);
-            Assert.That(recoveryFloor.transform.position.y, Is.LessThan(startGround.transform.position.y));
-            Assert.That(Find(scene, "FallRecovery_Step01").GetComponent<BoxCollider2D>(), Is.Not.Null);
-            Assert.That(Find(scene, "FallRecovery_Step02").GetComponent<BoxCollider2D>(), Is.Not.Null);
-            Assert.That(oneWay.GetComponent<BoxCollider2D>().usedByEffector, Is.True);
-            Assert.That(oneWay.GetComponent<PlatformEffector2D>().useOneWay, Is.True);
-            Assert.That(grabZone.GetComponent<BoxCollider2D>().isTrigger, Is.True);
-            Assert.That(grabZone.GetComponent<GrabbableSurface>(), Is.Not.Null);
-            Assert.That(startGround.layer, Is.EqualTo(0));
-            Assert.That(Physics2D.GetIgnoreLayerCollision(0, 0), Is.False);
         }
 
         private static GameObject Find(Scene scene, string name)
