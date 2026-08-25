@@ -36,8 +36,7 @@ namespace Daeume.Player
         [SerializeField] private Transform groundProbe;                     // 발밑 검사 위치(자식 오브젝트)
         [SerializeField, Min(0.01f)] private float groundProbeRadius = 0.08f;
         [SerializeField] private LayerMask groundMask = ~0;                 // 어떤 레이어를 "땅"으로 볼지
-        [SerializeField] private SpriteRenderer visualRenderer;             // 매달린 상태를 색으로 보여 줄 스프라이트
-        [SerializeField] private Color grabbingColor = new(0.6f, 0.85f, 1f, 1f);
+        [SerializeField] private SpriteRenderer visualRenderer;             // 바라보는 방향을 뒤집을 스프라이트
 
         private Rigidbody2D body;
         private InputAction move;
@@ -48,7 +47,6 @@ namespace Daeume.Player
         private float grabRemaining;              // 남은 매달리기 시간
         private bool grounded;
         private float defaultGravityScale = 1f;   // 붙잡기 해제 시 되돌릴 원래 중력 배율
-        private Color defaultVisualColor = Color.white;
 
         public bool IsGrounded => grounded;
         public bool IsGrabbing { get; private set; }
@@ -68,7 +66,6 @@ namespace Daeume.Player
             // 프리팹이 중력 배율을 1이 아닌 값(예: 3)으로 쓰면 붙잡기 한 번에 낙하 감각이 영구히 바뀌는 버그가 된다.
             // 그래서 시작 시점의 값을 기억해 두고 해제 때 그 값으로 되돌린다.
             defaultGravityScale = body.gravityScale;
-            if (visualRenderer != null) defaultVisualColor = visualRenderer.color;
 
             // 인스펙터에서 액션을 직접 지정하지 않았으면 PlayerInput이 들고 있는 액션 맵에서 이름으로 찾는다.
             // 둘 다 지원하므로 테스트에서는 액션을 주입하고, 실제 씬에서는 PlayerInput을 쓰는 식으로 유연하다.
@@ -237,9 +234,7 @@ namespace Daeume.Player
             body.gravityScale = 0f;        // 중력을 잠시 꺼서 그 자리에 머물게 한다.
             body.linearVelocity = Vector2.zero;
 
-            // 매달린 상태는 속도가 0이라 가만히 서 있는 것과 눈으로 구분이 안 됐다.
-            // 색을 바꿔 "지금 붙잡고 있다"를 바로 알 수 있게 한다.
-            if (visualRenderer != null) visualRenderer.color = grabbingColor;
+            // 매달린 상태는 전용 애니메이션이 알려 준다. 색을 덧칠하지 않는다.
             return true;
         }
 
@@ -266,7 +261,6 @@ namespace Daeume.Player
         {
             IsGrabbing = false;
             body.gravityScale = defaultGravityScale;
-            if (visualRenderer != null) visualRenderer.color = defaultVisualColor;
         }
 
         /// <summary>발밑에 땅이 있는지 검사한다.</summary>

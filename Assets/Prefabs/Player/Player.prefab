@@ -410,7 +410,6 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4294967295
   visualRenderer: {fileID: 6786194504420436091}
-  grabbingColor: {r: 0.6, g: 0.85, b: 1, a: 1}
 --- !u!114 &7740418390996157410
 MonoBehaviour:
   m_ObjectHideFlags: 0
