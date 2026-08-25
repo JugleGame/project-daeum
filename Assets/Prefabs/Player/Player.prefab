@@ -141,7 +141,7 @@ MonoBehaviour:
   m_Priority: 0
   m_ComponentVersion: 6
   m_HasRenderer: 0
-  m_UseRendererSilhouette: 1
+  m_UseRendererSilhouette: 0
   m_CastsShadows: 1
   m_SelfShadows: 0
   m_AlphaCutoff: 0.1
