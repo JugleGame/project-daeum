@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 9a260cbe88062ce4ea765c935c83a972
+guid: c2f87f0d46afde543820cd9668944d43
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 7683064575340464720
-    second: move_07_0
+      213: 8612924232183827051
+    second: 13-maintenance-platform_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -49,9 +49,9 @@ TextureImporter:
   spriteMode: 1
   spriteExtrude: 1
   spriteMeshType: 0
-  alignment: 7
+  alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 64
+  spritePixelsToUnits: 32
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -113,13 +113,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: move_07_0
+      name: 13-maintenance-platform_0
       rect:
         serializedVersion: 2
-        x: 19
-        y: 7
-        width: 26
-        height: 40
+        x: 0
+        y: 0
+        width: 2172
+        height: 724
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -128,8 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 05a4e8f468abf9a60800000000000000
-      internalID: 7683064575340464720
+      spriteID: b6acba8b4f0478770800000000000000
+      internalID: 8612924232183827051
       vertices: []
       indices: 
       edges: []
@@ -150,6 +150,6 @@ TextureImporter:
     nameFileIdTable: {}
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
-  userData: daeume-final-64ppu
+  userData: 
   assetBundleName: 
   assetBundleVariant: 
