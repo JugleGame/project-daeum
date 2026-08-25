@@ -152,8 +152,11 @@ namespace Daeume.Tests.PlayMode
             yield return null;
             yield return SceneManager.LoadSceneAsync("Stage01_Base", LoadSceneMode.Single);
             var authored = Object.FindObjectsByType<EncounterController>(FindObjectsSortMode.None);
-            var hazards = Object.FindObjectsByType<WarningPulseHazard>(FindObjectsSortMode.None);
             Assert.That(authored, Has.Length.EqualTo(3));
+
+            // Stage01에는 지형 해저드를 두지 않는다. 예고가 지면 아래에 파묻혀 보이지 않았고,
+            // 전투 공간을 바꾸는 역할도 Encounter 3개의 배치로 충분하다고 판단해 걷어냈다.
+            Assert.That(Object.FindObjectsByType<WarningPulseHazard>(FindObjectsSortMode.None), Is.Empty);
             foreach (var controller in authored)
             {
                 Assert.That(controller.Data, Is.Not.Null);
@@ -163,7 +166,6 @@ namespace Daeume.Tests.PlayMode
             Assert.That(
                 authored.Select(controller => controller.Data.EncounterId).OrderBy(id => id),
                 Is.EqualTo(new[] { "stage01.encounter.01", "stage01.encounter.02", "stage01.encounter.03" }));
-            Assert.That(hazards, Has.Length.GreaterThanOrEqualTo(1));
 
             var cleanup = SceneManager.CreateScene("EncounterTestCleanup");
             SceneManager.SetActiveScene(cleanup);
