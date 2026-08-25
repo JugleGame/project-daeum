@@ -35,6 +35,9 @@ namespace Daeume.Enemy
         private const float HitBlinkAlpha = 0.25f;
         private float nextTargetSearchTime; // 플레이어 탐색 재시도 시각(매 프레임 탐색 방지)
 
+        /// <summary>지형 검사에 주는 여유 두께. 0이면 벽에 닿았는지 판정이 프레임마다 깜빡인다.</summary>
+        private const float TerrainSkin = 0.02f;
+
         protected float stateRemaining;      // 현재 상태(혹은 하위 단계)가 끝나기까지 남은 시간
         protected bool attackResolved;       // 이번 공격에서 피해 판정을 이미 했는가
 
@@ -334,6 +337,40 @@ namespace Daeume.Enemy
         protected float TargetX => target == null ? transform.position.x : target.position.x;
 
         protected Transform TraumaTarget => traumaTarget;
+
+        /// <summary>진행 방향에 막히는 지형이 있는지 본다.</summary>
+        /// <remarks>
+        /// 잔재는 Rigidbody2D 없이 transform을 직접 옮긴다. 물리 엔진이 밀어내 주지 않으므로
+        /// 막힘 검사를 직접 하지 않으면 벽과 잠긴 출구를 그대로 통과한다.
+        /// TraumaChaseActor가 같은 이유로 이미 이 검사를 갖고 있다.
+        ///
+        /// 플레이어를 IDamageable.TargetKind로 걸러내는 이유: Daeume.Enemy는 Daeume.Player를
+        /// 참조하지 않는다. 대상 탐색이 이미 같은 방식을 쓰고 있어 규칙이 한 가지로 유지된다.
+        ///
+        /// 거리 0 히트는 무시한다. 기준점이 이미 콜라이더 안에 있다는 뜻이라, 막힘으로 치면
+        /// 벽에 살짝 겹친 잔재가 영영 그 자리에 굳는다.
+        /// </remarks>
+        protected bool IsBlockedTowards(float moveX)
+        {
+            if (Mathf.Approximately(moveX, 0f)) return false;
+            if (bodyCollider == null) bodyCollider = GetComponent<Collider2D>();
+            if (bodyCollider == null) return false;
+
+            var bounds = bodyCollider.bounds;
+            var reach = bounds.extents.x + Mathf.Abs(moveX) + TerrainSkin;
+            var hits = Physics2D.RaycastAll(bounds.center, new Vector2(Mathf.Sign(moveX), 0f), reach);
+
+            for (var index = 0; index < hits.Length; index++)
+            {
+                var hit = hits[index];
+                if (hit.collider == null || hit.collider.isTrigger || hit.distance <= 0f) continue;
+                if (hit.collider.transform == transform || hit.collider.transform.IsChildOf(transform)) continue;
+                if (FindDamageable(hit.collider.transform)?.TargetKind == DamageTargetKind.Player) continue;
+                return true;
+            }
+
+            return false;
+        }
 
         /// <summary>사거리 안이면 접촉 피해를 준다(근접·원거리형 공격 판정, 돌진형 충돌 판정이 공유한다).</summary>
         protected bool TryDealContactDamage(float rangeTolerance = 0.2f)
