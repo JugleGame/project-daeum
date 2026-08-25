@@ -19,9 +19,9 @@ MonoBehaviour:
   attackRange: 1.1
   moveSpeed: 1.8
   alertSeconds: 0.2
-  attackTelegraphSeconds: 0.55
+  attackTelegraphSeconds: 0.9
   attackRecoverySeconds: 0.7
-  hitStunSeconds: 0.18
+  hitStunSeconds: 0.45
   pressureProfiles:
   - stage: 0
     moveSpeedMultiplier: 1
