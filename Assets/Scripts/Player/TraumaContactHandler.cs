@@ -61,6 +61,7 @@ namespace Daeume.Player
             }
 
             StartCoroutine(GrabSequence());
+            AudioRuntime.PlaySfx("TraumaAttack");
             return true;
         }
 

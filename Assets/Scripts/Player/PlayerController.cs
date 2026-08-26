@@ -30,6 +30,7 @@ namespace Daeume.Player
         [SerializeField] private InputActionReference jumpAction;
         [SerializeField] private InputActionReference grabAction;
         [SerializeField, Min(0f)] private float moveSpeed = 5f;
+        [SerializeField, Min(0.05f)] private float footstepInterval = 0.36f;
         [SerializeField, Min(0f)] private float jumpVelocity = 4.5f;
         [SerializeField, Range(0f, 1f)] private float airControl = 0.75f;   // 공중에서의 조작 비율(1이면 지상과 동일)
         [SerializeField, Min(0.01f)] private float grabHoldSeconds = 1.5f;  // spec-002의 GrabHoldSeconds
@@ -48,6 +49,7 @@ namespace Daeume.Player
         private float grabRemaining;              // 남은 매달리기 시간
         private bool grounded;
         private float defaultGravityScale = 1f;   // 붙잡기 해제 시 되돌릴 원래 중력 배율
+        private float nextFootstepTime;
 
         public bool IsGrounded => grounded;
         public bool IsGrabbing { get; private set; }
@@ -186,6 +188,12 @@ namespace Daeume.Player
             }
 
             var control = grounded ? 1f : airControl;
+            if (grounded && Mathf.Abs(moveInput.x) > 0.05f && Time.time >= nextFootstepTime)
+            {
+                AudioRuntime.PlaySfx("PlayerWalk");
+                nextFootstepTime = Time.time + footstepInterval;
+            }
+
             // y 속도는 건드리지 않는다. 중력이 만든 낙하 속도를 덮어쓰면 점프가 이상해진다.
             body.linearVelocity = new Vector2(moveInput.x * moveSpeed * control, body.linearVelocity.y);
         }
@@ -233,6 +241,7 @@ namespace Daeume.Player
             {
                 ReleaseGrab();
                 body.linearVelocity = new Vector2(body.linearVelocity.x, jumpVelocity);
+                AudioRuntime.PlaySfx("PlayerJump");
                 return true;
             }
 
@@ -243,6 +252,7 @@ namespace Daeume.Player
             }
 
             body.linearVelocity = new Vector2(body.linearVelocity.x, jumpVelocity);
+            AudioRuntime.PlaySfx("PlayerJump");
             // 같은 프레임에 점프가 두 번 처리되는 것을 막기 위해 즉시 접지 상태를 내린다.
             grounded = false;
             return true;
@@ -306,6 +316,7 @@ namespace Daeume.Player
         private void RefreshGrounded()
         {
             var probePosition = groundProbe == null ? transform.position : groundProbe.position;
+            var wasGrounded = grounded;
             grounded = false;
             foreach (var overlap in Physics2D.OverlapCircleAll(probePosition, groundProbeRadius, groundMask))
             {
@@ -314,6 +325,11 @@ namespace Daeume.Player
                     grounded = true;
                     break;
                 }
+            }
+
+            if (!wasGrounded && grounded && body.linearVelocity.y <= 0f)
+            {
+                AudioRuntime.PlaySfx("PlayerLand");
             }
         }
 
