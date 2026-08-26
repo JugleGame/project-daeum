@@ -45,12 +45,15 @@ namespace Daeume.Core
             // 없는 번호가 나오면 멈추므로, 줄을 늘리려면 다음 번호를 이어서 넣으면 된다.
             ["stage.opening.stage01.01"] = "무슨 일이 일어난 거지…?",
             ["stage.opening.stage01.02"] = "오른쪽으로 가 볼까?",
+            ["stage.opening.stage10.01"] = "이 길을 전에 달린 적이 있다.",
+            ["stage.opening.stage10.02"] = "육교의 표지판을 확인해야 한다.",
 
             // HUD 상시 표기
             ["hud.health"] = "체력",
             ["hud.chase"] = "도망치세요",
             ["hud.failed"] = "쓰러졌습니다... 체크포인트에서 다시 시작합니다.",
             ["hud.objective.memory"] = "오른쪽 끝의 기억을 찾아라",
+            ["hud.objective.stage10.memory"] = "육교의 표지판에서 기억을 확인하라",
 
             // Stage 1 튜토리얼 조작 안내. 키 이름은 실제 바인딩에서 읽어 오고, 여기에는 동작 이름만 둔다.
             ["hud.tutorial.hint"] = "조작",
