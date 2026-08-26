@@ -12,7 +12,9 @@ namespace Daeume.Stage
         EncounterExit,
         MemoryAnchor,
         ChaseStart,
-        Escape
+        Escape,
+        /// <summary>추격 중 낙사했을 때의 복귀 지점. 추격은 진행 방향이 반대라 FallRecovery를 쓰면 지름길이 된다.</summary>
+        ChaseFallRecovery
     }
 
     /// <summary>
@@ -62,6 +64,7 @@ namespace Daeume.Stage
                 StageMarkerKind.MemoryAnchor => Color.magenta,
                 StageMarkerKind.ChaseStart => new Color(0.7f, 0.2f, 1f),
                 StageMarkerKind.Escape => Color.white,
+                StageMarkerKind.ChaseFallRecovery => new Color(1f, 0.25f, 0.5f),
                 _ => Color.gray
             };
         }
