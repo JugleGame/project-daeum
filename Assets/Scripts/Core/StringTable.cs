@@ -36,6 +36,7 @@ namespace Daeume.Core
             ["prompt.memory.stage06"] = "쇼핑백 속 작은 장난감 살펴보기",
             // Stage 10 전용 InteractionVerb. 육교 아래 병원 방향 표지판을 확인하는 외형과 짝을 이룬다.
             ["prompt.memory.stage10"] = "육교 아래 표지판 확인하기",
+            ["prompt.memory.stage13"] = "정류장의 기억 살펴보기",
             ["prompt.ending.lower_weapon"] = "내려놓기",
 
             ["prompt.continue"] = "계속",
@@ -47,6 +48,7 @@ namespace Daeume.Core
             ["stage.opening.stage01.02"] = "오른쪽으로 가 볼까?",
             ["stage.opening.stage10.01"] = "이 길을 전에 달린 적이 있다.",
             ["stage.opening.stage10.02"] = "육교의 표지판을 확인해야 한다.",
+            ["stage.opening.stage13.01"] = "멈춰 있던 시간이, 다시 숨을 쉰다.",
 
             // HUD 상시 표기
             ["hud.health"] = "체력",
