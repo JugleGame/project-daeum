@@ -67,6 +67,10 @@ namespace Daeume.Core
             ["title.continue"] = "이어하기",
             ["title.hint"] = "Enter 또는 클릭으로 선택",
             ["title.settings"] = "설정",
+            ["title.content_warning"] = "콘텐츠 경고",
+            ["title.content_warning.body"] = "이 게임은 상실, 죽음, 중환자실과 관련된 장면 및 표현을 포함합니다.",
+            ["title.close"] = "닫기",
+
 
             // 접근성 옵션 화면 (spec-013)
             ["options.heading"] = "접근성 옵션",
