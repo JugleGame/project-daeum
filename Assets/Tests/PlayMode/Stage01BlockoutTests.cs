@@ -191,6 +191,16 @@ public IEnumerator Test_StageTransition_PlayerVisualWaitsForStageScene()
             Assert.That(hud.ObjectiveLabel, Does.Contain(jumpLabel));
             Assert.That(hud.ObjectiveLabel, Does.Contain(StringTable.Get("options.rebind.interact")));
             Assert.That(hud.ObjectiveLabel, Does.Contain(StringTable.Get("hud.objective.memory")));
+
+            var koreanFont = KoreanFontBootstrap.KoreanFont;
+            Assert.That(koreanFont, Is.Not.Null, "Stage01 HUD에 적용할 한글 font가 빌드에 포함되어야 한다.");
+            var labels = hud.GetComponentsInChildren<UnityEngine.UI.Text>(true);
+            Assert.That(labels, Is.Not.Empty, "Stage01 HUD prefab에서 검사할 Text component를 찾지 못했다.");
+            foreach (var label in labels)
+            {
+                Assert.That(label.font, Is.SameAs(koreanFont),
+                    $"Stage01 HUD의 '{label.name}'이 scene load 이후 생성되어 한글 font 적용을 놓쳤다.");
+            }
             LogAssert.NoUnexpectedReceived();
         }
 

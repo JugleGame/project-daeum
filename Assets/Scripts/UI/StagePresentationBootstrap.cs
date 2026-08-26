@@ -181,6 +181,9 @@ namespace Daeume.UI
                 if (hudPrefab != null)
                 {
                     hudInstance = Object.Instantiate(hudPrefab);
+                    // 이 프리팹은 sceneLoaded callback이 끝난 뒤 생성될 수 있다.
+                    // 생성 즉시 font를 넣어 WebGL에서 한글이 '?'로 대체되지 않게 한다.
+                    KoreanFontBootstrap.ApplyToHierarchy(hudInstance);
                     // DontDestroyOnLoad: 씬이 바뀌어도 파괴되지 않게 한다.
                     // Title로 돌아갈 때는 OnSceneLoaded가 DespawnPersistentPresentation으로 정리한다.
                     Object.DontDestroyOnLoad(hudInstance);

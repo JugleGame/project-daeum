@@ -238,7 +238,8 @@ namespace Daeume.UI
 
             var label = go.GetComponent<Text>();
             label.text = text;
-            label.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            label.font = KoreanFontBootstrap.KoreanFont
+                ?? Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
             label.fontSize = fontSize;
             label.color = textColor;
             label.alignment = alignment;
