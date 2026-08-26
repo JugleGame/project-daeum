@@ -334,6 +334,8 @@ MonoBehaviour:
   flow: {fileID: 0}
   player: {fileID: 0}
   trauma: {fileID: 241710174}
+  restoreChaseOnCheckpoint: 0
+  revealTraumaOnMemoryComplete: 1
 --- !u!114 &25591924
 MonoBehaviour:
   m_ObjectHideFlags: 0
