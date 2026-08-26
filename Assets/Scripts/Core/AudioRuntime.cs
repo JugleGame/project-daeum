@@ -1,0 +1,47 @@
+using UnityEngine;
+
+namespace Daeume.Core
+{
+    /// <summary>제공된 2D BGM·효과음을 공통으로 재생한다.</summary>
+    public static class AudioRuntime
+    {
+        private static AudioSource sfxSource;
+        private static AudioSource titleSource;
+
+        public static void PlaySfx(string cue)
+        {
+            var clip = Resources.Load<AudioClip>("Audio/Sfx/" + cue);
+            if (clip == null) return;
+            if (sfxSource == null)
+            {
+                var host = new GameObject("SfxAudioSource");
+                Object.DontDestroyOnLoad(host);
+                sfxSource = host.AddComponent<AudioSource>();
+                sfxSource.spatialBlend = 0f;
+            }
+
+            sfxSource.PlayOneShot(clip);
+        }
+
+        public static void PlayTitleMusic()
+        {
+            if (titleSource != null && titleSource.isPlaying) return;
+            var clip = Resources.Load<AudioClip>("Audio/Bgm/Title");
+            if (clip == null) return;
+            var host = new GameObject("TitleMusicSource");
+            Object.DontDestroyOnLoad(host);
+            titleSource = host.AddComponent<AudioSource>();
+            titleSource.spatialBlend = 0f;
+            titleSource.loop = true;
+            titleSource.clip = clip;
+            titleSource.Play();
+        }
+
+        public static void StopTitleMusic()
+        {
+            if (titleSource == null) return;
+            Object.Destroy(titleSource.gameObject);
+            titleSource = null;
+        }
+    }
+}

@@ -277,6 +277,7 @@ namespace Daeume.Enemy
             wasAttackedByPlayer = true;   // Reactive 잔재는 이 순간부터 반응할 수 있다.
             var applied = Mathf.Min(CurrentHealth, request.Amount);
             CurrentHealth -= applied;
+            if (applied > 0) AudioRuntime.PlaySfx("RemnantHit");
             if (CurrentHealth <= 0)
             {
                 Die();
@@ -332,6 +333,7 @@ namespace Daeume.Enemy
                     // 압박 단계 배수를 곱한 뒤에도 최소 0.05초는 남긴다. 예고 없는 공격은 공정성 규칙 위반이다.
                     stateRemaining = Mathf.Max(0.05f, DataBase.AttackTelegraphSeconds * Profile.TelegraphMultiplier);
                     SetTelegraph(true);
+                    AudioRuntime.PlaySfx("RemnantAttack");
                     break;
                 case RemnantState.Hit:
                     stateRemaining = DataBase.HitStunSeconds;
@@ -552,7 +554,7 @@ namespace Daeume.Enemy
         {
             if (Mathf.Approximately(horizontalDelta, 0f)) return;
             FacingDirection = Mathf.Sign(horizontalDelta);
-            if (bodyRenderer != null) bodyRenderer.flipX = FacingDirection < 0f;
+            if (bodyRenderer != null) bodyRenderer.flipX = FacingDirection > 0f;
         }
 
         protected void SetTelegraph(bool value)

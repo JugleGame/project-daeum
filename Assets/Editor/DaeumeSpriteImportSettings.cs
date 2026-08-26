@@ -11,7 +11,7 @@ namespace Daeume.Editor
     ///
     /// 여기서 고정하는 값들은 협업 문서(collaboration-setup)의 픽셀 규칙과 일치해야 한다.
     /// - 기본 PPU 32 (프로젝트 blockout 격자)
-    /// - FinalDaeume PPU 64 (64px 캐릭터 canvas = 1 유닛)
+    /// - FinalDaeume 및 Remnant 타입 프레임 PPU 64
     /// - Point 필터 (픽셀이 뭉개지지 않게)
     /// - 압축 없음 (색이 변질되지 않게)
     /// - 밉맵 없음 (2D에서는 불필요하고 흐려지는 원인)
@@ -33,9 +33,13 @@ namespace Daeume.Editor
             }
 
             var isFinalDaeume = normalized.Contains("/Sprites/FinalDaeume/");
+            var usesFinalCharacterPpu = isFinalDaeume
+                || normalized.Contains("/Sprites/Remnant/Melee/Frames/")
+                || normalized.Contains("/Sprites/Remnant/Dash/Frames/")
+                || normalized.Contains("/Sprites/Remnant/Ranged/Frames/");
             var importer = (TextureImporter)assetImporter;
             importer.textureType = TextureImporterType.Sprite;
-            importer.spritePixelsPerUnit = isFinalDaeume
+            importer.spritePixelsPerUnit = usesFinalCharacterPpu
                 ? FinalDaeumePixelsPerUnit
                 : PixelsPerUnit;
             importer.filterMode = FilterMode.Point;
@@ -43,7 +47,7 @@ namespace Daeume.Editor
             importer.mipmapEnabled = false;
             importer.alphaIsTransparency = true;
             importer.spriteImportMode = SpriteImportMode.Single;
-            if (isFinalDaeume)
+            if (usesFinalCharacterPpu)
             {
                 importer.userData = "daeume-final-64ppu";
             }

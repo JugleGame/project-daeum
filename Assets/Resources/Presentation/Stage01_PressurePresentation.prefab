@@ -291,11 +291,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Daeume.Audio::Daeume.Audio.AudioCuePresenter
   musicSource: {fileID: 3341893100825836248}
-  exploreAmbientClip: {fileID: 0}
-  encounterCombatClip: {fileID: 0}
-  memoryClip: {fileID: 0}
-  chaseClip: {fileID: 0}
-  clearedClip: {fileID: 0}
+  exploreAmbientClip: {fileID: 8300000, guid: 2fae1d8a0c5b4d41b8e7c2a1f93d7e01, type: 3}
+  encounterCombatClip: {fileID: 8300000, guid: 1a6d3c4e8f5b4a72a1c9e0d3f4b5c601, type: 3}
+  memoryClip: {fileID: 8300000, guid: 3b7e2d5f9a6c4b83b2d0f1e4a5c6d702, type: 3}
+  chaseClip: {fileID: 8300000, guid: 4c8f3e6a0b7d4c94c3e1a2f5b6d7e803, type: 3}
+  clearedClip: {fileID: 8300000, guid: 5d9a4f7b1c8e4da5d4f2b3a6c7e8f904, type: 3}
 --- !u!114 &8123318448427594943
 MonoBehaviour:
   m_ObjectHideFlags: 0
