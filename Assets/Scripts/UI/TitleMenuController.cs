@@ -56,6 +56,7 @@ namespace Daeume.UI
         private void Start()
         {
             ResolveFlow();
+            AudioRuntime.PlayTitleMusic();
 
             // 키보드·패드로도 조작할 수 있게 첫 버튼을 선택 상태로 만든다.
             // 마우스 없이 진행할 수 있어야 한다는 접근성 기준선과 연결된 처리다.
@@ -87,6 +88,7 @@ namespace Daeume.UI
             var started = flow != null && (newGame ? flow.StartNewGame() : flow.ContinueGame());
             if (started)
             {
+                AudioRuntime.StopTitleMusic();
                 // 전환이 시작되면 버튼을 잠근다. 연타로 전환이 두 번 시작되는 것을 눈에 보이게 막는다.
                 SetInteractable(false);
 

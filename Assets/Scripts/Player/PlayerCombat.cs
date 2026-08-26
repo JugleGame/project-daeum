@@ -142,6 +142,7 @@ namespace Daeume.Player
             AttackSequence++;
             attackLockRemaining = attackLockSeconds;
             windupRemaining = attackWindupSeconds;
+            AudioRuntime.PlaySfx("PlayerAttack");
             return true;
         }
 
@@ -202,6 +203,11 @@ namespace Daeume.Player
                 }
 
                 var result = target.ApplyDamage(new DamageRequest(damage, gameObject));
+
+                if (target.TargetKind == DamageTargetKind.Trauma)
+                {
+                    AudioRuntime.PlaySfx("TraumaHit");
+                }
 
                 // 피해가 실제로 들어갔고(무적이 아니었고) 대상이 잔재일 때만 "선공"으로 친다.
                 // 트라우마는 ApplyDamage가 항상 실패를 돌려주므로 여기서 자연히 걸러진다.
