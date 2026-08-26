@@ -37,12 +37,22 @@ namespace Daeume.Stage
         /// </remarks>
         private static Vector2? ResolveRecoveryPosition()
         {
+            // 추격 중에는 전용 복귀 지점(ChaseFallRecovery)을 먼저 찾는다.
+            // 탐색용 FallRecovery는 구덩이 왼쪽(맵 시작 쪽)에 있는데, 추격은 오른쪽에서 왼쪽으로
+            // 달아나는 반대 방향이다. 그대로 쓰면 구덩이에 빠지는 게 구덩이를 건너뛰는 지름길이 된다.
+            var preferred = GameManager.Instance?.StageState == StageState.Chase
+                ? StageMarkerKind.ChaseFallRecovery
+                : StageMarkerKind.FallRecovery;
+
+            Vector2? fallback = null;
             foreach (var marker in FindObjectsByType<StageMarker>(FindObjectsSortMode.None))
             {
-                if (marker.Kind == StageMarkerKind.FallRecovery) return marker.transform.position;
+                if (marker.Kind == preferred) return marker.transform.position;
+                // 추격용 마커를 두지 않은 스테이지는 예전처럼 탐색용 마커로 복귀한다.
+                if (marker.Kind == StageMarkerKind.FallRecovery) fallback = marker.transform.position;
             }
 
-            return null;
+            return fallback;
         }
 
         /// <summary>

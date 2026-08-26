@@ -1,5 +1,6 @@
 using System.Linq;
 using Daeume.Player;
+using Daeume.Stage;
 using NUnit.Framework;
 using UnityEditor;
 using UnityEditor.SceneManagement;
@@ -71,6 +72,28 @@ namespace Daeume.Tests.EditMode
             Assert.That(prefabPaths, Has.Some.EndsWith("05-lamp-utility-pole.prefab"));
             Assert.That(prefabPaths, Has.Some.EndsWith("13-maintenance-platform.prefab"));
             Assert.That(prefabPaths, Has.Some.Contains("BackgroundProps"));
+        }
+
+        /// <summary>
+        /// 추격은 오른쪽(x 30)에서 왼쪽(탈출구)으로 달리므로, 구덩이(x 5.6~15.0) 왼쪽에 있는
+        /// 탐색용 FallRecovery로 복귀시키면 낙사가 구덩이를 건너뛰는 지름길이 된다.
+        /// 추격용 복귀 지점은 반드시 구덩이 오른쪽(진행 전) 지면에 있어야 한다.
+        /// </summary>
+        [Test]
+        public void Test_Stage01_ChaseFallRecoveryIsBeyondThePit()
+        {
+            var scene = EditorSceneManager.OpenScene(ScenePath, OpenSceneMode.Single);
+            var markers = scene.GetRootGameObjects()
+                .SelectMany(root => root.GetComponentsInChildren<StageMarker>(true))
+                .ToArray();
+
+            var fall = markers.Single(marker => marker.Kind == StageMarkerKind.FallRecovery);
+            var chaseFall = markers.Single(marker => marker.Kind == StageMarkerKind.ChaseFallRecovery);
+
+            Assert.That(chaseFall.transform.position.x, Is.GreaterThan(15f),
+                "추격 복귀 지점은 구덩이 오른쪽 끝(x 15.0) 너머 지면에 있어야 한다.");
+            Assert.That(chaseFall.transform.position.x, Is.GreaterThan(fall.transform.position.x),
+                "추격 복귀 지점이 탐색용보다 왼쪽에 있으면 낙사가 지름길이 된다.");
         }
 
         private static Transform Find(Transform root, string name)
