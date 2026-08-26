@@ -11,7 +11,7 @@ namespace Daeume.Tests.PlayMode
     public sealed class Stage13AcceptanceRuntimeTests
     {
         [UnityTest]
-        public IEnumerator Test_Stage13_StartsDarkWithActiveDistantTrauma()
+        public IEnumerator Test_Stage13_StartsDarkWithVisibleDistantTrauma()
         {
             var playerObject = new GameObject("Player");
             playerObject.transform.position = new Vector3(0f, -0.62f, 0f);
@@ -32,7 +32,12 @@ namespace Daeume.Tests.PlayMode
             Assert.That(player, Is.Not.Null, "Stage13 Player가 없다.");
             Assert.That(trauma, Is.Not.Null, "Stage13 Trauma가 없다.");
             Assert.That(sequence, Is.Not.Null, "Stage13 AcceptanceSequence가 없다.");
-            Assert.That(trauma.gameObject.activeInHierarchy, Is.True, "Stage13 시작 시 Trauma가 비활성 상태다.");
+            var traumaRenderer = trauma.GetComponentInChildren<SpriteRenderer>(true);
+            Assert.That(trauma.gameObject.activeInHierarchy, Is.True, "Stage13 Trauma GameObject가 비활성 상태다.");
+            Assert.That(traumaRenderer, Is.Not.Null, "Stage13 Trauma SpriteRenderer가 없다.");
+            Assert.That(traumaRenderer.enabled, Is.True, "Stage13 Trauma SpriteRenderer가 꺼져 있다.");
+            Assert.That(traumaRenderer.sprite, Is.Not.Null, "Stage13 Trauma에 표시할 sprite가 없다.");
+            Assert.That(traumaRenderer.color.a, Is.GreaterThan(0f), "Stage13 Trauma가 투명 상태다.");
             Assert.That(Vector2.Distance(player.transform.position, trauma.transform.position), Is.GreaterThanOrEqualTo(24f));
             Assert.That(sequence.CurrentLightIntensity, Is.EqualTo(0.55f).Within(0.01f));
             Assert.That(sequence.CurrentLightColor.r, Is.EqualTo(0.16f).Within(0.01f));
@@ -74,13 +79,23 @@ namespace Daeume.Tests.PlayMode
             var player = new GameObject("Player");
             var trauma = new GameObject("Trauma");
             var combat = player.AddComponent<PlayerCombat>();
+            var health = player.AddComponent<PlayerHealth>();
             var contact = player.AddComponent<TraumaContactHandler>();
-            var sequence = new GameObject("AcceptanceSequence").AddComponent<AcceptanceSequence>();
+            var sequenceObject = new GameObject("AcceptanceSequence");
+            sequenceObject.SetActive(false);
+            var sequence = sequenceObject.AddComponent<AcceptanceSequence>();
             sequence.ConfigureForTest(player.transform, trauma.transform, combat, contact);
-            yield return null;
+            var healthBefore = health.CurrentHealth;
 
-            contact.SetContactFailureEnabled(false);
+            sequenceObject.SetActive(true);
+
+            Assert.That(contact.ContactFailureEnabled, Is.False,
+                "Stage13의 첫 physics step 전에 Trauma 접촉 피해가 차단되어야 한다.");
             Assert.That(contact.BeginGrab(), Is.False);
+            Assert.That(health.CurrentHealth, Is.EqualTo(healthBefore),
+                "Stage13 초기화 중 Trauma 접촉으로 체력이 갑자기 감소했다.");
+
+            yield return null;
             Assert.That(sequence.TryLowerWeapon(), Is.True);
             Assert.That(combat.CombatEnabled, Is.False);
             Assert.That(sequence.CanCompleteEnding(), Is.False, "무장 해제 위치에서 자동으로 엔딩이 나면 안 된다.");

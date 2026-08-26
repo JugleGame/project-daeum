@@ -91,8 +91,12 @@ namespace Daeume.Tests.PlayMode
             var context = CreateContext(false, true);
             var controller = context.Root.AddComponent<StageOneChaseController>();
             controller.Configure(context.Director, null, context.Player, context.Pursuer.gameObject);
+            context.Pursuer.gameObject.SetActive(false);
+
             Assert.That(controller.BeginChaseFromMemory(), Is.True);
             Assert.That(context.Manager.StageState, Is.EqualTo(StageState.Chase));
+            Assert.That(context.Pursuer.gameObject.activeSelf, Is.True,
+                "회상 완료 시점에는 해당 스테이지의 Trauma가 활성화되어야 한다.");
             Assert.That(controller.CompleteAtEscape(), Is.True);
             Assert.That(context.Manager.StageState, Is.EqualTo(StageState.Cleared));
             context.Dispose();

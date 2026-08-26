@@ -75,6 +75,15 @@ namespace Daeume.ContaminationRuntime
         public string FarewellKey => "ending.farewell";
         public string CreditKey => "ending.credit";
 
+        private void Awake()
+        {
+            // Stage13 scene이 활성화된 첫 physics step보다 먼저 접촉 피해를 차단한다.
+            // Start에서만 끄면 scene load 직후 Player와 Trauma collider가 겹친 한 frame에
+            // TraumaContactHandler.OnTriggerEnter2D가 먼저 실행되어 보이지 않는 피해가 들어갈 수 있다.
+            ResolveReferences();
+            traumaContact?.SetContactFailureEnabled(false);
+        }
+
         private void Start()
         {
             ResolveReferences();
