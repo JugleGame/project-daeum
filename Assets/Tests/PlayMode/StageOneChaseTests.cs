@@ -98,6 +98,24 @@ namespace Daeume.Tests.PlayMode
             context.Dispose();
         }
 
+        [Test]
+        public void Test_Chase_StageOneTraumaRemainsActiveUntilEscape()
+        {
+            var context = CreateContext(false, true);
+            var controller = context.Root.AddComponent<StageOneChaseController>();
+            controller.Configure(context.Director, null, context.Player, context.Pursuer.gameObject, true);
+
+            Assert.That(controller.BeginChaseFromMemory(), Is.True);
+            context.Director.Tick(context.Data.TargetChaseSeconds + 1f);
+
+            Assert.That(context.Director.ChaseActive, Is.True,
+                "Stage 01 Trauma 추격은 고정 시간이 아니라 escape 도달 전까지 유지되어야 한다.");
+            Assert.That(controller.CompleteAtEscape(), Is.True);
+            Assert.That(context.Director.ChaseActive, Is.False,
+                "escape가 성립하면 유지 중이던 Trauma 추격도 즉시 종료되어야 한다.");
+            context.Dispose();
+        }
+
         private static Context CreateContext(bool assistEnabled, bool needsManager = false)
         {
             if (needsManager && GameManager.Instance != null)

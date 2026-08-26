@@ -44,6 +44,7 @@ namespace Daeume.ContaminationRuntime
 
         private string loadedOverlay = string.Empty;
         private bool deadEndBlocked;
+        private bool timedCompletionEnabled = true;
         private float restoreGraceRemaining;
 
         public ContaminationVariantData Data => data;
@@ -161,9 +162,19 @@ namespace Daeume.ContaminationRuntime
             BeginChase();
         }
 
+        public bool CompleteChase()
+        {
+            if (!ChaseActive) return false;
+            ChaseActive = false;
+            PublishChaseState();
+            return true;
+        }
+
         public void SetSpeedAssist(ChaseSpeedAssistAdapter adapter) => speedAssist = adapter;
 
         public void SetDeadEndBlocked(bool blocked) => deadEndBlocked = blocked;
+
+        public void SetTimedCompletion(bool enabled) => timedCompletionEnabled = enabled;
 
         /// <summary>Stage13 네 번째 loop부터 트라우마를 제자리에서 기다리게 한다.</summary>
         public void SetMovementSuppressed(bool suppressed) => MovementSuppressed = suppressed;
@@ -183,7 +194,7 @@ namespace Daeume.ContaminationRuntime
                 KeepDistance(step);
                 PublishDirective();
             }
-            if (ElapsedChaseSeconds < data.TargetChaseSeconds) return;
+            if (!timedCompletionEnabled || ElapsedChaseSeconds < data.TargetChaseSeconds) return;
             ChaseActive = false;
             PublishChaseState();
         }
@@ -221,9 +232,6 @@ namespace Daeume.ContaminationRuntime
             var distance = Mathf.Abs(offset);
             var targetDistance = deadEndBlocked ? data.MaxDistance : ContactDistance;
 
-            if (Mathf.Approximately(distance, targetDistance)) return;
-
-            var targetX = player.position.x + direction * targetDistance;
             var actor = pursuer.GetComponent<TraumaChaseActor>();
             if (actor != null)
             {
@@ -231,6 +239,9 @@ namespace Daeume.ContaminationRuntime
                 return;
             }
 
+            if (Mathf.Approximately(distance, targetDistance)) return;
+
+            var targetX = player.position.x + direction * targetDistance;
             var position = pursuer.position;
             position.x = Mathf.MoveTowards(position.x, targetX, EffectiveChaseSpeed * deltaTime);
             pursuer.position = position;

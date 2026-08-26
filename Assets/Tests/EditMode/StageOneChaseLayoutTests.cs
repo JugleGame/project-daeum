@@ -28,6 +28,17 @@ namespace Daeume.Tests.EditMode
             Assert.That(signals.Select(signal => signal.SignalId).Distinct().Count(), Is.EqualTo(signals.Length));
         }
 
+        [Test]
+        public void Test_Chase_StageOneSceneKeepsTraumaActiveUntilEscape()
+        {
+            var scene = EditorSceneManager.OpenScene(ScenePath, OpenSceneMode.Single);
+            var chase = scene.GetRootGameObjects()
+                .SelectMany(root => root.GetComponentsInChildren<StageOneChaseController>(true))
+                .Single();
+
+            Assert.That(chase.KeepChaseActiveUntilEscape, Is.True);
+        }
+
         private static ChaseRouteSignal[] LoadSignals()
         {
             var scene = EditorSceneManager.OpenScene(ScenePath, OpenSceneMode.Single);

@@ -27,19 +27,23 @@ namespace Daeume.ContaminationRuntime
         [SerializeField] private SceneFlowController flow;
         [SerializeField] private Transform player;
         [SerializeField] private GameObject trauma;
+        [SerializeField] private bool keepChaseActiveUntilEscape;
 
         /// <summary>실제로 저장에 쓰는 체크포인트 ID. 씬에서 비워 두면 기본 상수로 되돌아간다.</summary>
         public string ActiveCheckpointId => string.IsNullOrEmpty(checkpointId) ? CheckpointId : checkpointId;
+        public bool KeepChaseActiveUntilEscape => keepChaseActiveUntilEscape;
 
         public ContaminationDirector Director => director;
         public bool ChaseStarted { get; private set; }
 
-        public void Configure(ContaminationDirector chaseDirector, SceneFlowController sceneFlow, Transform playerTransform, GameObject traumaActor)
+        public void Configure(ContaminationDirector chaseDirector, SceneFlowController sceneFlow, Transform playerTransform,
+            GameObject traumaActor, bool keepActiveUntilEscape = false)
         {
             director = chaseDirector;
             flow = sceneFlow;
             player = playerTransform;
             trauma = traumaActor;
+            keepChaseActiveUntilEscape = keepActiveUntilEscape;
         }
 
         /// <summary>
@@ -70,6 +74,7 @@ namespace Daeume.ContaminationRuntime
             director.SetPressure(PressureStage.Echo);
 
             // 추격 시작. 압박을 Intrusion으로 올리는 판단은 director가 소유한다(spec-006).
+            director.SetTimedCompletion(!keepChaseActiveUntilEscape);
             if (!director.BeginChase()) return false;
 
             trauma?.SetActive(true);
@@ -92,11 +97,18 @@ namespace Daeume.ContaminationRuntime
             if (manager == null || manager.StageState != StageState.Chase) return false;
 
             // 정상 경로: 씬 흐름 소유자(A)가 클리어 연출·저장·씬 전환 순서를 처리한다.
-            if (flow != null) return flow.CompleteStageOne();
+            if (flow != null)
+            {
+                if (!flow.CompleteStageOne()) return false;
+                director?.CompleteChase();
+                return true;
+            }
 
             // 흐름 컨트롤러가 없는 단독 테스트 씬에서는 상태 계약만 확인한다.
             manager.SetStageState(StageState.Cleared);
-            return manager.StageState == StageState.Cleared;
+            if (manager.StageState != StageState.Cleared) return false;
+            director?.CompleteChase();
+            return true;
         }
 
         /// <summary>막다른 길 구간에 들어갔는지 여부를 director에게 전달한다.</summary>

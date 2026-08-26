@@ -125,11 +125,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba173a03b23512040b84ce6e68a3823c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Daeume.ContaminationRuntime::Daeume.ContaminationRuntime.TraumaChaseActor
-  gravity: 0
-  maxFallSpeed: 22
-  jumpSpeed: 13
-  climbSpeed: 5
-  clearanceMargin: 0.1
 --- !u!95 &2081515219084469999
 Animator:
   serializedVersion: 7
