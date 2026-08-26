@@ -26,5 +26,17 @@ namespace Daeume.Tests.EditMode
             Assert.That(visual, Is.Not.Null);
             Assert.That(visual.localScale, Is.EqualTo(Vector3.one));
         }
+
+        [Test]
+        public void Test_Trauma_PrefabUsesGravitylessKinematicBody()
+        {
+            var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(PrefabPath);
+            Assert.That(prefab, Is.Not.Null);
+            var body = prefab.GetComponent<Rigidbody2D>();
+
+            Assert.That(body, Is.Not.Null);
+            Assert.That(body.bodyType, Is.EqualTo(RigidbodyType2D.Kinematic));
+            Assert.That(body.gravityScale, Is.Zero);
+        }
     }
 }

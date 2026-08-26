@@ -411,7 +411,7 @@ namespace Daeume.Enemy
         /// <remarks>
         /// 잔재는 Rigidbody2D 없이 transform을 직접 옮긴다. 물리 엔진이 밀어내 주지 않으므로
         /// 막힘 검사를 직접 하지 않으면 벽과 잠긴 출구를 그대로 통과한다.
-        /// TraumaChaseActor가 같은 이유로 이미 이 검사를 갖고 있다.
+        /// 비행형 Trauma와 달리 잔재는 지형을 따라 이동하므로 이 검사가 필요하다.
         ///
         /// 플레이어를 IDamageable.TargetKind로 걸러내는 이유: Daeume.Enemy는 Daeume.Player를
         /// 참조하지 않는다. 대상 탐색이 이미 같은 방식을 쓰고 있어 규칙이 한 가지로 유지된다.
