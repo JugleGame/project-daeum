@@ -51,6 +51,27 @@ namespace Daeume.Editor
             Debug.Log($"ROLE_A_BUILD_OK path={report.summary.outputPath} errors={report.summary.totalErrors}");
         }
 
+        /// <summary>CI와 로컬 CLI가 동일한 활성 scene 목록으로 WebGL release를 생성한다.</summary>
+        public static void BuildWebGL()
+        {
+            var scenes = EditorBuildSettingsScene.GetActiveSceneList(EditorBuildSettings.scenes);
+            var options = new BuildPlayerOptions
+            {
+                scenes = scenes,
+                locationPathName = "Builds/WebGL",
+                target = BuildTarget.WebGL,
+                options = BuildOptions.None
+            };
+            var report = BuildPipeline.BuildPlayer(options);
+            if (report.summary.result != UnityEditor.Build.Reporting.BuildResult.Succeeded)
+            {
+                throw new System.InvalidOperationException(
+                    $"WebGL build failed: {report.summary.result}, errors={report.summary.totalErrors}");
+            }
+
+            Debug.Log($"WEBGL_BUILD_OK path={report.summary.outputPath} errors={report.summary.totalErrors}");
+        }
+
         public static void BuildPrototypeWindows()
         {
             var options = new BuildPlayerOptions
