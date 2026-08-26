@@ -11,7 +11,7 @@ namespace Daeume.Core
         public static void PlaySfx(string cue)
         {
             var clip = Resources.Load<AudioClip>("Audio/Sfx/" + cue);
-            if (clip == null) return;
+            if (clip == null || Object.FindAnyObjectByType<AudioListener>() == null) return;
             if (sfxSource == null)
             {
                 var host = new GameObject("SfxAudioSource");

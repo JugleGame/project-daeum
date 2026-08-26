@@ -15,6 +15,35 @@ namespace Daeume.Tests.PlayMode
 {
     public sealed class Stage01BlockoutTests
     {
+
+[UnityTest]
+public IEnumerator Test_StageTransition_PlayerVisualWaitsForStageScene()
+        {
+            SceneManager.LoadScene("Boot", LoadSceneMode.Single);
+            for (var frame = 0; frame < 600 && !SceneManager.GetSceneByName("Title").isLoaded; frame++)
+                yield return null;
+
+            Assert.That(SceneManager.GetSceneByName("Title").isLoaded, Is.True);
+            var player = Object.FindAnyObjectByType<PlayerController>();
+            var flow = Object.FindAnyObjectByType<SceneFlowController>();
+            Assert.That(player, Is.Not.Null);
+            Assert.That(flow, Is.Not.Null);
+            Assert.That(player.VisualRenderer, Is.Not.Null);
+            Assert.That(player.VisualRenderer.enabled, Is.False,
+                "Stage가 없는 Title/로딩 구간에는 회색 배경 위 Player가 먼저 보여서는 안 된다.");
+
+            Assert.That(flow.StartNewGame(), Is.True);
+            Assert.That(player.VisualRenderer.enabled, Is.False);
+
+            for (var frame = 0; frame < 600 && !SceneManager.GetSceneByName("Stage01_Base").isLoaded; frame++)
+                yield return null;
+            yield return null;
+
+            Assert.That(SceneManager.GetSceneByName("Stage01_Base").isLoaded, Is.True);
+            Assert.That(player.VisualRenderer.enabled, Is.True,
+                "Stage01 로드가 끝나면 Player visual을 다시 표시해야 한다.");
+        }
+
         [UnityTest]
         public IEnumerator Test_Stage01_PlayerMovesJumpsAndUsesGrabSurface()
         {

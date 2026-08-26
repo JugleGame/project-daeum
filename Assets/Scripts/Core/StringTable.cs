@@ -50,7 +50,7 @@ namespace Daeume.Core
 
             // HUD 상시 표기
             ["hud.health"] = "체력",
-            ["hud.chase"] = "도망치세요",
+            ["hud.chase"] = "← 왼쪽으로 도망치세요",
             ["hud.failed"] = "쓰러졌습니다... 체크포인트에서 다시 시작합니다.",
             ["hud.objective.memory"] = "오른쪽 끝의 기억을 찾아라",
             ["hud.objective.stage10.memory"] = "육교의 표지판에서 기억을 확인하라",

@@ -1,4 +1,6 @@
 
+
+using System.Collections.Generic;
 using Daeume.Stage;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -20,6 +22,8 @@ namespace Daeume.UI
     {
         [SerializeField] private Color cameraBackground = new(0.5f, 0.5f, 0.5f, 1f);
         private Material unlitMaterial;
+        private static readonly List<SpriteRenderer> HiddenPlayerRenderers = new();
+
 
         private void Awake()
         {
@@ -90,11 +94,38 @@ namespace Daeume.UI
             }
         }
 
-        private static void SetPlayerPhysicsActive(bool active)
+private static void SetPlayerPhysicsActive(bool active)
         {
             var player = GameObject.Find("Player");
-            var body = player != null ? player.GetComponent<Rigidbody2D>() : null;
-            if (body != null) body.bodyType = active ? RigidbodyType2D.Dynamic : RigidbodyType2D.Kinematic;
+            if (player == null) return;
+
+            var body = player.GetComponent<Rigidbody2D>();
+            if (body != null)
+            {
+                body.bodyType = active ? RigidbodyType2D.Dynamic : RigidbodyType2D.Kinematic;
+                if (!active) body.linearVelocity = Vector2.zero;
+            }
+
+            // Player는 Persistent 씬에 있으므로 content 교체 중에도 살아 있다.
+            // Stage scene이 없는 동안 현재 켜져 있던 renderer만 기억해 숨긴다.
+            // 공격 이펙트처럼 원래 꺼져 있던 renderer를 Stage 진입 때 잘못 켜지 않기 위해
+            // 모든 renderer에 active를 일괄 대입하지 않는다.
+            if (!active)
+            {
+                foreach (var renderer in player.GetComponentsInChildren<SpriteRenderer>(true))
+                {
+                    if (!renderer.enabled || HiddenPlayerRenderers.Contains(renderer)) continue;
+                    HiddenPlayerRenderers.Add(renderer);
+                    renderer.enabled = false;
+                }
+                return;
+            }
+
+            foreach (var renderer in HiddenPlayerRenderers)
+            {
+                if (renderer != null) renderer.enabled = true;
+            }
+            HiddenPlayerRenderers.Clear();
         }
 
         /// <summary>

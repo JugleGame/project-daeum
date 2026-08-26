@@ -82,6 +82,11 @@ namespace Daeume.Encounter
         /// <summary>전투를 시작한다. 이미 진행 중이거나 완료됐으면 아무 일도 하지 않는다.</summary>
         public bool TryActivate()
         {
+            // Memory/Chase/Failed 상태에서는 일반 encounter가 추격 복원과 겹치면 안 된다.
+            // GameManager가 없는 독립 테스트에서는 기존처럼 허용한다.
+            var manager = GameManager.Instance;
+            if (manager != null && manager.StageState != StageState.Explore) return false;
+
             // State != Inactive 조건이 spec-012의 "완료 Encounter 재진입은 Spawn 0회"를 보장한다.
             // 전투를 끝낸 구간을 되돌아 지나갈 때 적이 다시 나오면 진행이 무의미해진다.
             if (State != EncounterState.Inactive || data == null || enemyPrefab == null || spawnPoints == null || spawnPoints.Length == 0)

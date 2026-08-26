@@ -86,11 +86,12 @@ namespace Daeume.Flow
         /// 되돌리던 시절에는 부활 지점이 탈출 경로 반대편일 때 추격자를 지나갈 방법이 없어
         /// 붙잡힘 → 복귀 → 붙잡힘이 무한 반복됐다. 체력 소진은 종전대로 체크포인트에서 재시도한다.
         /// </remarks>
-        private void OnStageFailed(StageFailed value)
+private void OnStageFailed(StageFailed value)
         {
-            pendingRetry = value.Cause == StageFailureCause.TraumaGrabCompleted
-                ? StartCoroutine(GameOverAfterDelay())
-                : StartCoroutine(RetryAfterDelay());
+            // 모든 사망 원인은 동일한 저장 지점 재시도 경로를 사용한다.
+            // Trauma만 Title로 보내면 저장된 체크포인트가 있어도 진행이 끊기고,
+            // grab 연출이 소유한 입력 잠금도 콘텐츠 교체 경계에 남을 수 있다.
+            pendingRetry = StartCoroutine(RetryAfterDelay());
         }
 
         /// <summary>붙잡힘 연출을 볼 시간을 준 뒤 타이틀로 내보낸다.</summary>
@@ -299,13 +300,17 @@ namespace Daeume.Flow
             plan.CompleteTransition();
         }
 
-        private IEnumerator LoadContent(string sceneName, StageState state, SaveData data)
+private IEnumerator LoadContent(string sceneName, StageState state, SaveData data)
         {
             yield return ReplaceContent(sceneName);
 
-            // 씬이 올라온 뒤에 플레이어 복원을 요청해야 한다. 순서가 반대면 아직 없는 지형 위에 놓인다.
-            GameManager.Instance?.Events.Publish(new PlayerRestoreRequested(data.PlayerPosition, data.PlayerHealth));
+            // 먼저 Stage state를 복원한다. Chase 상태가 먼저 알려져야 새 scene의 director가
+            // 추격을 활성화하고, 이어지는 PlayerRestoreRequested에서 Trauma를 안전거리로
+            // 옮기며 restore grace를 적용할 수 있다.
             GameManager.Instance?.ResetStage(state);
+
+            // 상태 수신자와 HUD가 준비된 뒤 위치·입력·체력을 마지막 값으로 복원한다.
+            GameManager.Instance?.Events.Publish(new PlayerRestoreRequested(data.PlayerPosition, data.PlayerHealth));
             plan.CompleteTransition();
         }
 
