@@ -51,6 +51,8 @@ namespace Daeume.Audio
         private void OnEnable()
         {
             Connect();
+            AudioRuntime.VolumeChanged += ApplyAudioVolume;
+            ApplyAudioVolume();
             SceneManager.sceneLoaded -= OnSceneLoaded;
             SceneManager.sceneLoaded += OnSceneLoaded;
         }
@@ -69,6 +71,7 @@ namespace Daeume.Audio
         {
             RemoveLastAppliedShakeOffset();
             SceneManager.sceneLoaded -= OnSceneLoaded;
+            AudioRuntime.VolumeChanged -= ApplyAudioVolume;
             GameManager.Instance?.Events.Unsubscribe<ContaminationPressureChanged>(OnPressure);
         }
 
@@ -128,6 +131,13 @@ namespace Daeume.Audio
             ambientSource = source;
             targetCamera = camera;
             ResetAppliedShakeState();
+            ApplyAudioVolume();
+        }
+
+        private void ApplyAudioVolume()
+        {
+            if (ambientSource != null)
+                ambientSource.volume = Mathf.Lerp(0.25f, 0.8f, pressureAmount) * AudioRuntime.BgmVolume;
         }
 
         private void OnSceneLoaded(Scene _, LoadSceneMode __)
@@ -201,7 +211,7 @@ namespace Daeume.Audio
             }
 
             // 환경음 볼륨도 압박에 따라 올린다. Lerp는 두 값 사이를 비율로 섞는 함수다.
-            if (ambientSource != null) ambientSource.volume = Mathf.Lerp(0.25f, 0.8f, pressureAmount);
+            ApplyAudioVolume();
         }
     }
 }

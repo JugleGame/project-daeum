@@ -279,7 +279,7 @@ namespace Daeume.ContaminationRuntime
             directionalMusic = gameObject.AddComponent<AudioSource>();
             directionalMusic.loop = true;
             directionalMusic.playOnAwake = false;
-            directionalMusic.volume = 0.02f;
+            directionalMusic.volume = 0.02f * AudioRuntime.BgmVolume;
             const int sampleRate = 22050;
             var samples = new float[sampleRate * 2];
             for (var index = 0; index < samples.Length; index++)
@@ -295,7 +295,7 @@ namespace Daeume.ContaminationRuntime
             if (directionalMusic == null || player == null || trauma == null) return;
             directionalMusic.panStereo = Mathf.Sign(trauma.position.x - player.position.x) * 0.65f;
             var approach = 1f - Mathf.InverseLerp(lowerWeaponDistance, collapseDistance, distance);
-            directionalMusic.volume = Mathf.Lerp(0.02f, 0.12f, approach);
+            directionalMusic.volume = Mathf.Lerp(0.02f, 0.12f, approach) * AudioRuntime.BgmVolume;
             directionalMusic.pitch = Mathf.Lerp(0.8f, 1.1f, approach);
         }
 
