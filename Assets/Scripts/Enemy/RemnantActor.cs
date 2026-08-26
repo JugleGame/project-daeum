@@ -552,7 +552,7 @@ namespace Daeume.Enemy
         {
             if (Mathf.Approximately(horizontalDelta, 0f)) return;
             FacingDirection = Mathf.Sign(horizontalDelta);
-            if (bodyRenderer != null) bodyRenderer.flipX = FacingDirection < 0f;
+            if (bodyRenderer != null) bodyRenderer.flipX = FacingDirection > 0f;
         }
 
         protected void SetTelegraph(bool value)

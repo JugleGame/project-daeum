@@ -17,7 +17,6 @@ namespace Daeume.Tests.EditMode
     {
         private const string PlayerPrefabPath = "Assets/Prefabs/Player/Player.prefab";
         private const string PlayerSpritePath = "Assets/Art/Sprites/FinalDaeume/Hero/Frames/idle_00.png";
-        private const string RemnantSpritePath = "Assets/Art/Sprites/FinalDaeume/Trauma/Frames/idle_00.png";
         private const string TraumaSpritePath = "Assets/Art/Sprites/FinalDaeume/Trauma/Frames/idle_00.png";
 
         [Test]
@@ -116,9 +115,18 @@ namespace Daeume.Tests.EditMode
         public void Test_Animation_PrefabsUseCurrentSpritesAndControllers()
         {
             AssertPrefabMapping<PlayerAnimationDriver>(PlayerPrefabPath, PlayerSpritePath);
-            AssertPrefabMapping<RemnantAnimationDriver>("Assets/Prefabs/Enemy/Stage01_MeleeRemnant.prefab", RemnantSpritePath);
-            AssertPrefabMapping<RemnantAnimationDriver>("Assets/Prefabs/Enemy/DashRemnant.prefab", RemnantSpritePath);
-            AssertPrefabMapping<RemnantAnimationDriver>("Assets/Prefabs/Enemy/RangedRemnant.prefab", RemnantSpritePath);
+            AssertPrefabMapping<RemnantAnimationDriver>(
+                "Assets/Prefabs/Enemy/Stage01_MeleeRemnant.prefab",
+                "Assets/Art/Sprites/Remnant/Melee/Frames/idle_00.png",
+                "Assets/Animations/Enemy/MeleeRemnant.controller");
+            AssertPrefabMapping<RemnantAnimationDriver>(
+                "Assets/Prefabs/Enemy/DashRemnant.prefab",
+                "Assets/Art/Sprites/Remnant/Dash/Frames/idle_00.png",
+                "Assets/Animations/Enemy/DashRemnant.controller");
+            AssertPrefabMapping<RemnantAnimationDriver>(
+                "Assets/Prefabs/Enemy/RangedRemnant.prefab",
+                "Assets/Art/Sprites/Remnant/Ranged/Frames/idle_00.png",
+                "Assets/Animations/Enemy/RangedRemnant.controller");
             AssertPrefabMapping<TraumaAnimationDriver>("Assets/Prefabs/Enemy/Stage01_Trauma.prefab", TraumaSpritePath);
         }
 
@@ -161,6 +169,14 @@ namespace Daeume.Tests.EditMode
             AssertFrameClip("Assets/Animations/Enemy/Trauma_Idle.anim", "FinalDaeume/Trauma/Frames", 4, 5f, true);
             AssertFrameClip("Assets/Animations/Enemy/Trauma_Chase.anim", "FinalDaeume/Trauma/Frames", 6, 8f, true);
             AssertFrameClip("Assets/Animations/Enemy/Trauma_Attack.anim", "FinalDaeume/Trauma/Frames", 4, 10f, false);
+        }
+
+        [Test]
+        public void Test_Animation_RemnantArchetypeFramesClipsAndPrefabsMatchIssue60()
+        {
+            AssertRemnantArchetype("Melee", "Stage01_MeleeRemnant");
+            AssertRemnantArchetype("Dash", "DashRemnant");
+            AssertRemnantArchetype("Ranged", "RangedRemnant");
         }
 
         [Test]
@@ -257,7 +273,10 @@ namespace Daeume.Tests.EditMode
                 "Legacy embedded Player_Core texture must be removed");
         }
 
-        private static void AssertPrefabMapping<TDriver>(string prefabPath, string spritePath)
+        private static void AssertPrefabMapping<TDriver>(
+            string prefabPath,
+            string spritePath,
+            string controllerPath = null)
             where TDriver : Component
         {
             var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(prefabPath);
@@ -267,6 +286,13 @@ namespace Daeume.Tests.EditMode
             var animator = prefab.GetComponent<Animator>();
             Assert.That(animator, Is.Not.Null, $"{prefabPath} Animator");
             Assert.That(animator.runtimeAnimatorController, Is.Not.Null, $"{prefabPath} controller");
+            if (controllerPath != null)
+            {
+                Assert.That(
+                    AssetDatabase.GetAssetPath(animator.runtimeAnimatorController),
+                    Is.EqualTo(controllerPath),
+                    $"{prefabPath} controller");
+            }
 
             var expectedSprite = AssetDatabase.LoadAssetAtPath<Sprite>(spritePath);
             Assert.That(expectedSprite, Is.Not.Null, spritePath);
@@ -278,6 +304,39 @@ namespace Daeume.Tests.EditMode
                 mapped.transform.localScale,
                 Is.EqualTo(Vector3.one),
                 $"{prefabPath} must not downscale original-resolution character pixels");
+        }
+
+        private static void AssertRemnantArchetype(string type, string prefabName)
+        {
+            var frameFolder = $"Assets/Art/Sprites/Remnant/{type}/Frames";
+            var animationRoot = $"Assets/Animations/Enemy/{type}Remnant";
+            var controllerPath = animationRoot + ".controller";
+            AssertImporterFolder(frameFolder, 16, 64f, SpriteAlignment.BottomCenter, new Vector2Int(128, 128));
+            AssertFrameClip(animationRoot + "_Idle.anim", frameFolder, 4, 5f, true);
+            AssertFrameClip(animationRoot + "_Alert.anim", frameFolder, 2, 6f, false);
+            AssertFrameClip(animationRoot + "_Approach.anim", frameFolder, 6, 8f, true);
+            AssertFrameClip(animationRoot + "_Attack.anim", frameFolder, 4, 10f, false);
+            AssertController(
+                controllerPath,
+                new[] { "Idle", "Alert", "Approach", "Attack", "Hit", "Dead" });
+            AssertControllerStateClip(controllerPath, "Idle", animationRoot + "_Idle.anim");
+            AssertControllerStateClip(controllerPath, "Alert", animationRoot + "_Alert.anim");
+            AssertControllerStateClip(controllerPath, "Approach", animationRoot + "_Approach.anim");
+            AssertControllerStateClip(controllerPath, "Attack", animationRoot + "_Attack.anim");
+            AssertControllerStateClip(controllerPath, "Hit", animationRoot + "_Hit.anim");
+            AssertPrefabMapping<RemnantAnimationDriver>(
+                $"Assets/Prefabs/Enemy/{prefabName}.prefab",
+                frameFolder + "/idle_00.png",
+                controllerPath);
+        }
+
+        private static void AssertControllerStateClip(string controllerPath, string stateName, string clipPath)
+        {
+            var controller = AssetDatabase.LoadAssetAtPath<AnimatorController>(controllerPath);
+            var state = controller.layers[0].stateMachine.states
+                .Single(value => value.state.name == stateName)
+                .state;
+            Assert.That(AssetDatabase.GetAssetPath(state.motion), Is.EqualTo(clipPath), $"{controllerPath} {stateName}");
         }
 
         private static void AssertController(
