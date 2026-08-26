@@ -260,7 +260,12 @@ private void OnStageFailed(StageFailed value)
         /// </remarks>
         private IEnumerator AdvanceAfterStageClear()
         {
-            var nextStageId = currentData.CurrentStageId + 1;
+            var nextStageId = currentData.CurrentStageId switch
+            {
+                1 => 10,
+                10 => 13,
+                _ => 0
+            };
             var nextScene = PlayableStageScene(nextStageId);
             var hasNextStage = !string.IsNullOrEmpty(nextScene);
 
