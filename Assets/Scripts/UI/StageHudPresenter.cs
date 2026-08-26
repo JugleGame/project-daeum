@@ -129,9 +129,13 @@ namespace Daeume.UI
             // 목표 문구는 탐색 중에만 보인다. 회상을 시작하거나 추격에 들어가면 자연히 사라진다.
             var visible = value.State == StageState.Explore;
             var hint = ControlHint();
+            var objectiveKey = $"hud.objective.stage{FindAnyObjectByType<SceneFlowController>()?.CurrentData?.CurrentStageId ?? 1:00}.memory";
+            var objective = StringTable.TryGet(objectiveKey, out var stageObjective)
+                ? stageObjective
+                : StringTable.Get("hud.objective.memory");
             ObjectiveLabel = string.IsNullOrEmpty(hint)
-                ? StringTable.Get("hud.objective.memory")
-                : $"{hint}{System.Environment.NewLine}{StringTable.Get("hud.objective.memory")}";
+                ? objective
+                : $"{hint}{System.Environment.NewLine}{objective}";
             if (objectiveText != null) objectiveText.text = ObjectiveLabel;
             if (objectiveRoot != null) objectiveRoot.SetActive(visible);
         }

@@ -247,6 +247,7 @@ namespace Daeume.Core
             data.ContaminationVariantId ??= string.Empty;
             data.PressureStage ??= "Stable";
             data.AssistSettings ??= new AssistSettings();
+            NormalizeAudioVolumes(data.AssistSettings);
         }
 
         private void LoadAssistSettings()
@@ -259,6 +260,7 @@ namespace Daeume.Core
             try
             {
                 assistSettings = JsonUtility.FromJson<AssistSettings>(settingsStore.Read()) ?? new AssistSettings();
+                NormalizeAudioVolumes(assistSettings);
             }
             catch (Exception exception) when (
                 exception is ArgumentException || exception is IOException || exception is UnauthorizedAccessException)
@@ -266,6 +268,22 @@ namespace Daeume.Core
                 // 설정 파일이 깨졌다고 게임을 막을 이유는 없다. 기본 설정으로 계속 진행한다.
                 assistSettings = new AssistSettings();
             }
+        }
+
+        private static void NormalizeAudioVolumes(AssistSettings settings)
+        {
+            if (settings.AudioVolumeSchemaVersion == 0)
+            {
+                settings.BgmVolume = 1f;
+                settings.SfxVolume = 1f;
+            }
+            else
+            {
+                settings.BgmVolume = Mathf.Clamp01(settings.BgmVolume);
+                settings.SfxVolume = Mathf.Clamp01(settings.SfxVolume);
+            }
+
+            settings.AudioVolumeSchemaVersion = 1;
         }
     }
 }

@@ -23,6 +23,8 @@ namespace Daeume.UI
         [SerializeField, Range(0f, 1f)] private float cameraShakeStrength = 0.5f;
         [SerializeField, Range(0, 2)] private int subtitleSize = 1;
         [SerializeField] private bool chaseSpeedAssist;
+        [SerializeField, Range(0f, 1f)] private float bgmVolume = 1f;
+        [SerializeField, Range(0f, 1f)] private float sfxVolume = 1f;
         private string bindingOverridesJson = string.Empty;
 
         /// <summary>현재 값을 저장 가능한 형태로 만들어 돌려준다.</summary>
@@ -31,7 +33,10 @@ namespace Daeume.UI
             CameraShakeStrength = cameraShakeStrength,
             SubtitleSize = subtitleSize,
             ChaseSpeedAssist = chaseSpeedAssist,
-            BindingOverridesJson = bindingOverridesJson
+            BindingOverridesJson = bindingOverridesJson,
+            AudioVolumeSchemaVersion = 1,
+            BgmVolume = bgmVolume,
+            SfxVolume = sfxVolume
         };
 
         /// <summary>저장된 설정을 화면 값에 반영한다. 범위를 벗어난 값은 안전하게 잘라 낸다.</summary>
@@ -42,6 +47,8 @@ namespace Daeume.UI
             subtitleSize = Mathf.Clamp(settings.SubtitleSize, 0, 2);
             chaseSpeedAssist = settings.ChaseSpeedAssist;
             bindingOverridesJson = settings.BindingOverridesJson ?? string.Empty;
+            bgmVolume = Mathf.Clamp01(settings.BgmVolume);
+            sfxVolume = Mathf.Clamp01(settings.SfxVolume);
         }
 
         // 아래 네 함수는 옵션 화면의 슬라이더·토글·리매핑이 호출할 진입점이다.
@@ -50,5 +57,7 @@ namespace Daeume.UI
         public void SetSubtitleSize(int value) => subtitleSize = Mathf.Clamp(value, 0, 2);
         public void SetChaseAssist(bool value) => chaseSpeedAssist = value;
         public void SetBindingOverrides(string json) => bindingOverridesJson = json ?? string.Empty;
+        public void SetBgmVolume(float value) => bgmVolume = Mathf.Clamp01(value);
+        public void SetSfxVolume(float value) => sfxVolume = Mathf.Clamp01(value);
     }
 }

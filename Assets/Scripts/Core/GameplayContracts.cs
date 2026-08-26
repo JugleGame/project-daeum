@@ -147,10 +147,24 @@ namespace Daeume.Core
     /// <summary>
     /// 플레이어가 발판 밖(낙사 구간)으로 벗어났음을 알린다. (spec-007)
     /// spec-001은 낙사·함정으로 인한 "보이지 않는 즉사"를 금지한다. 그래서 이 메시지는
-    /// StageFailureCause를 태우지 않고 씬 흐름(A)이 곧바로 체크포인트 위치로 되돌리게 한다.
+    /// StageFailureCause를 태우지 않고 씬 흐름(A)이 곧바로 복귀 지점으로 되돌리게 한다.
     /// </summary>
+    /// <remarks>
+    /// RecoveryPosition은 레벨이 선언한 낙사 복귀 지점(StageMarkerKind.FallRecovery)이다.
+    /// 좌표를 여기에 실어 보내는 이유는 asmdef 구조 때문이다 — 복귀를 결정하는 Daeume.Flow가
+    /// 마커를 들고 있는 Daeume.Stage를 참조하면 Stage → Player → Flow 순환이 생긴다.
+    /// 마커를 찾을 수 있는 쪽(VoidZone, Daeume.Stage)이 좌표를 채워 보내면 순환 없이 해결된다.
+    ///
+    /// 마커가 없는 스테이지도 있을 수 있어 null을 허용한다. 그때는 예전처럼 저장된 위치로 되돌린다.
+    /// </remarks>
     public readonly struct PlayerFellOutOfBounds
     {
+        public PlayerFellOutOfBounds(Vector2? recoveryPosition = null)
+        {
+            RecoveryPosition = recoveryPosition;
+        }
+
+        public Vector2? RecoveryPosition { get; }
     }
 
     /// <summary>저장 데이터로부터 플레이어 위치·체력을 복원해 달라는 요청. 씬 흐름(A)이 발행한다.</summary>

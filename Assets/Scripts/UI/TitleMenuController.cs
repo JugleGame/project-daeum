@@ -21,6 +21,11 @@ namespace Daeume.UI
         [SerializeField] private Text subtitleText;
         [SerializeField] private Button settingsButton;
         [SerializeField] private GameObject settingsPanel;
+        [SerializeField] private Button contentWarningButton;
+        [SerializeField] private GameObject contentWarningPanel;
+        [SerializeField] private Text contentWarningBody;
+        [SerializeField] private Button contentWarningCloseButton;
+
         private SceneFlowController flow;
 
         private void Awake()
@@ -29,6 +34,9 @@ namespace Daeume.UI
             newGameButton?.onClick.AddListener(StartNewGame);
             continueButton?.onClick.AddListener(ContinueGame);
             settingsButton?.onClick.AddListener(OpenSettings);
+            contentWarningButton?.onClick.AddListener(OpenContentWarning);
+            contentWarningCloseButton?.onClick.AddListener(CloseContentWarning);
+
 
             // spec-013: 씬에 원고를 직접 박지 않는다. 버튼 글자·제목·부제·안내 문구를 전부 StringTable에서 채운다.
             if (headingText != null) headingText.text = StringTable.Get("title.heading");
@@ -37,15 +45,37 @@ namespace Daeume.UI
             SetButtonLabel(newGameButton, "title.new_game");
             SetButtonLabel(continueButton, "title.continue");
             SetButtonLabel(settingsButton, "title.settings");
+            SetButtonLabel(contentWarningButton, "title.content_warning");
+            SetButtonLabel(contentWarningCloseButton, "title.close");
+            if (contentWarningBody != null)
+                contentWarningBody.text = StringTable.Get("title.content_warning.body");
+
 
             // 접근성 옵션 화면은 기본적으로 닫혀 있다.
             if (settingsPanel != null) settingsPanel.SetActive(false);
+            if (contentWarningPanel != null) contentWarningPanel.SetActive(false);
+
         }
 
         public void OpenSettings()
         {
             if (settingsPanel != null) settingsPanel.SetActive(true);
         }
+
+        public void OpenContentWarning()
+        {
+            if (contentWarningPanel != null) contentWarningPanel.SetActive(true);
+            if (EventSystem.current != null && contentWarningCloseButton != null)
+                EventSystem.current.SetSelectedGameObject(contentWarningCloseButton.gameObject);
+        }
+
+        public void CloseContentWarning()
+        {
+            if (contentWarningPanel != null) contentWarningPanel.SetActive(false);
+            if (EventSystem.current != null && contentWarningButton != null)
+                EventSystem.current.SetSelectedGameObject(contentWarningButton.gameObject);
+        }
+
 
         private static void SetButtonLabel(Button button, string key)
         {
@@ -56,6 +86,7 @@ namespace Daeume.UI
         private void Start()
         {
             ResolveFlow();
+            AudioRuntime.PlayTitleMusic();
 
             // 키보드·패드로도 조작할 수 있게 첫 버튼을 선택 상태로 만든다.
             // 마우스 없이 진행할 수 있어야 한다는 접근성 기준선과 연결된 처리다.
@@ -69,6 +100,9 @@ namespace Daeume.UI
             newGameButton?.onClick.RemoveListener(StartNewGame);
             continueButton?.onClick.RemoveListener(ContinueGame);
             settingsButton?.onClick.RemoveListener(OpenSettings);
+            contentWarningButton?.onClick.RemoveListener(OpenContentWarning);
+            contentWarningCloseButton?.onClick.RemoveListener(CloseContentWarning);
+
         }
 
         public void Bind(Button newGame, Button continueGame, Text status)
@@ -87,6 +121,7 @@ namespace Daeume.UI
             var started = flow != null && (newGame ? flow.StartNewGame() : flow.ContinueGame());
             if (started)
             {
+                AudioRuntime.StopTitleMusic();
                 // 전환이 시작되면 버튼을 잠근다. 연타로 전환이 두 번 시작되는 것을 눈에 보이게 막는다.
                 SetInteractable(false);
 

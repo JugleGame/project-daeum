@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0567ce6f5126b5847ae6bf0323dfc8d5, type: 3}
+  m_Name: Stage13
+  m_EditorClassIdentifier: Daeume.Stage::Daeume.Stage.StageData
+  stageId: 13
+  location: "\uCCAB \uC815\uB958\uC7A5\uC73C\uB85C \uB418\uB3CC\uC544\uC624\uB294 \uAE30\uC5B5 \uAE38"
+  memoryId: memory-stage13
+  memoryTitle: "\uB2E4\uC74C\uC5D0 \uBCF4\uC790"
+  memoryPresentationId: stage13-memory
+  emotionalRole: 4
+  encounterIds:
+  - stage13.encounter.none
+  contaminationVariantId: stage13-return
+  primaryContaminationChannels: 000000000100000002000000
+  contaminationMeaning: "\uC0C8 \uC624\uC5FC\uC744 \uB354\uD558\uC9C0 \uC54A\uACE0, \uD2B8\uB77C\uC6B0\uB9C8\uC5D0 \uB2E4\uAC00\uAC08\uC218\uB85D \uAE30\uC874 \uC624\uC5FC\uC744 \uD558\uB098\uC529 \uC81C\uAC70\uD55C\uB2E4."
+  hospitalImageryDirectness: 4
+  chaseId: chase-stage13-return
+  chaseMeaning: "\uB3C4\uC8FC\uC640 \uACF5\uACA9\uC774 \uD574\uACB0\uC774 \uC544\uB2CC \uAC83\uC744 \uBC18\uBCF5\uC73C\uB85C \uD655\uC778\uD558\uACE0, \uC811\uADFC\uACFC \uC218\uC6A9\uC73C\uB85C \uADDC\uCE59\uC744 \uB4A4\uC9D1\uB294\uB2E4."
+  targetChaseSeconds: 25
+  lengthCategory: 1
+  targetPlaytimeMinutes: 7
+  clueIds:
+  - clue-stage13-farewell
+  explorationIntensity: 1
+  memoryIntensity: 2
+  encounterIntensity: 0
+  contaminationIntensity: 4
+  chaseIntensity: 1
+  nextStageId: 0
+

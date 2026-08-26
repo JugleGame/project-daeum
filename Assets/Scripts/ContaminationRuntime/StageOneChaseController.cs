@@ -17,21 +17,66 @@ namespace Daeume.ContaminationRuntime
     {
         public const string CheckpointId = "Stage01_Chase";
 
+        /// <summary>
+        /// 이 씬이 저장할 추격 체크포인트 ID. Stage10·Stage13이 같은 컴포넌트를 재사용하므로
+        /// 스테이지마다 달라야 한다. 비워 두면 <see cref="CheckpointId"/> 기본값을 쓴다.
+        /// </summary>
+        [SerializeField] private string checkpointId = CheckpointId;
+
         [SerializeField] private ContaminationDirector director;
         [SerializeField] private SceneFlowController flow;
         [SerializeField] private Transform player;
         [SerializeField] private GameObject trauma;
+        [SerializeField] private bool keepChaseActiveUntilEscape;
+        [SerializeField] private bool restoreChaseOnCheckpoint = true;
+        [SerializeField] private bool revealTraumaOnMemoryComplete;
+
+        /// <summary>실제로 저장에 쓰는 체크포인트 ID. 씬에서 비워 두면 기본 상수로 되돌아간다.</summary>
+        public string ActiveCheckpointId => string.IsNullOrEmpty(checkpointId) ? CheckpointId : checkpointId;
+        public bool KeepChaseActiveUntilEscape => keepChaseActiveUntilEscape;
 
         public ContaminationDirector Director => director;
         public bool ChaseStarted { get; private set; }
 
-        public void Configure(ContaminationDirector chaseDirector, SceneFlowController sceneFlow, Transform playerTransform, GameObject traumaActor)
+        public void Configure(ContaminationDirector chaseDirector, SceneFlowController sceneFlow, Transform playerTransform,
+            GameObject traumaActor, bool keepActiveUntilEscape = false)
         {
             director = chaseDirector;
             flow = sceneFlow;
             player = playerTransform;
             trauma = traumaActor;
+            keepChaseActiveUntilEscape = keepActiveUntilEscape;
         }
+
+private void OnEnable()
+        {
+            GameManager.Instance?.Events.Subscribe<StageStateChanged>(HandleStageStateChanged);
+        }
+
+        private void OnDisable()
+        {
+            GameManager.Instance?.Events.Unsubscribe<StageStateChanged>(HandleStageStateChanged);
+        }
+
+        private void HandleStageStateChanged(StageStateChanged message)
+        {
+            if (message.State != StageState.Chase || ChaseStarted || !restoreChaseOnCheckpoint) return;
+
+            ResolveReferences();
+            if (director == null || flow == null ||
+                flow.CurrentData == null || flow.CurrentData.CheckpointId != ActiveCheckpointId)
+            {
+                return;
+            }
+
+            // 새로 적재된 Stage scene은 Trauma가 비활성이고 director도 정지 상태다.
+            // 저장된 chase checkpoint로 돌아온 경우에만 회상 없이 추격 runtime을 복원한다.
+            director.SetTimedCompletion(!keepChaseActiveUntilEscape);
+            if (!director.BeginChase()) director.RetryChase();
+            trauma?.SetActive(true);
+            ChaseStarted = true;
+        }
+
 
         /// <summary>
         /// 회상이 끝났을 때 호출된다. 스펙이 정한 순서를 그대로 실행한다.
@@ -61,14 +106,18 @@ namespace Daeume.ContaminationRuntime
             director.SetPressure(PressureStage.Echo);
 
             // 추격 시작. 압박을 Intrusion으로 올리는 판단은 director가 소유한다(spec-006).
+            director.SetTimedCompletion(!keepChaseActiveUntilEscape);
             if (!director.BeginChase()) return false;
 
             trauma?.SetActive(true);
+            if (revealTraumaOnMemoryComplete)
+                trauma?.GetComponentInChildren<TraumaRevealVisual>(true)?.Reveal();
 
             // 체크포인트는 추격이 실제로 시작된 뒤 저장한다.
             // 그래야 추격 중 사망 시 "회상을 다시 보지 않고" 같은 지점에서 재개된다(spec-011).
             var health = player == null ? 3 : player.GetComponent<PlayerHealth>()?.CurrentHealth ?? 3;
-            flow?.SaveChaseCheckpoint(CheckpointId, player == null ? Vector2.zero : (Vector2)player.position, health, director.VariantId);
+            flow?.SaveChaseCheckpoint(string.IsNullOrWhiteSpace(checkpointId) ? CheckpointId : checkpointId,
+                player == null ? Vector2.zero : (Vector2)player.position, health, director.VariantId);
 
             ChaseStarted = true;
             return true;
@@ -82,11 +131,18 @@ namespace Daeume.ContaminationRuntime
             if (manager == null || manager.StageState != StageState.Chase) return false;
 
             // 정상 경로: 씬 흐름 소유자(A)가 클리어 연출·저장·씬 전환 순서를 처리한다.
-            if (flow != null) return flow.CompleteStageOne();
+            if (flow != null)
+            {
+                if (!flow.CompleteStageOne()) return false;
+                director?.CompleteChase();
+                return true;
+            }
 
             // 흐름 컨트롤러가 없는 단독 테스트 씬에서는 상태 계약만 확인한다.
             manager.SetStageState(StageState.Cleared);
-            return manager.StageState == StageState.Cleared;
+            if (manager.StageState != StageState.Cleared) return false;
+            director?.CompleteChase();
+            return true;
         }
 
         /// <summary>막다른 길 구간에 들어갔는지 여부를 director에게 전달한다.</summary>

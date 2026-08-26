@@ -18,23 +18,11 @@ EditorBuildSettings:
     path: Assets/Scenes/Stage01_Base.unity
     guid: a222958d004b9544baf5f52085f9601a
   - enabled: 1
-    path: Assets/Scenes/Stage02_Base.unity
-    guid: b90113c5c8e6bd54b88fb5f10a861103
+    path: Assets/Scenes/Stage10_Base.unity
+    guid: a4817e092917daf4e94e30559ff55a85
   - enabled: 1
-    path: Assets/Scenes/RoleAPrototype.unity
-    guid: 66d1b885c841dfb4ebb2bec16b819b03
-  - enabled: 1
-    path: Assets/Scenes/Stage03_Base.unity
-    guid: fa792acbcc6d0714cb643fef49399765
-  - enabled: 1
-    path: Assets/Scenes/Stage04_Base.unity
-    guid: c5b88cd08695d2c4e955a0b5eb810065
-  - enabled: 1
-    path: Assets/Scenes/Stage05_Base.unity
-    guid: 7bb01feb5b39e314b9dd99729f8140ad
-  - enabled: 1
-    path: Assets/Scenes/Stage06_Base.unity
-    guid: 63e7ccce888fabd4b99d0246d607b956
+    path: Assets/Scenes/Stage13_Base.unity
+    guid: d15e919a7b874318ae0efa4c9fc670da
   m_configObjects:
     com.unity.dt.app-ui: {fileID: 11400000, guid: 1b1c20d82303e4b5781c3ef50ac1449f, type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}

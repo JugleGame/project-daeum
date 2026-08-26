@@ -1,15 +1,16 @@
 ﻿<Solution>
+  <Project Path="Daeume.Tests.EditMode.csproj" />
   <Project Path="Daeume.Interaction.csproj" />
   <Project Path="Daeume.Prototype.csproj" />
   <Project Path="Daeume.Contamination.csproj" />
   <Project Path="Daeume.Core.csproj" />
+  <Project Path="Daeume.Enemy.csproj" />
+  <Project Path="PipelineTestReporter.csproj" />
   <Project Path="Daeume.Encounter.csproj" />
   <Project Path="Daeume.ContaminationRuntime.csproj" />
+  <Project Path="Daeume.Tests.PlayMode.csproj" />
   <Project Path="Daeume.Editor.csproj" />
   <Project Path="Daeume.Stage.csproj" />
-  <Project Path="Daeume.Tests.PlayMode.csproj" />
-  <Project Path="Daeume.Tests.EditMode.csproj" />
-  <Project Path="Daeume.Enemy.csproj" />
   <Project Path="Daeume.UI.csproj" />
   <Project Path="Daeume.Flow.csproj" />
   <Project Path="Daeume.Audio.csproj" />

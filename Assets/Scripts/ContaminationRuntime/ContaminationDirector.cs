@@ -44,6 +44,7 @@ namespace Daeume.ContaminationRuntime
 
         private string loadedOverlay = string.Empty;
         private bool deadEndBlocked;
+        private bool timedCompletionEnabled = true;
         private float restoreGraceRemaining;
 
         public ContaminationVariantData Data => data;
@@ -56,6 +57,7 @@ namespace Daeume.ContaminationRuntime
         public float EffectiveChaseSpeed => speedAssist == null ? data?.ChaseSpeed ?? 0f : speedAssist.ResolveSpeed(data?.ChaseSpeed ?? 0f);
         public float EffectiveMinDistance => speedAssist == null ? data?.MinDistance ?? 0f : speedAssist.ResolveApproachDistance(data?.MinDistance ?? 0f, data?.MaxDistance ?? 0f);
         public bool DeadEndBlocked => deadEndBlocked;
+        public bool MovementSuppressed { get; private set; }
         public event Action<string, bool> OverlayRequested;
 
         private void OnEnable()
@@ -160,9 +162,22 @@ namespace Daeume.ContaminationRuntime
             BeginChase();
         }
 
+        public bool CompleteChase()
+        {
+            if (!ChaseActive) return false;
+            ChaseActive = false;
+            PublishChaseState();
+            return true;
+        }
+
         public void SetSpeedAssist(ChaseSpeedAssistAdapter adapter) => speedAssist = adapter;
 
         public void SetDeadEndBlocked(bool blocked) => deadEndBlocked = blocked;
+
+        public void SetTimedCompletion(bool enabled) => timedCompletionEnabled = enabled;
+
+        /// <summary>Stage13 네 번째 loop부터 트라우마를 제자리에서 기다리게 한다.</summary>
+        public void SetMovementSuppressed(bool suppressed) => MovementSuppressed = suppressed;
 
         /// <summary>
         /// 매 프레임 추격을 진행한다. 목표 시간에 도달하면 추격을 끝낸다.
@@ -174,9 +189,12 @@ namespace Daeume.ContaminationRuntime
             var step = Mathf.Max(0f, deltaTime);
             ElapsedChaseSeconds = Mathf.Min(data.TargetChaseSeconds, ElapsedChaseSeconds + step);
             restoreGraceRemaining = Mathf.Max(0f, restoreGraceRemaining - step);
-            KeepDistance(step);
-            PublishDirective();
-            if (ElapsedChaseSeconds < data.TargetChaseSeconds) return;
+            if (!MovementSuppressed)
+            {
+                KeepDistance(step);
+                PublishDirective();
+            }
+            if (!timedCompletionEnabled || ElapsedChaseSeconds < data.TargetChaseSeconds) return;
             ChaseActive = false;
             PublishChaseState();
         }
@@ -214,9 +232,6 @@ namespace Daeume.ContaminationRuntime
             var distance = Mathf.Abs(offset);
             var targetDistance = deadEndBlocked ? data.MaxDistance : ContactDistance;
 
-            if (Mathf.Approximately(distance, targetDistance)) return;
-
-            var targetX = player.position.x + direction * targetDistance;
             var actor = pursuer.GetComponent<TraumaChaseActor>();
             if (actor != null)
             {
@@ -224,6 +239,9 @@ namespace Daeume.ContaminationRuntime
                 return;
             }
 
+            if (Mathf.Approximately(distance, targetDistance)) return;
+
+            var targetX = player.position.x + direction * targetDistance;
             var position = pursuer.position;
             position.x = Mathf.MoveTowards(position.x, targetX, EffectiveChaseSpeed * deltaTime);
             pursuer.position = position;

@@ -33,7 +33,7 @@ MonoBehaviour:
     \uB3C4\uC8FC\uB85C\uB85C \uAC70\uB9AC\uAC00 \uBCC0\uD55C\uB2E4."
   targetChaseSeconds: 30
   lengthCategory: 1
-  targetPlaytimeMinutes: 12
+  targetPlaytimeMinutes: 9
   clueIds:
   - clue-stage01-family-photo
   - clue-stage01-door-chain
@@ -42,4 +42,4 @@ MonoBehaviour:
   encounterIntensity: 2
   contaminationIntensity: 2
   chaseIntensity: 3
-  nextStageId: 2
+  nextStageId: 10

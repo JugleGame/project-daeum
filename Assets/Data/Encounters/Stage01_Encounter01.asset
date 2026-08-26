@@ -22,7 +22,6 @@ MonoBehaviour:
   spawnCount: 1
   waveCount: 1
   clearCondition: 0
-  lockExit: 1
+  lockExit: 0
   exitMarkerId: stage01.encounter.01.exit
-  terrainHazardIds:
-  - hazard-stage01-warning-pulse
+  terrainHazardIds: []

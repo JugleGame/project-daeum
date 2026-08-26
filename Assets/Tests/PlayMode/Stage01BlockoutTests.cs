@@ -15,6 +15,35 @@ namespace Daeume.Tests.PlayMode
 {
     public sealed class Stage01BlockoutTests
     {
+
+[UnityTest]
+public IEnumerator Test_StageTransition_PlayerVisualWaitsForStageScene()
+        {
+            SceneManager.LoadScene("Boot", LoadSceneMode.Single);
+            for (var frame = 0; frame < 600 && !SceneManager.GetSceneByName("Title").isLoaded; frame++)
+                yield return null;
+
+            Assert.That(SceneManager.GetSceneByName("Title").isLoaded, Is.True);
+            var player = Object.FindAnyObjectByType<PlayerController>();
+            var flow = Object.FindAnyObjectByType<SceneFlowController>();
+            Assert.That(player, Is.Not.Null);
+            Assert.That(flow, Is.Not.Null);
+            Assert.That(player.VisualRenderer, Is.Not.Null);
+            Assert.That(player.VisualRenderer.enabled, Is.False,
+                "Stage가 없는 Title/로딩 구간에는 회색 배경 위 Player가 먼저 보여서는 안 된다.");
+
+            Assert.That(flow.StartNewGame(), Is.True);
+            Assert.That(player.VisualRenderer.enabled, Is.False);
+
+            for (var frame = 0; frame < 600 && !SceneManager.GetSceneByName("Stage01_Base").isLoaded; frame++)
+                yield return null;
+            yield return null;
+
+            Assert.That(SceneManager.GetSceneByName("Stage01_Base").isLoaded, Is.True);
+            Assert.That(player.VisualRenderer.enabled, Is.True,
+                "Stage01 로드가 끝나면 Player visual을 다시 표시해야 한다.");
+        }
+
         [UnityTest]
         public IEnumerator Test_Stage01_PlayerMovesJumpsAndUsesGrabSurface()
         {
@@ -51,7 +80,9 @@ namespace Daeume.Tests.PlayMode
             }
             Assert.That(body.position.y, Is.GreaterThan(jumpStartY + .25f));
 
-            var grabSurface = GameObject.Find("GrabWall_Zone").GetComponent<GrabbableSurface>();
+            // 매달림 표면은 blockout 벽이 아니라 가로등 프리팹(05-lamp-utility-pole)이 갖는다.
+            var grabSurface = Object.FindAnyObjectByType<GrabbableSurface>();
+            Assert.That(grabSurface, Is.Not.Null, "Stage01에 GrabbableSurface가 없다.");
             player.SetGroundedForTest(false);
             Assert.That(player.TryBeginGrab(grabSurface), Is.True);
             Assert.That(player.IsGrabbing, Is.True);
@@ -68,21 +99,32 @@ namespace Daeume.Tests.PlayMode
             var bounds = Object.FindAnyObjectByType<StageCameraBounds>();
             var camera = Camera.main;
 
-            body.position = new Vector2(8f, -2.5f);
+            // blockout 발판을 걷어 낸 뒤로 Stage01의 지면은 GroundTilemap 하나뿐이다(윗면 y = -1).
+            body.position = new Vector2(8f, 1.5f);
             body.linearVelocity = Vector2.down;
             yield return WaitForGrounded(player);
-            Assert.That(body.position.y, Is.GreaterThan(-4.1f));
+            Assert.That(body.position.y, Is.GreaterThan(-1.5f));
+
+            // 경계는 카메라 중심이 아니라 화면에 담겨도 되는 세계 좌표의 끝이다.
+            // 카메라 중심이 어디까지 갈 수 있는지는 화면 반너비를 뺀 값이며, 그 계산은
+            // StageCameraBounds가 소유한다(종횡비가 달라져도 같은 규칙이 적용된다).
+            StageCameraBounds.ResolveCameraLimits(camera, bounds.Minimum, bounds.Maximum, out var lower, out var upper);
 
             body.position = new Vector2(100f, 0f);
             Physics2D.SyncTransforms();
             yield return new WaitForFixedUpdate();
             yield return null;
-            Assert.That(camera.transform.position.x, Is.EqualTo(bounds.Maximum.x).Within(.01f));
+            Assert.That(camera.transform.position.x, Is.EqualTo(upper.x).Within(.01f));
+            Assert.That(camera.transform.position.x + camera.orthographicSize * camera.aspect,
+                Is.LessThanOrEqualTo(bounds.Maximum.x + .01f), "화면 오른쪽 끝이 콘텐츠 밖을 비추면 안 된다.");
+
             body.position = new Vector2(-100f, 0f);
             Physics2D.SyncTransforms();
             yield return new WaitForFixedUpdate();
             yield return null;
-            Assert.That(camera.transform.position.x, Is.EqualTo(bounds.Minimum.x).Within(.01f));
+            Assert.That(camera.transform.position.x, Is.EqualTo(lower.x).Within(.01f));
+            Assert.That(camera.transform.position.x - camera.orthographicSize * camera.aspect,
+                Is.GreaterThanOrEqualTo(bounds.Minimum.x - .01f), "화면 왼쪽 끝이 콘텐츠 밖을 비추면 안 된다.");
             LogAssert.NoUnexpectedReceived();
         }
 
@@ -91,10 +133,16 @@ namespace Daeume.Tests.PlayMode
         {
             yield return LoadStage();
             var manager = GameManager.Instance;
-            var flow = Object.FindAnyObjectByType<SceneFlowController>();
             var player = Object.FindAnyObjectByType<PlayerController>();
             var body = player.GetComponent<Rigidbody2D>();
-            var startPosition = flow.CurrentData.PlayerPosition;
+
+            StageMarker recovery = null;
+            foreach (var marker in Object.FindObjectsByType<StageMarker>(FindObjectsSortMode.None))
+            {
+                if (marker.Kind == StageMarkerKind.FallRecovery) { recovery = marker; break; }
+            }
+
+            Assert.That(recovery, Is.Not.Null, "Stage01은 낙사 복귀 마커를 선언해야 한다.");
 
             // 발판(blockout 바닥, minY ~= -4.5) 아래 VoidZone(#11) 안으로 완전히 벗어난다.
             body.position = new Vector2(15f, -15f);
@@ -110,8 +158,11 @@ namespace Daeume.Tests.PlayMode
             // 스테이지를 Failed로 만들지 않는다 — "보이지 않는 즉사" 금지 규칙.
             Assert.That(manager.StageState, Is.Not.EqualTo(StageState.Failed));
             Assert.That(body.position.y, Is.GreaterThan(-5f), "Player should have been teleported back onto the playable floor.");
-            Assert.That(Vector2.Distance(body.position, startPosition), Is.LessThan(0.05f),
-                "Player should be restored to the last saved checkpoint position (SaveSystem.ResolveRespawnHealth path).");
+            // 저장 위치가 아니라 레벨이 선언한 낙사 복귀 마커로 되돌린다.
+            // 저장 위치(SaveData.PlayerPosition)는 추격 체크포인트에서만 갱신돼서
+            // 탐색 구간에서는 계속 (0,0)이었다 — 구덩이에 빠질 때마다 스테이지 시작점으로 튕겼다.
+            Assert.That(Vector2.Distance(body.position, recovery.transform.position), Is.LessThan(0.05f),
+                "Player should be restored to the FallRecovery marker declared by the level.");
             LogAssert.NoUnexpectedReceived();
         }
 
@@ -123,14 +174,21 @@ namespace Daeume.Tests.PlayMode
             var hud = Object.FindAnyObjectByType<StageHudPresenter>();
             Assert.That(hud, Is.Not.Null, "StagePresentationBootstrap should have spawned the HUD.");
 
-            // HUD는 방금 생성됐을 수 있다. Start()가 구독을 마칠 한 프레임을 준 뒤에 상태 변화를 알린다
-            // (구독 전에 알리면 목표/조작 문구가 비어 있는 채로 남는다).
+            // A prior PlayMode test can replace the Persistent scene's GameManager after this
+            // persistent HUD first enabled. Re-enable it so the fixture reconnects to the current
+            // event bus before requesting the Explore-state objective.
+            hud.enabled = false;
+            hud.enabled = true;
             yield return null;
             GameManager.Instance.ResetStage();
-            yield return null;
 
-            // 튜토리얼 스테이지라 목표 문구만으로는 조작을 알 수 없다(#11).
-            Assert.That(hud.ObjectiveLabel, Does.Contain(StringTable.Get("options.rebind.jump")));
+            var jumpLabel = StringTable.Get("options.rebind.jump");
+            for (var frame = 0; frame < 30 && !hud.ObjectiveLabel.Contains(jumpLabel); frame++)
+            {
+                yield return null;
+            }
+
+            Assert.That(hud.ObjectiveLabel, Does.Contain(jumpLabel));
             Assert.That(hud.ObjectiveLabel, Does.Contain(StringTable.Get("options.rebind.interact")));
             Assert.That(hud.ObjectiveLabel, Does.Contain(StringTable.Get("hud.objective.memory")));
             LogAssert.NoUnexpectedReceived();

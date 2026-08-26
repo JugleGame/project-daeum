@@ -1,3 +1,7 @@
+
+
+using System.Collections.Generic;
+using Daeume.Stage;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -18,6 +22,8 @@ namespace Daeume.UI
     {
         [SerializeField] private Color cameraBackground = new(0.5f, 0.5f, 0.5f, 1f);
         private Material unlitMaterial;
+        private static readonly List<SpriteRenderer> HiddenPlayerRenderers = new();
+
 
         private void Awake()
         {
@@ -66,30 +72,60 @@ namespace Daeume.UI
             if (camera != null)
             {
                 camera.orthographic = true;
-                camera.orthographicSize = 4.21875f;
                 camera.backgroundColor = cameraBackground;
             }
 
             foreach (var renderer in FindObjectsByType<SpriteRenderer>(FindObjectsSortMode.None))
             {
+                // Sky는 월드 조명과 무관하게 원본 색을 유지해야 한다.
+                // 그 외 Terrain/Background 스프라이트는 프리팹에 지정된 Lit 머티리얼을 보존한다.
+                // Sorting Layer만 보고 Unlit으로 덮어쓰면 벽처럼 조명을 받아야 하는 오브젝트가
+                // 주변 소품보다 밝게 떠 보인다.
+                if (renderer.GetComponent<StageSkyBackground>() != null)
+                {
+                    if (unlitMaterial != null) renderer.sharedMaterial = unlitMaterial;
+                    continue;
+                }
+
                 if (renderer.sortingLayerName == "Terrain")
-                {
                     renderer.color = EnsureValue(renderer.color, 0.5f);
-                    if (unlitMaterial != null) renderer.sharedMaterial = unlitMaterial;
-                }
                 else if (renderer.sortingLayerName == "Background")
-                {
                     renderer.color = EnsureValue(renderer.color, 0.22f);
-                    if (unlitMaterial != null) renderer.sharedMaterial = unlitMaterial;
-                }
             }
         }
 
-        private static void SetPlayerPhysicsActive(bool active)
+private static void SetPlayerPhysicsActive(bool active)
         {
             var player = GameObject.Find("Player");
-            var body = player != null ? player.GetComponent<Rigidbody2D>() : null;
-            if (body != null) body.bodyType = active ? RigidbodyType2D.Dynamic : RigidbodyType2D.Kinematic;
+            if (player == null) return;
+
+            var body = player.GetComponent<Rigidbody2D>();
+            if (body != null)
+            {
+                body.bodyType = active ? RigidbodyType2D.Dynamic : RigidbodyType2D.Kinematic;
+                if (!active) body.linearVelocity = Vector2.zero;
+            }
+
+            // Player는 Persistent 씬에 있으므로 content 교체 중에도 살아 있다.
+            // Stage scene이 없는 동안 현재 켜져 있던 renderer만 기억해 숨긴다.
+            // 공격 이펙트처럼 원래 꺼져 있던 renderer를 Stage 진입 때 잘못 켜지 않기 위해
+            // 모든 renderer에 active를 일괄 대입하지 않는다.
+            if (!active)
+            {
+                foreach (var renderer in player.GetComponentsInChildren<SpriteRenderer>(true))
+                {
+                    if (!renderer.enabled || HiddenPlayerRenderers.Contains(renderer)) continue;
+                    HiddenPlayerRenderers.Add(renderer);
+                    renderer.enabled = false;
+                }
+                return;
+            }
+
+            foreach (var renderer in HiddenPlayerRenderers)
+            {
+                if (renderer != null) renderer.enabled = true;
+            }
+            HiddenPlayerRenderers.Clear();
         }
 
         /// <summary>

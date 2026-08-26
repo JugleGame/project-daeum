@@ -15,12 +15,12 @@ MonoBehaviour:
   enemyId: remnant-stage06-ranged
   maxHealth: 3
   contactDamage: 1
-  detectionRange: 7
-  attackRange: 4.5
-  moveSpeed: 1.6
+  detectionRange: 5.5
+  attackRange: 3.2
+  moveSpeed: 1.4
   alertSeconds: 0.25
-  attackTelegraphSeconds: 0.8
-  attackRecoverySeconds: 0.9
+  attackTelegraphSeconds: 1.1
+  attackRecoverySeconds: 1.2
   hitStunSeconds: 0.18
   stageNumber: 6
   visualTraitTags: 0

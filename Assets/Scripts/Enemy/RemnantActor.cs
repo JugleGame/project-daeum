@@ -26,7 +26,31 @@ namespace Daeume.Enemy
         private PressureStage pressureStage;
         private float lastPlayerX;
         private bool wasAttackedByPlayer;   // Reactive 잔재의 "선공당함" 기록
+        private Color bodyBaseColor = Color.white;
+
+        /// <summary>피격 점멸이 한 번 켜지거나 꺼져 있는 시간.</summary>
+        private const float HitBlinkHalfPeriod = 0.08f;
+
+        /// <summary>점멸이 켜진 순간의 알파. 0으로 두면 사라진 것처럼 보여 맞았다는 신호가 안 된다.</summary>
+        private const float HitBlinkAlpha = 0.25f;
         private float nextTargetSearchTime; // 플레이어 탐색 재시도 시각(매 프레임 탐색 방지)
+
+        /// <summary>지형 검사에 주는 여유 두께. 0이면 벽에 닿았는지 판정이 프레임마다 깜빡인다.</summary>
+        private const float TerrainSkin = 0.02f;
+
+        // ponytail: 발밑을 얼마나 내려다볼지 고정값. 잔재 키·스폰 높이가 스테이지마다 크게
+        // 달라지면 RemnantDataBase로 옮겨 아키타입별로 조정한다.
+        private const float LedgeProbeDepth = 0.6f;
+
+        // 접지 보정에서 위아래로 살펴볼 거리. 스폰 지점이 조금 어긋나 있어도 바닥에 붙인다.
+        private const float GroundSnapRange = 1.5f;
+        /// <summary>낙하 가속도. TraumaChaseActor와 같은 값을 쓴다.</summary>
+        private const float Gravity = 30f;
+
+        /// <summary>낙하 속도 상한. 없으면 한 프레임에 지형을 통과해 버린다.</summary>
+        private const float MaxFallSpeed = 22f;
+
+        private float verticalVelocity;
 
         protected float stateRemaining;      // 현재 상태(혹은 하위 단계)가 끝나기까지 남은 시간
         protected bool attackResolved;       // 이번 공격에서 피해 판정을 이미 했는가
@@ -66,6 +90,8 @@ namespace Daeume.Enemy
 
         protected virtual void Awake()
         {
+            if (bodyRenderer != null) bodyBaseColor = bodyRenderer.color;
+
             bodyCollider = GetComponent<Collider2D>();
             ForceTriggerBody();
             CurrentHealth = DataBase.MaxHealth;
@@ -107,6 +133,7 @@ namespace Daeume.Enemy
             if (bodyCollider == null) bodyCollider = GetComponent<Collider2D>();
             bodyCollider.enabled = true;
             ForceTriggerBody();
+            if (bodyRenderer != null) bodyRenderer.color = bodyBaseColor;
             EnterState(RemnantState.Idle);
         }
 
@@ -132,6 +159,10 @@ namespace Daeume.Enemy
             {
                 return;
             }
+
+            // 잔재는 중력을 받지 않는다. 발밑을 직접 맞춰 주지 않으면 스폰 지점 높이 그대로 떠 있고,
+            // 높이가 다른 지형으로 걸어가도 처음 높이를 유지한다. (Stage01에서 40px 가량 떠 보였다)
+            SnapToGround();
 
             if (target == null)
             {
@@ -163,6 +194,7 @@ namespace Daeume.Enemy
                     break;
                 case RemnantState.Hit:
                     stateRemaining -= step;
+                    TickHitBlink();
                     if (stateRemaining <= 0f)
                     {
                         EnterState(TargetInRange(DataBase.DetectionRange * Profile.DetectionRangeMultiplier)
@@ -171,6 +203,67 @@ namespace Daeume.Enemy
                     }
                     break;
             }
+
+            ApplyGravity(step);
+        }
+
+        /// <summary>발밑 지형을 찾아 그 위에 세운다. 없으면 떨어진다.</summary>
+        /// <remarks>
+        /// 잔재는 Rigidbody2D 없이 transform으로만 움직이고, 그동안 y는 아무도 건드리지 않았다.
+        /// 그래서 스폰된 높이에 그대로 굳어, 계단 위에서 나온 잔재가 평지의 플레이어를 쫓아올 때
+        /// 공중에 뜬 채로 따라왔다. TraumaChaseActor가 이미 같은 문제를 같은 방식으로 풀고 있어
+        /// 그 구조를 그대로 가져온다.
+        ///
+        /// 몸통 콜라이더는 trigger라 물리 엔진이 받쳐 주지 않는다. 지형은 직접 찾아야 한다.
+        /// </remarks>
+        private void ApplyGravity(float deltaTime)
+        {
+            if (deltaTime <= 0f) return;
+            if (bodyCollider == null) bodyCollider = GetComponent<Collider2D>();
+            if (bodyCollider == null) return;
+
+            var bounds = bodyCollider.bounds;
+            var footOffset = transform.position.y - bounds.min.y;
+            var fall = Mathf.Abs(verticalVelocity) * deltaTime;
+            var ground = FindGroundBelow(bounds.center, bounds.extents.y + fall + TerrainSkin, bounds.size.x * 0.5f);
+
+            if (ground.HasValue && verticalVelocity <= 0f)
+            {
+                transform.position = new Vector3(transform.position.x, ground.Value + footOffset, transform.position.z);
+                verticalVelocity = 0f;
+                return;
+            }
+
+            verticalVelocity = Mathf.Max(-MaxFallSpeed, verticalVelocity - Gravity * deltaTime);
+            transform.position += new Vector3(0f, verticalVelocity * deltaTime, 0f);
+        }
+
+        /// <summary>발밑에서 가장 가까운 지형의 윗면. 없으면 null.</summary>
+        /// <remarks>
+        /// 지형으로 치지 않는 것은 IsBlockedTowards와 같다 - 자기 자신, 트리거, 그리고 플레이어.
+        /// 거리 0 히트도 무시한다. 기준점이 이미 콜라이더 안에 있다는 뜻이라, 지형을 찾은 것으로
+        /// 치면 벽에 파묻힌 채 굳는다.
+        /// </remarks>
+        private float? FindGroundBelow(Vector2 origin, float distance, float minimumWidth)
+        {
+            var hits = Physics2D.RaycastAll(origin, Vector2.down, distance);
+            var best = float.NegativeInfinity;
+
+            for (var index = 0; index < hits.Length; index++)
+            {
+                var hit = hits[index];
+                if (hit.collider == null || hit.collider.isTrigger || hit.distance <= 0f) continue;
+                if (hit.collider.transform == transform || hit.collider.transform.IsChildOf(transform)) continue;
+                if (FindDamageable(hit.collider.transform)?.TargetKind == DamageTargetKind.Player) continue;
+
+                // 발보다 좁은 것 위에는 설 수 없다. 이 조건이 없으면 가로등 기둥(폭 0.28)
+                // 꼭대기를 밟고 공중에 선다. 기둥은 앞을 막으라고 있는 것이지 발판이 아니다.
+                if (hit.collider.bounds.size.x < minimumWidth) continue;
+
+                if (hit.point.y > best) best = hit.point.y;
+            }
+
+            return float.IsNegativeInfinity(best) ? (float?)null : best;
         }
 
         public DamageResult ApplyDamage(DamageRequest request)
@@ -184,6 +277,7 @@ namespace Daeume.Enemy
             wasAttackedByPlayer = true;   // Reactive 잔재는 이 순간부터 반응할 수 있다.
             var applied = Mathf.Min(CurrentHealth, request.Amount);
             CurrentHealth -= applied;
+            if (applied > 0) AudioRuntime.PlaySfx("RemnantHit");
             if (CurrentHealth <= 0)
             {
                 Die();
@@ -229,6 +323,7 @@ namespace Daeume.Enemy
             attackResolved = false;
             IsYielding = false;
             SetTelegraph(false);
+            if (value != RemnantState.Hit) SetBodyAlpha(1f);
             switch (value)
             {
                 case RemnantState.Alert:
@@ -238,11 +333,35 @@ namespace Daeume.Enemy
                     // 압박 단계 배수를 곱한 뒤에도 최소 0.05초는 남긴다. 예고 없는 공격은 공정성 규칙 위반이다.
                     stateRemaining = Mathf.Max(0.05f, DataBase.AttackTelegraphSeconds * Profile.TelegraphMultiplier);
                     SetTelegraph(true);
+                    AudioRuntime.PlaySfx("RemnantAttack");
                     break;
                 case RemnantState.Hit:
                     stateRemaining = DataBase.HitStunSeconds;
                     break;
             }
+        }
+
+        /// <summary>피격 경직 동안 몸을 깜빡여 맞았다는 사실을 알린다.</summary>
+        /// <remarks>
+        /// 왜 색이 아니라 알파인가: 잔재 스프라이트는 픽셀 평균이 rgb(31, 24, 28)인 검은 실루엣이다.
+        /// SpriteRenderer.color는 곱셈이라 검은 픽셀에 빨강을 곱해도 검정 그대로다.
+        /// 알파를 낮추면 밝은 하늘 배경이 비쳐 실루엣이 옅어지므로 실제로 눈에 띈다.
+        ///
+        /// 남은 경직 시간을 반주기로 나눈 몫의 홀짝으로 켜고 끈다. 별도 타이머를 두지 않아도
+        /// 경직이 끝나는 순간 점멸도 함께 끝난다.
+        /// </remarks>
+        private void TickHitBlink()
+        {
+            if (bodyRenderer == null) return;
+            var lit = Mathf.FloorToInt(Mathf.Max(0f, stateRemaining) / HitBlinkHalfPeriod) % 2 == 0;
+            SetBodyAlpha(lit ? HitBlinkAlpha : 1f);
+        }
+
+        private void SetBodyAlpha(float value)
+        {
+            if (bodyRenderer == null) return;
+            var color = bodyRenderer.color;
+            bodyRenderer.color = new Color(color.r, color.g, color.b, value);
         }
 
         private void Die()
@@ -300,6 +419,95 @@ namespace Daeume.Enemy
 
         protected Transform TraumaTarget => traumaTarget;
 
+        /// <summary>진행 방향에 막히는 지형이 있는지, 또는 그쪽이 낭떠러지인지 본다.</summary>
+        /// <remarks>
+        /// 잔재는 Rigidbody2D 없이 transform을 직접 옮긴다. 물리 엔진이 밀어내 주지 않으므로
+        /// 막힘 검사를 직접 하지 않으면 벽과 잠긴 출구를 그대로 통과한다.
+        /// 비행형 Trauma와 달리 잔재는 지형을 따라 이동하므로 이 검사가 필요하다.
+        ///
+        /// 플레이어를 IDamageable.TargetKind로 걸러내는 이유: Daeume.Enemy는 Daeume.Player를
+        /// 참조하지 않는다. 대상 탐색이 이미 같은 방식을 쓰고 있어 규칙이 한 가지로 유지된다.
+        ///
+        /// 거리 0 히트는 무시한다. 기준점이 이미 콜라이더 안에 있다는 뜻이라, 막힘으로 치면
+        /// 벽에 살짝 겹친 잔재가 영영 그 자리에 굳는다.
+        ///
+        /// 벽뿐 아니라 낭떠러지도 막힘으로 친다. 잔재는 중력을 받지 않고 x만 움직이므로,
+        /// 이 검사가 없으면 바닥이 끊긴 구간 위를 그대로 떠서 건너 플레이어를 쫓아간다
+        /// (Stage01의 폭 9.5짜리 구덩이에서 실제로 그렇게 보였다).
+        /// </remarks>
+        protected bool IsBlockedTowards(float moveX)
+        {
+            if (Mathf.Approximately(moveX, 0f)) return false;
+            if (bodyCollider == null) bodyCollider = GetComponent<Collider2D>();
+            if (bodyCollider == null) return false;
+
+            var bounds = bodyCollider.bounds;
+            var reach = bounds.extents.x + Mathf.Abs(moveX) + TerrainSkin;
+            var hits = Physics2D.RaycastAll(bounds.center, new Vector2(Mathf.Sign(moveX), 0f), reach);
+
+            for (var index = 0; index < hits.Length; index++)
+            {
+                var hit = hits[index];
+                if (hit.collider == null || hit.collider.isTrigger || hit.distance <= 0f) continue;
+                if (hit.collider.transform == transform || hit.collider.transform.IsChildOf(transform)) continue;
+                if (FindDamageable(hit.collider.transform)?.TargetKind == DamageTargetKind.Player) continue;
+                return true;
+            }
+
+            // 벽은 없다. 이제 갈 곳 발밑에 바닥이 있는지 본다.
+            var footX = bounds.center.x + Mathf.Sign(moveX) * (bounds.extents.x + Mathf.Abs(moveX));
+            return !HasGroundAt(footX, bounds.min.y);
+        }
+
+        /// <summary>발밑 바닥에 딱 붙여 세운다.</summary>
+        /// <remarks>
+        /// 잔재의 스프라이트는 발바닥이 곧 pivot이다(캔버스 아래 여백 8px, pivot 9px).
+        /// 그래서 transform.y를 바닥 높이에 맞추면 그림의 발이 바닥에 닿는다.
+        /// 몸통 콜라이더는 트리거라 바닥에 얹힐 필요가 없다 — 기준은 그림이다.
+        ///
+        /// 바닥을 못 찾으면 아무것도 하지 않는다. 낭떠러지 위로 걸어 들어가는 것은
+        /// IsBlockedTowards가 이미 막으므로, 여기서 못 찾는 경우는 스폰 지점이 허공인 배치 실수뿐이다.
+        /// 그때 억지로 끌어내리면 원인이 감춰진다.
+        /// </remarks>
+        private void SnapToGround()
+        {
+            // 위에서 쏘면 머리 위 발판에 먼저 맞아 잔재가 그 위로 끌려 올라간다. 발밑에서 아래로만 본다.
+            var origin = new Vector2(transform.position.x, transform.position.y + TerrainSkin);
+            var hits = Physics2D.RaycastAll(origin, Vector2.down, GroundSnapRange);
+            for (var index = 0; index < hits.Length; index++)
+            {
+                var hit = hits[index];
+                if (hit.collider == null || hit.collider.isTrigger) continue;
+                if (hit.collider.transform == transform || hit.collider.transform.IsChildOf(transform)) continue;
+                if (FindDamageable(hit.collider.transform)?.TargetKind == DamageTargetKind.Player) continue;
+
+                var position = transform.position;
+                position.y = hit.point.y;
+                transform.position = position;
+                return;
+            }
+        }
+
+        /// <summary>주어진 지점의 발밑에 디딜 바닥이 있는지 본다.</summary>
+        /// <remarks>
+        /// 얕게만 본다(LedgeProbeDepth). 잔재는 떨어지지 않으므로 한참 아래에 있는 바닥은
+        /// 디딜 수 있는 곳이 아니다 — 깊게 보면 구덩이 속 기둥 위를 공중에서 밟은 셈이 된다.
+        /// </remarks>
+        private bool HasGroundAt(float x, float footY)
+        {
+            var hits = Physics2D.RaycastAll(new Vector2(x, footY + TerrainSkin), Vector2.down, LedgeProbeDepth + TerrainSkin);
+            for (var index = 0; index < hits.Length; index++)
+            {
+                var hit = hits[index];
+                if (hit.collider == null || hit.collider.isTrigger) continue;
+                if (hit.collider.transform == transform || hit.collider.transform.IsChildOf(transform)) continue;
+                if (FindDamageable(hit.collider.transform)?.TargetKind == DamageTargetKind.Player) continue;
+                return true;
+            }
+
+            return false;
+        }
+
         /// <summary>사거리 안이면 접촉 피해를 준다(근접·원거리형 공격 판정, 돌진형 충돌 판정이 공유한다).</summary>
         protected bool TryDealContactDamage(float rangeTolerance = 0.2f)
         {
@@ -346,7 +554,7 @@ namespace Daeume.Enemy
         {
             if (Mathf.Approximately(horizontalDelta, 0f)) return;
             FacingDirection = Mathf.Sign(horizontalDelta);
-            if (bodyRenderer != null) bodyRenderer.flipX = FacingDirection < 0f;
+            if (bodyRenderer != null) bodyRenderer.flipX = FacingDirection > 0f;
         }
 
         protected void SetTelegraph(bool value)

@@ -13,13 +13,15 @@ GameObject:
   - component: {fileID: 2007084600865699998}
   - component: {fileID: 4748520264833140839}
   - component: {fileID: 7335344593299841124}
+  - component: {fileID: 2081515219084469999}
+  - component: {fileID: 1851503107830675840}
   m_Layer: 0
   m_Name: Stage01_Trauma
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &7829907258734453
 Transform:
   m_ObjectHideFlags: 0
@@ -70,8 +72,8 @@ CircleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0.8}
-  m_Radius: 0.65
+  m_Offset: {x: 0, y: 1}
+  m_Radius: 1
 --- !u!50 &2007084600865699998
 Rigidbody2D:
   serializedVersion: 5
@@ -123,6 +125,45 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba173a03b23512040b84ce6e68a3823c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Daeume.ContaminationRuntime::Daeume.ContaminationRuntime.TraumaChaseActor
+--- !u!95 &2081515219084469999
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5599073853292540476}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: d438dd559769ff44e8acb2af8d0c70be, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &1851503107830675840
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5599073853292540476}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b18b4989d76d25145b3e3dbd43d9c635, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Daeume.ContaminationRuntime::Daeume.ContaminationRuntime.TraumaAnimationDriver
+  animator: {fileID: 0}
+  actor: {fileID: 0}
+  spriteRenderer: {fileID: 3870197452899508559}
+  chaseSignalHoldSeconds: 0.15
+  attackHoldSeconds: 0.4
 --- !u!1 &7202050056739665674
 GameObject:
   m_ObjectHideFlags: 0
@@ -133,6 +174,9 @@ GameObject:
   m_Component:
   - component: {fileID: 8556296475785621100}
   - component: {fileID: 3870197452899508559}
+  - component: {fileID: 3607764861741376097}
+  - component: {fileID: 7648050724478289691}
+  - component: {fileID: 6366948025765772838}
   m_Layer: 0
   m_Name: Visual
   m_TagString: Untagged
@@ -149,8 +193,8 @@ Transform:
   m_GameObject: {fileID: 7202050056739665674}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.8, z: 0}
-  m_LocalScale: {x: 1.5, y: 2.6, z: 1}
+  m_LocalPosition: {x: 0, y: -0.109375, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 7829907258734453}
@@ -181,7 +225,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 418749e7997a1244d8b25e3f4c6bee3f, type: 2}
+  - {fileID: 2100000, guid: 1662cb165095a8647bda7dc91244c667, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -200,11 +244,11 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: 1005
+  m_SortingLayer: 5
   m_SortingOrder: 20
   m_MaskInteraction: 0
-  m_Sprite: {fileID: -2919469710021749664, guid: 5576e6b4b40375a4b911a110a9858c6f, type: 2}
+  m_Sprite: {fileID: 21300000, guid: 0a4d507f6bac94f4cbf38db9fa3da767, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -215,3 +259,159 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
   m_BlendShapeWeights: []
+--- !u!114 &3607764861741376097
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7202050056739665674}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c48d52fb9a54201aefcd6f42f9b8d85, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Daeume.ContaminationRuntime::Daeume.ContaminationRuntime.TraumaAppearancePulse
+  target: {fileID: 3870197452899508559}
+  peakColor: {r: 1.7, g: 1.6, b: 1, a: 1}
+  cycleSeconds: 1.3
+  durationSeconds: 1.3
+--- !u!114 &7648050724478289691
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7202050056739665674}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5e69469e1f754a8fab887082c6f7ad0d, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Daeume.ContaminationRuntime::Daeume.ContaminationRuntime.TraumaRevealVisual
+  animator: {fileID: 2081515219084469999}
+  target: {fileID: 3870197452899508559}
+  characterSprite: {fileID: -1275403624107121422, guid: 1874179890d67d24ea3bfbcb24285214, type: 3}
+  pulse: {fileID: 3607764861741376097}
+--- !u!114 &6366948025765772838
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7202050056739665674}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7db70e0ea77f5ac47a8f4565a9406397, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.RenderPipelines.Universal.2D.Runtime::UnityEngine.Rendering.Universal.ShadowCaster2D
+  m_ShadowGroup: 0
+  m_Priority: 0
+  m_ComponentVersion: 6
+  m_HasRenderer: 0
+  m_UseRendererSilhouette: 0
+  m_CastsShadows: 0
+  m_SelfShadows: 0
+  m_AlphaCutoff: 0.1
+  m_ApplyToSortingLayers: 00000000e9030000ea030000eb030000ec030000ed030000ee030000ef030000f0030000
+  m_ShapePath:
+  - {x: -1.296875, y: -0.14062557, z: 0}
+  - {x: -1.296875, y: 4.3437495, z: 0}
+  - {x: 1.375, y: 4.3437495, z: 0}
+  - {x: 1.375, y: -0.14062557, z: 0}
+  m_ShapePathHash: 0
+  m_InstanceId: 0
+  m_ShadowShape2DComponent: {fileID: 3870197452899508559}
+  m_ShadowShape2DProvider:
+    rid: 2227428607761580192
+  m_ShadowCastingSource: 2
+  m_ShadowMesh:
+    rid: 2227428607761580193
+  m_CastingOption: 1
+  m_PreviousTrimEdge: 0
+  m_PreviousEdgeProcessing: -1
+  m_PreviousShadowCastingSource: -1
+  m_PreviousShadowShape2DSource: {fileID: 0}
+  m_SelectionSources:
+    rid: 2227428607761580194
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 2227428607761580192
+      type: {class: ShadowShape2DProvider_SpriteRenderer, ns: UnityEngine.Rendering.Universal, asm: Unity.RenderPipelines.Universal.2D.Runtime}
+      data: 
+    - rid: 2227428607761580193
+      type: {class: ShadowMesh2D, ns: UnityEngine.Rendering.Universal, asm: Unity.RenderPipelines.Universal.2D.Runtime}
+      data:
+        m_Vertices:
+        - position: {x: 1.2749939, y: 4.2437286, z: 0}
+          tangent: {x: -1, y: 0, z: -1.1968536, w: 4.2437286}
+        - position: {x: -1.1968536, y: 4.2437286, z: 0}
+          tangent: {x: -1, y: 0, z: -1.1968536, w: -0.040618896}
+        - position: {x: -1.1968536, y: -0.040618896, z: 0}
+          tangent: {x: -1, y: 0, z: 1.2749939, w: -0.040618896}
+        - position: {x: 1.2749939, y: -0.040618896, z: 0}
+          tangent: {x: -1, y: 0, z: 1.2749939, w: 4.2437286}
+        - position: {x: 1.2749939, y: 4.2437286, z: 0}
+          tangent: {x: 0, y: 0, z: -1.1968536, w: 4.2437286}
+        - position: {x: -1.1968536, y: 4.2437286, z: 0}
+          tangent: {x: 0, y: 0, z: 1.2749939, w: 4.2437286}
+        - position: {x: 1.2749939, y: 4.2437286, z: 0}
+          tangent: {x: 1, y: 0, z: -1.1968536, w: 4.2437286}
+        - position: {x: 1.2749939, y: 4.2437286, z: 0}
+          tangent: {x: 3, y: 0, z: -1.1968536, w: 4.2437286}
+        - position: {x: -1.1968536, y: 4.2437286, z: 0}
+          tangent: {x: 0, y: 0, z: -1.1968536, w: -0.040618896}
+        - position: {x: -1.1968536, y: -0.040618896, z: 0}
+          tangent: {x: 0, y: 0, z: -1.1968536, w: 4.2437286}
+        - position: {x: -1.1968536, y: 4.2437286, z: 0}
+          tangent: {x: 1, y: 0, z: -1.1968536, w: -0.040618896}
+        - position: {x: -1.1968536, y: 4.2437286, z: 0}
+          tangent: {x: 3, y: 0, z: -1.1968536, w: -0.040618896}
+        - position: {x: -1.1968536, y: -0.040618896, z: 0}
+          tangent: {x: 0, y: 0, z: 1.2749939, w: -0.040618896}
+        - position: {x: 1.2749939, y: -0.040618896, z: 0}
+          tangent: {x: 0, y: 0, z: -1.1968536, w: -0.040618896}
+        - position: {x: -1.1968536, y: -0.040618896, z: 0}
+          tangent: {x: 1, y: 0, z: 1.2749939, w: -0.040618896}
+        - position: {x: -1.1968536, y: -0.040618896, z: 0}
+          tangent: {x: 3, y: 0, z: 1.2749939, w: -0.040618896}
+        - position: {x: 1.2749939, y: -0.040618896, z: 0}
+          tangent: {x: 0, y: 0, z: 1.2749939, w: 4.2437286}
+        - position: {x: 1.2749939, y: 4.2437286, z: 0}
+          tangent: {x: 0, y: 0, z: 1.2749939, w: -0.040618896}
+        - position: {x: 1.2749939, y: -0.040618896, z: 0}
+          tangent: {x: 1, y: 0, z: 1.2749939, w: 4.2437286}
+        - position: {x: 1.2749939, y: -0.040618896, z: 0}
+          tangent: {x: 3, y: 0, z: 1.2749939, w: 4.2437286}
+        m_Indices: 000000000400000005000000050000000100000000000000010000000800000009000000090000000200000001000000020000000c0000000d0000000d0000000300000002000000030000001000000011000000110000000000000003000000000000000600000007000000010000000a0000000b000000020000000e0000000f000000030000001200000013000000
+        m_LocalBounds:
+          m_Center: {x: 0.03907013, y: 2.1015549, z: 0}
+          m_Extent: {x: 1.2359238, y: 2.1421738, z: 0}
+        m_EdgeProcessing: 1
+        m_TrimEdge: 0.1
+        m_FlipX: 0
+        m_FlipY: 0
+        m_InitialTrim: 0.1
+    - rid: 2227428607761580194
+      type: {class: Shadow2DProviderSources, ns: UnityEngine.Rendering.Universal, asm: Unity.RenderPipelines.Universal.2D.Runtime}
+      data:
+        m_SelectedHashCode: 0
+        m_SelectedSource:
+          rid: -2
+        m_Provider2DCache:
+          rid: 3406140276556169316
+    - rid: 3406140276556169316
+      type: {class: 'Provider2DCache`1[[UnityEngine.Rendering.Universal.ShadowShape2DProvider, Unity.RenderPipelines.Universal.2D.Runtime]]', ns: UnityEngine.Rendering.Universal, asm: Unity.RenderPipelines.Universal.2D.Runtime}
+      data:
+        m_Cache:
+        - m_Key:
+            m_TypeName: ShadowShape2DProvider_SpriteRenderer
+            m_Component: {fileID: 3870197452899508559}
+            m_UsesComponent: 1
+          m_Value:
+            m_Provider:
+              rid: 3406140276556169317
+    - rid: 3406140276556169317
+      type: {class: ShadowShape2DProvider_SpriteRenderer, ns: UnityEngine.Rendering.Universal, asm: Unity.RenderPipelines.Universal.2D.Runtime}
+      data: 

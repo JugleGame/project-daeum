@@ -1,0 +1,646 @@
+{
+  "source_size": [
+    1662,
+    946
+  ],
+  "detected_layout": [
+    8,
+    4
+  ],
+  "tile_count": 32,
+  "seam_check": {
+    "method": "3x3 repeat",
+    "base_tile_indices": [
+      1,
+      9,
+      17,
+      25
+    ],
+    "image": "stage01-seam-check-3x3.png"
+  },
+  "checks": [
+    {
+      "path": "01-asphalt-base.png",
+      "size": [
+        16,
+        16
+      ],
+      "expected_size": [
+        16,
+        16
+      ],
+      "size_ok": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "binary_alpha_ok": true,
+      "palette_ok": true,
+      "green_opaque_pixels": 0
+    },
+    {
+      "path": "02-asphalt-aggregate.png",
+      "size": [
+        16,
+        16
+      ],
+      "expected_size": [
+        16,
+        16
+      ],
+      "size_ok": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "binary_alpha_ok": true,
+      "palette_ok": true,
+      "green_opaque_pixels": 0
+    },
+    {
+      "path": "03-asphalt-crack-fine.png",
+      "size": [
+        16,
+        16
+      ],
+      "expected_size": [
+        16,
+        16
+      ],
+      "size_ok": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "binary_alpha_ok": true,
+      "palette_ok": true,
+      "green_opaque_pixels": 0
+    },
+    {
+      "path": "04-asphalt-crack-branch.png",
+      "size": [
+        16,
+        16
+      ],
+      "expected_size": [
+        16,
+        16
+      ],
+      "size_ok": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "binary_alpha_ok": true,
+      "palette_ok": true,
+      "green_opaque_pixels": 0
+    },
+    {
+      "path": "05-asphalt-repair.png",
+      "size": [
+        16,
+        16
+      ],
+      "expected_size": [
+        16,
+        16
+      ],
+      "size_ok": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "binary_alpha_ok": true,
+      "palette_ok": true,
+      "green_opaque_pixels": 0
+    },
+    {
+      "path": "06-asphalt-repair-worn.png",
+      "size": [
+        16,
+        16
+      ],
+      "expected_size": [
+        16,
+        16
+      ],
+      "size_ok": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "binary_alpha_ok": true,
+      "palette_ok": true,
+      "green_opaque_pixels": 0
+    },
+    {
+      "path": "07-asphalt-line-short.png",
+      "size": [
+        16,
+        16
+      ],
+      "expected_size": [
+        16,
+        16
+      ],
+      "size_ok": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "binary_alpha_ok": true,
+      "palette_ok": true,
+      "green_opaque_pixels": 0
+    },
+    {
+      "path": "08-asphalt-line-long.png",
+      "size": [
+        16,
+        16
+      ],
+      "expected_size": [
+        16,
+        16
+      ],
+      "size_ok": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "binary_alpha_ok": true,
+      "palette_ok": true,
+      "green_opaque_pixels": 0
+    },
+    {
+      "path": "09-sidewalk-base.png",
+      "size": [
+        16,
+        16
+      ],
+      "expected_size": [
+        16,
+        16
+      ],
+      "size_ok": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "binary_alpha_ok": true,
+      "palette_ok": true,
+      "green_opaque_pixels": 0
+    },
+    {
+      "path": "10-sidewalk-variant.png",
+      "size": [
+        16,
+        16
+      ],
+      "expected_size": [
+        16,
+        16
+      ],
+      "size_ok": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "binary_alpha_ok": true,
+      "palette_ok": true,
+      "green_opaque_pixels": 0
+    },
+    {
+      "path": "11-sidewalk-joint.png",
+      "size": [
+        16,
+        16
+      ],
+      "expected_size": [
+        16,
+        16
+      ],
+      "size_ok": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "binary_alpha_ok": true,
+      "palette_ok": true,
+      "green_opaque_pixels": 0
+    },
+    {
+      "path": "12-sidewalk-double-joint.png",
+      "size": [
+        16,
+        16
+      ],
+      "expected_size": [
+        16,
+        16
+      ],
+      "size_ok": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "binary_alpha_ok": true,
+      "palette_ok": true,
+      "green_opaque_pixels": 0
+    },
+    {
+      "path": "13-sidewalk-crack.png",
+      "size": [
+        16,
+        16
+      ],
+      "expected_size": [
+        16,
+        16
+      ],
+      "size_ok": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "binary_alpha_ok": true,
+      "palette_ok": true,
+      "green_opaque_pixels": 0
+    },
+    {
+      "path": "14-sidewalk-broken.png",
+      "size": [
+        16,
+        16
+      ],
+      "expected_size": [
+        16,
+        16
+      ],
+      "size_ok": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "binary_alpha_ok": true,
+      "palette_ok": true,
+      "green_opaque_pixels": 0
+    },
+    {
+      "path": "15-sidewalk-drain-small.png",
+      "size": [
+        16,
+        16
+      ],
+      "expected_size": [
+        16,
+        16
+      ],
+      "size_ok": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "binary_alpha_ok": true,
+      "palette_ok": true,
+      "green_opaque_pixels": 0
+    },
+    {
+      "path": "16-sidewalk-drain-wide.png",
+      "size": [
+        16,
+        16
+      ],
+      "expected_size": [
+        16,
+        16
+      ],
+      "size_ok": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "binary_alpha_ok": true,
+      "palette_ok": true,
+      "green_opaque_pixels": 0
+    },
+    {
+      "path": "17-curb-base.png",
+      "size": [
+        16,
+        16
+      ],
+      "expected_size": [
+        16,
+        16
+      ],
+      "size_ok": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "binary_alpha_ok": true,
+      "palette_ok": true,
+      "green_opaque_pixels": 0
+    },
+    {
+      "path": "18-curb-top-highlight.png",
+      "size": [
+        16,
+        16
+      ],
+      "expected_size": [
+        16,
+        16
+      ],
+      "size_ok": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "binary_alpha_ok": true,
+      "palette_ok": true,
+      "green_opaque_pixels": 0
+    },
+    {
+      "path": "19-curb-front-dark.png",
+      "size": [
+        16,
+        16
+      ],
+      "expected_size": [
+        16,
+        16
+      ],
+      "size_ok": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "binary_alpha_ok": true,
+      "palette_ok": true,
+      "green_opaque_pixels": 0
+    },
+    {
+      "path": "20-curb-broken.png",
+      "size": [
+        16,
+        16
+      ],
+      "expected_size": [
+        16,
+        16
+      ],
+      "size_ok": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "binary_alpha_ok": true,
+      "palette_ok": true,
+      "green_opaque_pixels": 0
+    },
+    {
+      "path": "21-curb-left-end.png",
+      "size": [
+        16,
+        16
+      ],
+      "expected_size": [
+        16,
+        16
+      ],
+      "size_ok": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "binary_alpha_ok": true,
+      "palette_ok": true,
+      "green_opaque_pixels": 0
+    },
+    {
+      "path": "22-curb-right-end.png",
+      "size": [
+        16,
+        16
+      ],
+      "expected_size": [
+        16,
+        16
+      ],
+      "size_ok": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "binary_alpha_ok": true,
+      "palette_ok": true,
+      "green_opaque_pixels": 0
+    },
+    {
+      "path": "23-curb-ramp-left.png",
+      "size": [
+        16,
+        16
+      ],
+      "expected_size": [
+        16,
+        16
+      ],
+      "size_ok": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "binary_alpha_ok": true,
+      "palette_ok": true,
+      "green_opaque_pixels": 0
+    },
+    {
+      "path": "24-curb-ramp-right.png",
+      "size": [
+        16,
+        16
+      ],
+      "expected_size": [
+        16,
+        16
+      ],
+      "size_ok": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "binary_alpha_ok": true,
+      "palette_ok": true,
+      "green_opaque_pixels": 0
+    },
+    {
+      "path": "25-wall-center.png",
+      "size": [
+        16,
+        16
+      ],
+      "expected_size": [
+        16,
+        16
+      ],
+      "size_ok": true,
+      "alpha_values": [
+        255
+      ],
+      "binary_alpha_ok": true,
+      "palette_ok": true,
+      "green_opaque_pixels": 0
+    },
+    {
+      "path": "26-wall-center-variant.png",
+      "size": [
+        16,
+        16
+      ],
+      "expected_size": [
+        16,
+        16
+      ],
+      "size_ok": true,
+      "alpha_values": [
+        255
+      ],
+      "binary_alpha_ok": true,
+      "palette_ok": true,
+      "green_opaque_pixels": 0
+    },
+    {
+      "path": "27-wall-top.png",
+      "size": [
+        16,
+        16
+      ],
+      "expected_size": [
+        16,
+        16
+      ],
+      "size_ok": true,
+      "alpha_values": [
+        255
+      ],
+      "binary_alpha_ok": true,
+      "palette_ok": true,
+      "green_opaque_pixels": 0
+    },
+    {
+      "path": "28-wall-bottom.png",
+      "size": [
+        16,
+        16
+      ],
+      "expected_size": [
+        16,
+        16
+      ],
+      "size_ok": true,
+      "alpha_values": [
+        255
+      ],
+      "binary_alpha_ok": true,
+      "palette_ok": true,
+      "green_opaque_pixels": 0
+    },
+    {
+      "path": "29-wall-left-end.png",
+      "size": [
+        16,
+        16
+      ],
+      "expected_size": [
+        16,
+        16
+      ],
+      "size_ok": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "binary_alpha_ok": true,
+      "palette_ok": true,
+      "green_opaque_pixels": 0
+    },
+    {
+      "path": "30-wall-right-end.png",
+      "size": [
+        16,
+        16
+      ],
+      "expected_size": [
+        16,
+        16
+      ],
+      "size_ok": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "binary_alpha_ok": true,
+      "palette_ok": true,
+      "green_opaque_pixels": 0
+    },
+    {
+      "path": "31-wall-joint.png",
+      "size": [
+        16,
+        16
+      ],
+      "expected_size": [
+        16,
+        16
+      ],
+      "size_ok": true,
+      "alpha_values": [
+        255
+      ],
+      "binary_alpha_ok": true,
+      "palette_ok": true,
+      "green_opaque_pixels": 0
+    },
+    {
+      "path": "32-wall-broken.png",
+      "size": [
+        16,
+        16
+      ],
+      "expected_size": [
+        16,
+        16
+      ],
+      "size_ok": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "binary_alpha_ok": true,
+      "palette_ok": true,
+      "green_opaque_pixels": 0
+    },
+    {
+      "path": "stage01-tileset-128x64.png",
+      "size": [
+        128,
+        64
+      ],
+      "expected_size": [
+        128,
+        64
+      ],
+      "size_ok": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "binary_alpha_ok": true,
+      "palette_ok": true,
+      "green_opaque_pixels": 0
+    }
+  ],
+  "all_passed": true
+}

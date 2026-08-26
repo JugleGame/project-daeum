@@ -42,6 +42,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7825254992236037219}
   - component: {fileID: 6786194504420436091}
+  - component: {fileID: 3527140065633862237}
   m_Layer: 0
   m_Name: Visual
   m_TagString: Untagged
@@ -58,8 +59,8 @@ Transform:
   m_GameObject: {fileID: 3336365217334870839}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.5, y: 1, z: 1}
+  m_LocalPosition: {x: 0, y: -0.75, z: 0}
+  m_LocalScale: {x: 2, y: 2, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8379081958627077374}
@@ -90,7 +91,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 418749e7997a1244d8b25e3f4c6bee3f, type: 2}
+  - {fileID: 2100000, guid: 1662cb165095a8647bda7dc91244c667, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -113,7 +114,7 @@ SpriteRenderer:
   m_SortingLayer: 5
   m_SortingOrder: 10
   m_MaskInteraction: 0
-  m_Sprite: {fileID: -2919469710021749664, guid: 5576e6b4b40375a4b911a110a9858c6f, type: 2}
+  m_Sprite: {fileID: 21300000, guid: 1874179890d67d24ea3bfbcb24285214, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -124,6 +125,116 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
   m_BlendShapeWeights: []
+--- !u!114 &3527140065633862237
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3336365217334870839}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7db70e0ea77f5ac47a8f4565a9406397, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.RenderPipelines.Universal.2D.Runtime::UnityEngine.Rendering.Universal.ShadowCaster2D
+  m_ShadowGroup: 0
+  m_Priority: 0
+  m_ComponentVersion: 6
+  m_HasRenderer: 0
+  m_UseRendererSilhouette: 0
+  m_CastsShadows: 0
+  m_SelfShadows: 0
+  m_AlphaCutoff: 0.1
+  m_ApplyToSortingLayers: 00000000e9030000ea030000eb030000ec030000ed030000ee030000ef030000f0030000
+  m_ShapePath:
+  - {x: -0.5, y: 0, z: 0}
+  - {x: -0.5, y: 1, z: 0}
+  - {x: 0.5, y: 1, z: 0}
+  - {x: 0.5, y: 0, z: 0}
+  m_ShapePathHash: 0
+  m_InstanceId: 0
+  m_ShadowShape2DComponent: {fileID: 6786194504420436091}
+  m_ShadowShape2DProvider:
+    rid: 2227428607761580186
+  m_ShadowCastingSource: 2
+  m_ShadowMesh:
+    rid: 2227428607761580187
+  m_CastingOption: 1
+  m_PreviousTrimEdge: 0
+  m_PreviousEdgeProcessing: -1
+  m_PreviousShadowCastingSource: -1
+  m_PreviousShadowShape2DSource: {fileID: 0}
+  m_SelectionSources:
+    rid: 2227428607761580188
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 2227428607761580186
+      type: {class: ShadowShape2DProvider_SpriteRenderer, ns: UnityEngine.Rendering.Universal, asm: Unity.RenderPipelines.Universal.2D.Runtime}
+      data: 
+    - rid: 2227428607761580187
+      type: {class: ShadowMesh2D, ns: UnityEngine.Rendering.Universal, asm: Unity.RenderPipelines.Universal.2D.Runtime}
+      data:
+        m_Vertices:
+        - position: {x: 0.3999939, y: 0.8999939, z: 0}
+          tangent: {x: -1, y: 0, z: -0.3999939, w: 0.8999939}
+        - position: {x: -0.3999939, y: 0.8999939, z: 0}
+          tangent: {x: -1, y: 0, z: -0.3999939, w: 0.1000061}
+        - position: {x: -0.3999939, y: 0.1000061, z: 0}
+          tangent: {x: -1, y: 0, z: 0.3999939, w: 0.1000061}
+        - position: {x: 0.3999939, y: 0.1000061, z: 0}
+          tangent: {x: -1, y: 0, z: 0.3999939, w: 0.8999939}
+        - position: {x: 0.3999939, y: 0.8999939, z: 0}
+          tangent: {x: 0, y: 0, z: -0.3999939, w: 0.8999939}
+        - position: {x: -0.3999939, y: 0.8999939, z: 0}
+          tangent: {x: 0, y: 0, z: 0.3999939, w: 0.8999939}
+        - position: {x: 0.3999939, y: 0.8999939, z: 0}
+          tangent: {x: 1, y: 0, z: -0.3999939, w: 0.8999939}
+        - position: {x: 0.3999939, y: 0.8999939, z: 0}
+          tangent: {x: 3, y: 0, z: -0.3999939, w: 0.8999939}
+        - position: {x: -0.3999939, y: 0.8999939, z: 0}
+          tangent: {x: 0, y: 0, z: -0.3999939, w: 0.1000061}
+        - position: {x: -0.3999939, y: 0.1000061, z: 0}
+          tangent: {x: 0, y: 0, z: -0.3999939, w: 0.8999939}
+        - position: {x: -0.3999939, y: 0.8999939, z: 0}
+          tangent: {x: 1, y: 0, z: -0.3999939, w: 0.1000061}
+        - position: {x: -0.3999939, y: 0.8999939, z: 0}
+          tangent: {x: 3, y: 0, z: -0.3999939, w: 0.1000061}
+        - position: {x: -0.3999939, y: 0.1000061, z: 0}
+          tangent: {x: 0, y: 0, z: 0.3999939, w: 0.1000061}
+        - position: {x: 0.3999939, y: 0.1000061, z: 0}
+          tangent: {x: 0, y: 0, z: -0.3999939, w: 0.1000061}
+        - position: {x: -0.3999939, y: 0.1000061, z: 0}
+          tangent: {x: 1, y: 0, z: 0.3999939, w: 0.1000061}
+        - position: {x: -0.3999939, y: 0.1000061, z: 0}
+          tangent: {x: 3, y: 0, z: 0.3999939, w: 0.1000061}
+        - position: {x: 0.3999939, y: 0.1000061, z: 0}
+          tangent: {x: 0, y: 0, z: 0.3999939, w: 0.8999939}
+        - position: {x: 0.3999939, y: 0.8999939, z: 0}
+          tangent: {x: 0, y: 0, z: 0.3999939, w: 0.1000061}
+        - position: {x: 0.3999939, y: 0.1000061, z: 0}
+          tangent: {x: 1, y: 0, z: 0.3999939, w: 0.8999939}
+        - position: {x: 0.3999939, y: 0.1000061, z: 0}
+          tangent: {x: 3, y: 0, z: 0.3999939, w: 0.8999939}
+        m_Indices: 000000000400000005000000050000000100000000000000010000000800000009000000090000000200000001000000020000000c0000000d0000000d0000000300000002000000030000001000000011000000110000000000000003000000000000000600000007000000010000000a0000000b000000020000000e0000000f000000030000001200000013000000
+        m_LocalBounds:
+          m_Center: {x: 0, y: 0.5, z: 0}
+          m_Extent: {x: 0.3999939, y: 0.3999939, z: 0}
+        m_EdgeProcessing: 1
+        m_TrimEdge: 0.1
+        m_FlipX: 0
+        m_FlipY: 0
+        m_InitialTrim: 0.1
+    - rid: 2227428607761580188
+      type: {class: Shadow2DProviderSources, ns: UnityEngine.Rendering.Universal, asm: Unity.RenderPipelines.Universal.2D.Runtime}
+      data:
+        m_SelectedHashCode: 0
+        m_SelectedSource:
+          rid: -2
+        m_Provider2DCache:
+          rid: -2
 --- !u!1 &5868388535329833457
 GameObject:
   m_ObjectHideFlags: 0
@@ -264,6 +375,8 @@ GameObject:
   - component: {fileID: 7981659459401930856}
   - component: {fileID: 7745639166333629014}
   - component: {fileID: 5891524950247702130}
+  - component: {fileID: 6153722749260724298}
+  - component: {fileID: 2634686083183597743}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -380,8 +493,8 @@ CapsuleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_Size: {x: 0.5, y: 1}
+  m_Offset: {x: 0, y: 0.18}
+  m_Size: {x: 0.5, y: 1.25}
   m_Direction: 0
 --- !u!114 &2534862086244471228
 MonoBehaviour:
@@ -399,7 +512,7 @@ MonoBehaviour:
   jumpAction: {fileID: 0}
   grabAction: {fileID: 0}
   moveSpeed: 5
-  jumpVelocity: 8
+  jumpVelocity: 4.5
   airControl: 0.75
   grabHoldSeconds: 1.5
   groundProbe: {fileID: 6574249883668948628}
@@ -408,7 +521,6 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4294967295
   visualRenderer: {fileID: 6786194504420436091}
-  grabbingColor: {r: 0.6, g: 0.85, b: 1, a: 1}
 --- !u!114 &7740418390996157410
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -446,6 +558,8 @@ MonoBehaviour:
   encounterId: Stage01_Encounter01
   swipeVisual: {fileID: 8439278157655228766}
   swipeVisibleSeconds: 0.12
+  attackLockSeconds: 0.67
+  attackWindupSeconds: 0.25
 --- !u!114 &7745639166333629014
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -479,3 +593,43 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4294967295
   facingDirection: 1
+--- !u!95 &6153722749260724298
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8819981631482507481}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: e81b3477c997a7a42b8243868719bfa8, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &2634686083183597743
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8819981631482507481}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0e8d0ad038c3a744e8b8db503b271b7a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Daeume.Player::Daeume.Player.PlayerAnimationDriver
+  animator: {fileID: 0}
+  controller: {fileID: 0}
+  combat: {fileID: 0}
+  health: {fileID: 0}
+  attackHoldSeconds: 0.67
+  damagedHoldSeconds: 0.18

@@ -70,7 +70,7 @@ namespace Daeume.Audio
 
             if (stingerSource != null && monsterStingerClip != null)
             {
-                stingerSource.PlayOneShot(monsterStingerClip);
+                stingerSource.PlayOneShot(monsterStingerClip, AudioRuntime.SfxVolume);
             }
             Publish(MemoryToChaseCueStep.MonsterStinger);
 

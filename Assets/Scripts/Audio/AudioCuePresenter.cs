@@ -29,17 +29,33 @@ namespace Daeume.Audio
         [SerializeField] private AudioClip clearedClip;
 
         private bool encounterActive;
+        private float baseVolume = 1f;
 
         public AudioCueId? CurrentCue { get; private set; }
 
         private void Awake()
         {
             if (musicSource == null) musicSource = GetComponent<AudioSource>();
+            if (musicSource != null) baseVolume = musicSource.volume;
         }
 
-        private void OnEnable() => Connect();
+        private void OnEnable()
+        {
+            Connect();
+            AudioRuntime.VolumeChanged += ApplyVolume;
+            ApplyVolume();
+        }
         private void Start() => Connect();
-        private void OnDisable() => Disconnect();
+        private void OnDisable()
+        {
+            Disconnect();
+            AudioRuntime.VolumeChanged -= ApplyVolume;
+        }
+
+        private void ApplyVolume()
+        {
+            if (musicSource != null) musicSource.volume = baseVolume * AudioRuntime.BgmVolume;
+        }
 
         private void Connect()
         {

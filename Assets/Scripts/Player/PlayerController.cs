@@ -30,16 +30,17 @@ namespace Daeume.Player
         [SerializeField] private InputActionReference jumpAction;
         [SerializeField] private InputActionReference grabAction;
         [SerializeField, Min(0f)] private float moveSpeed = 5f;
-        [SerializeField, Min(0f)] private float jumpVelocity = 8f;
+        [SerializeField, Min(0.05f)] private float footstepInterval = 0.36f;
+        [SerializeField, Min(0f)] private float jumpVelocity = 4.5f;
         [SerializeField, Range(0f, 1f)] private float airControl = 0.75f;   // 공중에서의 조작 비율(1이면 지상과 동일)
         [SerializeField, Min(0.01f)] private float grabHoldSeconds = 1.5f;  // spec-002의 GrabHoldSeconds
         [SerializeField] private Transform groundProbe;                     // 발밑 검사 위치(자식 오브젝트)
         [SerializeField, Min(0.01f)] private float groundProbeRadius = 0.08f;
         [SerializeField] private LayerMask groundMask = ~0;                 // 어떤 레이어를 "땅"으로 볼지
-        [SerializeField] private SpriteRenderer visualRenderer;             // 매달린 상태를 색으로 보여 줄 스프라이트
-        [SerializeField] private Color grabbingColor = new(0.6f, 0.85f, 1f, 1f);
+        [SerializeField] private SpriteRenderer visualRenderer;             // 바라보는 방향을 뒤집을 스프라이트
 
         private Rigidbody2D body;
+        private PlayerCombat combat;
         private InputAction move;
         private InputAction jump;
         private InputAction grab;
@@ -48,11 +49,15 @@ namespace Daeume.Player
         private float grabRemaining;              // 남은 매달리기 시간
         private bool grounded;
         private float defaultGravityScale = 1f;   // 붙잡기 해제 시 되돌릴 원래 중력 배율
-        private Color defaultVisualColor = Color.white;
+        private float nextFootstepTime;
 
         public bool IsGrounded => grounded;
         public bool IsGrabbing { get; private set; }
+
+        /// <summary>몸통 스프라이트. 피격 점멸처럼 색을 건드리는 연출이 함께 쓴다.</summary>
+        public SpriteRenderer VisualRenderer => visualRenderer;
         public float GrabHoldSeconds => grabHoldSeconds;
+        public float HorizontalInput => moveInput.x;
         public float FacingDirection { get; private set; } = 1f;  // 1=오른쪽, -1=왼쪽. 상호작용 대상 선택에도 쓰인다.
 
         /// <summary>연출 중 조작을 잠글 때 사용한다(붙잡히는 연출, 회상 재생 등).</summary>
@@ -61,12 +66,13 @@ namespace Daeume.Player
         private void Awake()
         {
             body = GetComponent<Rigidbody2D>();
+            combat = GetComponentInChildren<PlayerCombat>(true);
+            if (visualRenderer == null) visualRenderer = GetComponentInChildren<SpriteRenderer>();
 
             // 수정: 예전에는 붙잡기 해제 시 중력 배율을 1로 "고정 대입"했다.
             // 프리팹이 중력 배율을 1이 아닌 값(예: 3)으로 쓰면 붙잡기 한 번에 낙하 감각이 영구히 바뀌는 버그가 된다.
             // 그래서 시작 시점의 값을 기억해 두고 해제 때 그 값으로 되돌린다.
             defaultGravityScale = body.gravityScale;
-            if (visualRenderer != null) defaultVisualColor = visualRenderer.color;
 
             // 인스펙터에서 액션을 직접 지정하지 않았으면 PlayerInput이 들고 있는 액션 맵에서 이름으로 찾는다.
             // 둘 다 지원하므로 테스트에서는 액션을 주입하고, 실제 씬에서는 PlayerInput을 쓰는 식으로 유연하다.
@@ -113,8 +119,6 @@ namespace Daeume.Player
         /// 역할 간 의존이 늘어난다. 대신 플레이어가 "상태 변경 소식"만 듣고 스스로 잠그게 했다.
         /// 덕분에 회상뿐 아니라 나중에 다른 연출이 Memory 상태를 써도 같은 규칙이 자동 적용된다.
         ///
-        /// 붙잡히는 연출(TraumaContactHandler)도 InputEnabled를 쓰지만, 그쪽은 Failed 상태로 넘어가며
-        /// 자체적으로 다시 켜 주므로 이 처리와 충돌하지 않는다.
         /// </remarks>
         private void OnStageStateChanged(StageStateChanged message)
         {
@@ -172,7 +176,22 @@ namespace Daeume.Player
                 return;
             }
 
+            if (combat != null && combat.IsAttacking)
+            {
+                // 공격 동작이 끝날 때까지 제자리에 선다. 달리면서 공격하면 다리가 멈춘 공격 자세로
+                // 미끄러져 애니메이션이 고장 난 것처럼 보였다.
+                // y는 여기서도 건드리지 않는다. 공중에서 공격해도 중력은 그대로 작동해야 한다.
+                body.linearVelocity = new Vector2(0f, body.linearVelocity.y);
+                return;
+            }
+
             var control = grounded ? 1f : airControl;
+            if (grounded && Mathf.Abs(moveInput.x) > 0.05f && Time.time >= nextFootstepTime)
+            {
+                AudioRuntime.PlaySfx("PlayerWalk");
+                nextFootstepTime = Time.time + footstepInterval;
+            }
+
             // y 속도는 건드리지 않는다. 중력이 만든 낙하 속도를 덮어쓰면 점프가 이상해진다.
             body.linearVelocity = new Vector2(moveInput.x * moveSpeed * control, body.linearVelocity.y);
         }
@@ -187,10 +206,24 @@ namespace Daeume.Player
         {
             // ClampMagnitude: 대각선 입력이 1보다 커져 더 빨라지는 현상을 막는다.
             moveInput = Vector2.ClampMagnitude(value, 1f);
+
+            // 공격 중과 매달린 동안에는 바라보는 방향을 고정한다.
+            //
+            // 공격: 제자리에 선 채로 스프라이트만 홱 돌면 이동을 막은 의미가 없다.
+            // 매달리기: 벽을 잡은 자세 그대로 좌우 입력만으로 몸이 뒤집혀 벽에 등을 대고
+            // 붙어 있는 그림이 됐다. 잡은 순간의 방향이 곧 벽 방향이므로 그대로 둔다.
+            //
+            // 입력 자체는 계속 기록한다. 동작이 끝나는 즉시 누르고 있던 방향으로 이어서 움직인다.
+            if (IsGrabbing || (combat != null && combat.IsAttacking))
+            {
+                return;
+            }
+
             if (!Mathf.Approximately(moveInput.x, 0f))
             {
                 // 입력이 0일 때는 방향을 유지한다. 멈춰 섰다고 정면이 바뀌면 상호작용 대상이 튄다.
                 FacingDirection = Mathf.Sign(moveInput.x);
+                if (visualRenderer != null) visualRenderer.flipX = FacingDirection < 0f;
             }
         }
 
@@ -206,6 +239,7 @@ namespace Daeume.Player
             {
                 ReleaseGrab();
                 body.linearVelocity = new Vector2(body.linearVelocity.x, jumpVelocity);
+                AudioRuntime.PlaySfx("PlayerJump");
                 return true;
             }
 
@@ -216,6 +250,7 @@ namespace Daeume.Player
             }
 
             body.linearVelocity = new Vector2(body.linearVelocity.x, jumpVelocity);
+            AudioRuntime.PlaySfx("PlayerJump");
             // 같은 프레임에 점프가 두 번 처리되는 것을 막기 위해 즉시 접지 상태를 내린다.
             grounded = false;
             return true;
@@ -234,9 +269,7 @@ namespace Daeume.Player
             body.gravityScale = 0f;        // 중력을 잠시 꺼서 그 자리에 머물게 한다.
             body.linearVelocity = Vector2.zero;
 
-            // 매달린 상태는 속도가 0이라 가만히 서 있는 것과 눈으로 구분이 안 됐다.
-            // 색을 바꿔 "지금 붙잡고 있다"를 바로 알 수 있게 한다.
-            if (visualRenderer != null) visualRenderer.color = grabbingColor;
+            // 매달린 상태는 전용 애니메이션이 알려 준다. 색을 덧칠하지 않는다.
             return true;
         }
 
@@ -263,7 +296,6 @@ namespace Daeume.Player
         {
             IsGrabbing = false;
             body.gravityScale = defaultGravityScale;
-            if (visualRenderer != null) visualRenderer.color = defaultVisualColor;
         }
 
         /// <summary>발밑에 땅이 있는지 검사한다.</summary>
@@ -282,6 +314,7 @@ namespace Daeume.Player
         private void RefreshGrounded()
         {
             var probePosition = groundProbe == null ? transform.position : groundProbe.position;
+            var wasGrounded = grounded;
             grounded = false;
             foreach (var overlap in Physics2D.OverlapCircleAll(probePosition, groundProbeRadius, groundMask))
             {
@@ -290,6 +323,11 @@ namespace Daeume.Player
                     grounded = true;
                     break;
                 }
+            }
+
+            if (!wasGrounded && grounded && body.linearVelocity.y <= 0f)
+            {
+                AudioRuntime.PlaySfx("PlayerLand");
             }
         }
 
