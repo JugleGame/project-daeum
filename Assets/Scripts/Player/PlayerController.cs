@@ -117,8 +117,6 @@ namespace Daeume.Player
         /// 역할 간 의존이 늘어난다. 대신 플레이어가 "상태 변경 소식"만 듣고 스스로 잠그게 했다.
         /// 덕분에 회상뿐 아니라 나중에 다른 연출이 Memory 상태를 써도 같은 규칙이 자동 적용된다.
         ///
-        /// 붙잡히는 연출(TraumaContactHandler)도 InputEnabled를 쓰지만, 그쪽은 Failed 상태로 넘어가며
-        /// 자체적으로 다시 켜 주므로 이 처리와 충돌하지 않는다.
         /// </remarks>
         private void OnStageStateChanged(StageStateChanged message)
         {

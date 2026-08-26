@@ -48,7 +48,8 @@ namespace Daeume.Tests.PlayMode
             Assert.That(GameManager.Instance.Fail(StageFailureCause.HealthDepleted), Is.True);
 
             // RetryAfterDelay가 1.2초를 기다린 뒤 씬을 갈아 끼운다.
-            yield return WaitUntil(() => objectBeforeDeath == null, 600,
+            yield return new WaitForSeconds(2.5f);
+            Assert.That(objectBeforeDeath == null, Is.True,
                 "재시도해도 죽기 전 씬 오브젝트가 살아 있다. 씬이 다시 올라오지 않았다는 뜻이고, "
                 + "그러면 처치했던 적도 죽은 채로 남는다.");
             yield return WaitForStage();

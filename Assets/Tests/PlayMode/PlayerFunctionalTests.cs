@@ -141,15 +141,29 @@ namespace Daeume.Tests.PlayMode
             Object.DestroyImmediate(trauma.gameObject);
         }
 
-        [Test]
-        public void Test_Combat_TraumaContactDealsNoDamage()
+        [UnityTest]
+        public IEnumerator Test_Combat_TraumaContactDealsOneDamageWithoutLockingMovement()
         {
             var player = new GameObject("Player");
+            var body = player.AddComponent<Rigidbody2D>();
+            body.gravityScale = 0f;
+            var controller = player.AddComponent<PlayerController>();
             var health = player.AddComponent<PlayerHealth>();
+            var handler = player.AddComponent<TraumaContactHandler>();
             var before = health.CurrentHealth;
-            player.AddComponent<TraumaContactHandler>().BeginGrab();
-            Assert.That(health.CurrentHealth, Is.EqualTo(before));
-            Object.DestroyImmediate(player);
+
+            Assert.That(handler.BeginGrab(), Is.True);
+            Assert.That(health.CurrentHealth, Is.EqualTo(before - 1));
+            Assert.That(controller.InputEnabled, Is.True,
+                "Trauma 접촉 피해는 이동 입력을 잠그면 안 된다.");
+
+            controller.SetGroundedForTest(true);
+            controller.SetMoveInput(1f);
+            yield return new WaitForFixedUpdate();
+            Assert.That(body.linearVelocity.x, Is.GreaterThan(0f),
+                "Trauma와 접촉한 직후에도 이동 velocity가 적용돼야 한다.");
+
+            Object.Destroy(player);
         }
 
         [Test]
@@ -178,15 +192,27 @@ namespace Daeume.Tests.PlayMode
         }
 
         [UnityTest]
-        public IEnumerator Test_Combat_TraumaContactStartsGrabThenFails()
+        public IEnumerator Test_Combat_TraumaContactUsesHealthInsteadOfInstantFailure()
         {
             var manager = new GameObject("Manager").AddComponent<GameManager>();
             var player = new GameObject("Player");
+            player.AddComponent<Rigidbody2D>().gravityScale = 0f;
+            var controller = player.AddComponent<PlayerController>();
+            var health = player.AddComponent<PlayerHealth>();
             var handler = player.AddComponent<TraumaContactHandler>();
+
             Assert.That(handler.BeginGrab(), Is.True);
-            Assert.That(handler.BeginGrab(), Is.False);
+            Assert.That(handler.BeginGrab(), Is.False, "contact cooldown 중에는 중복 피해를 주면 안 된다.");
+            Assert.That(health.CurrentHealth, Is.EqualTo(health.MaxHealth - 1));
+            Assert.That(controller.InputEnabled, Is.True);
+            Assert.That(manager.StageState, Is.Not.EqualTo(StageState.Failed));
+
             yield return new WaitForSeconds(handler.TraumaGrabSeconds + 0.05f);
-            Assert.That(manager.StageState, Is.EqualTo(StageState.Failed));
+
+            Assert.That(handler.BeginGrab(), Is.True);
+            Assert.That(health.CurrentHealth, Is.EqualTo(health.MaxHealth - 2));
+            Assert.That(manager.StageState, Is.Not.EqualTo(StageState.Failed));
+
             Object.Destroy(player);
             Object.Destroy(manager.gameObject);
         }

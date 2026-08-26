@@ -46,6 +46,36 @@ namespace Daeume.ContaminationRuntime
             keepChaseActiveUntilEscape = keepActiveUntilEscape;
         }
 
+private void OnEnable()
+        {
+            GameManager.Instance?.Events.Subscribe<StageStateChanged>(HandleStageStateChanged);
+        }
+
+        private void OnDisable()
+        {
+            GameManager.Instance?.Events.Unsubscribe<StageStateChanged>(HandleStageStateChanged);
+        }
+
+        private void HandleStageStateChanged(StageStateChanged message)
+        {
+            if (message.State != StageState.Chase || ChaseStarted) return;
+
+            ResolveReferences();
+            if (director == null || flow == null ||
+                flow.CurrentData == null || flow.CurrentData.CheckpointId != ActiveCheckpointId)
+            {
+                return;
+            }
+
+            // 새로 적재된 Stage scene은 Trauma가 비활성이고 director도 정지 상태다.
+            // 저장된 chase checkpoint로 돌아온 경우에만 회상 없이 추격 runtime을 복원한다.
+            director.SetTimedCompletion(!keepChaseActiveUntilEscape);
+            if (!director.BeginChase()) director.RetryChase();
+            trauma?.SetActive(true);
+            ChaseStarted = true;
+        }
+
+
         /// <summary>
         /// 회상이 끝났을 때 호출된다. 스펙이 정한 순서를 그대로 실행한다.
         ///

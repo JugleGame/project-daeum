@@ -142,6 +142,7 @@ namespace Daeume.Tests.PlayMode
             traumaObject.AddComponent<TraumaChaseActor>();
             var driver = traumaObject.AddComponent<TraumaAnimationDriver>();
             var player = new GameObject("AnimationPlayer");
+            player.AddComponent<PlayerHealth>();
             var contact = player.AddComponent<TraumaContactHandler>();
 
             Assert.That(contact.BeginGrab(), Is.True);
