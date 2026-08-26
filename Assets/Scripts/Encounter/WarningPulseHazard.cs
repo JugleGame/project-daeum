@@ -28,6 +28,7 @@ namespace Daeume.Encounter
 
         private readonly List<IDamageable> queuedTargets = new();
         private AudioSource warningAudio;
+        private float warningVolume = 1f;
         private Coroutine sequence;
 
         public string HazardId => hazardId;
@@ -40,6 +41,7 @@ namespace Daeume.Encounter
         {
             GetComponent<Collider2D>().isTrigger = true;
             warningAudio = GetComponent<AudioSource>();
+            warningVolume = warningAudio.volume;
             warningAudio.playOnAwake = false;
             if (warningAudio.clip == null) warningAudio.clip = CreateWarningClip();
             SetWarning(false);
@@ -98,7 +100,11 @@ namespace Daeume.Encounter
         {
             WarningSequenceCount++;
             SetWarning(true);
-            if (warningAudio != null && warningAudio.clip != null) warningAudio.Play();
+            if (warningAudio != null && warningAudio.clip != null)
+            {
+                warningAudio.volume = warningVolume * AudioRuntime.SfxVolume;
+                warningAudio.Play();
+            }
             WarningIssued?.Invoke();
         }
 

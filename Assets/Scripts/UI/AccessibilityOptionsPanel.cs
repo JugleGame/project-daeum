@@ -43,6 +43,8 @@ namespace Daeume.UI
         private bool isRebinding;
         private Slider shakeSlider;
         private Slider subtitleSlider;
+        private Slider bgmSlider;
+        private Slider sfxSlider;
         private Toggle chaseAssistToggle;
         private Text[] rebindKeyLabels;
 
@@ -81,6 +83,8 @@ namespace Daeume.UI
             var current = presenter.Current;
             if (shakeSlider != null) shakeSlider.SetValueWithoutNotify(current.CameraShakeStrength);
             if (subtitleSlider != null) subtitleSlider.SetValueWithoutNotify(current.SubtitleSize);
+            if (bgmSlider != null) bgmSlider.SetValueWithoutNotify(current.BgmVolume);
+            if (sfxSlider != null) sfxSlider.SetValueWithoutNotify(current.SfxVolume);
             if (chaseAssistToggle != null) chaseAssistToggle.isOn = current.ChaseSpeedAssist;
         }
 
@@ -173,6 +177,14 @@ namespace Daeume.UI
             const float rowSpacing = 90f;
 
             CreateHeading("Heading", self, StringTable.Get("options.heading"), y);
+            y -= rowSpacing;
+
+            bgmSlider = CreateSliderRow(self, StringTable.Get("options.bgm_volume"), 0f, 1f, false, y);
+            bgmSlider.onValueChanged.AddListener(value => { presenter.SetBgmVolume(value); SaveCurrent(); });
+            y -= rowSpacing;
+
+            sfxSlider = CreateSliderRow(self, StringTable.Get("options.sfx_volume"), 0f, 1f, false, y);
+            sfxSlider.onValueChanged.AddListener(value => { presenter.SetSfxVolume(value); SaveCurrent(); });
             y -= rowSpacing;
 
             shakeSlider = CreateSliderRow(self, StringTable.Get("options.shake"), 0f, 1f, false, y);

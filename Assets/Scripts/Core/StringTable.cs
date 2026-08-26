@@ -71,6 +71,8 @@ namespace Daeume.Core
             // 접근성 옵션 화면 (spec-013)
             ["options.heading"] = "접근성 옵션",
             ["options.close"] = "닫기",
+            ["options.bgm_volume"] = "BGM 볼륨",
+            ["options.sfx_volume"] = "효과음 볼륨",
             ["options.shake"] = "카메라 흔들림",
             ["options.subtitle_size"] = "자막 크기",
             ["options.chase_assist"] = "추격 속도 저하",

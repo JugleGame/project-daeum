@@ -22,6 +22,9 @@ namespace Daeume.Core
         public int SubtitleSize = 1;             // 자막 크기 3단계: 0/1/2
         public bool ChaseSpeedAssist;            // 켜면 추격 속도와 접근 압박만 낮춘다(경로·기믹은 불변)
         public string BindingOverridesJson = string.Empty; // 키 재설정 결과를 담는 자리(Input System이 JSON으로 뱉는다)
+        public int AudioVolumeSchemaVersion = 1;
+        public float BgmVolume = 1f;
+        public float SfxVolume = 1f;
 
         /// <summary>
         /// 값만 똑같은 새 객체를 만든다(깊은 복사).
@@ -38,7 +41,10 @@ namespace Daeume.Core
                 CameraShakeStrength = CameraShakeStrength,
                 SubtitleSize = SubtitleSize,
                 ChaseSpeedAssist = ChaseSpeedAssist,
-                BindingOverridesJson = BindingOverridesJson ?? string.Empty
+                BindingOverridesJson = BindingOverridesJson ?? string.Empty,
+                AudioVolumeSchemaVersion = AudioVolumeSchemaVersion,
+                BgmVolume = BgmVolume,
+                SfxVolume = SfxVolume
             };
         }
     }

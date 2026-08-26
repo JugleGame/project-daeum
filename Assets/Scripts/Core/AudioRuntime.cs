@@ -8,6 +8,19 @@ namespace Daeume.Core
         private static AudioSource sfxSource;
         private static AudioSource titleSource;
 
+        public static float BgmVolume { get; private set; } = 1f;
+        public static float SfxVolume { get; private set; } = 1f;
+        public static event System.Action VolumeChanged;
+
+        public static void ApplySettings(AssistSettings settings)
+        {
+            BgmVolume = Mathf.Clamp01(settings?.BgmVolume ?? 1f);
+            SfxVolume = Mathf.Clamp01(settings?.SfxVolume ?? 1f);
+            if (titleSource != null) titleSource.volume = BgmVolume;
+            if (sfxSource != null) sfxSource.volume = SfxVolume;
+            VolumeChanged?.Invoke();
+        }
+
         public static void PlaySfx(string cue)
         {
             var clip = Resources.Load<AudioClip>("Audio/Sfx/" + cue);
@@ -18,6 +31,7 @@ namespace Daeume.Core
                 Object.DontDestroyOnLoad(host);
                 sfxSource = host.AddComponent<AudioSource>();
                 sfxSource.spatialBlend = 0f;
+                sfxSource.volume = SfxVolume;
             }
 
             sfxSource.PlayOneShot(clip);
@@ -33,6 +47,7 @@ namespace Daeume.Core
             titleSource = host.AddComponent<AudioSource>();
             titleSource.spatialBlend = 0f;
             titleSource.loop = true;
+            titleSource.volume = BgmVolume;
             titleSource.clip = clip;
             titleSource.Play();
         }

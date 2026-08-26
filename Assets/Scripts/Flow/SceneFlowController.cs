@@ -62,6 +62,7 @@ namespace Daeume.Flow
             // 진행 상황과 사용자 설정을 다른 파일로 나눈다(새 게임에도 접근성 설정이 유지되도록).
             saveSystem = new SaveSystem(new FileSaveStore(path), new FileSaveStore(settingsPath));
             currentData = saveSystem.Load(maxHealth).Data;
+            AudioRuntime.ApplySettings(currentData.AssistSettings);
 
             GameManager.Instance?.Events.Subscribe<ChaseCheckpointRestoreRequested>(RestoreChaseCheckpoint);
             GameManager.Instance?.Events.Subscribe<StageFailed>(OnStageFailed);
@@ -239,6 +240,7 @@ private void OnStageFailed(StageFailed value)
         public void SaveAssistSettings(AssistSettings settings)
         {
             currentData.AssistSettings = (settings ?? new AssistSettings()).Copy();
+            AudioRuntime.ApplySettings(currentData.AssistSettings);
             saveSystem.Save(currentData, maxHealth);
         }
 

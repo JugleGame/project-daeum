@@ -16,6 +16,7 @@ namespace Daeume.Encounter
 
         private readonly HashSet<Transform> queuedTargets = new();
         private AudioSource warningAudio;
+        private float warningVolume = 1f;
         private Coroutine sequence;
         private Color idleColor;
 
@@ -30,6 +31,7 @@ namespace Daeume.Encounter
             if (warningRenderer == null) warningRenderer = GetComponent<SpriteRenderer>();
             idleColor = warningRenderer.color;
             warningAudio = GetComponent<AudioSource>();
+            warningVolume = warningAudio.volume;
             warningAudio.playOnAwake = false;
             GetComponent<Collider2D>().isTrigger = true;
             SetWarning(false);
@@ -59,7 +61,11 @@ namespace Daeume.Encounter
         private IEnumerator ResolveSequence()
         {
             SetWarning(true);
-            if (warningAudio != null) warningAudio.Play();
+            if (warningAudio != null)
+            {
+                warningAudio.volume = warningVolume * AudioRuntime.SfxVolume;
+                warningAudio.Play();
+            }
             yield return new WaitForSeconds(warningSeconds);
             foreach (var target in queuedTargets)
             {
