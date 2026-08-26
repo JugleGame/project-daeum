@@ -8,9 +8,9 @@ namespace Daeume.Tests.EditMode
 {
     /// <summary>
     /// spec-007/spec-006/spec-005 acceptance criteria that must hold for every StageData asset
-    /// currently authored in the project. Only Stage 1 exists in this slice (Stage 2~13 are out of
-    /// scope for issue #11), so these tests iterate "all StageData assets that exist today" rather
-    /// than a hardcoded count of 13 — they keep passing unmodified once later stages are added.
+    /// currently authored in the project. 3스테이지 재구성 이후 남은 레코드는 Stage01 / Stage10 / Stage13뿐이라,
+    /// 이 테스트들은 13개를 고정 개수로 세지 않고 "지금 존재하는 모든 StageData"를 순회한다 —
+    /// 스테이지가 다시 늘어나도 수정 없이 통과한다.
     /// </summary>
     public sealed class StageProgressionTests
     {
@@ -19,12 +19,12 @@ namespace Daeume.Tests.EditMode
         {
             var stages = LoadAllStageData();
             Assert.That(stages, Is.Not.Empty, "Expected at least Stage 1's StageData asset to exist.");
-            Assert.That(stages.Select(stage => stage.StageId), Does.Contain(4),
-                "Issue #14 requires an authored Stage04 record.");
-            Assert.That(stages.Select(stage => stage.StageId), Does.Contain(5),
-                "Issue #15 requires an authored Stage05 record.");
-            Assert.That(stages.Select(stage => stage.StageId), Does.Contain(6),
-                "Issue #16 requires an authored Stage06 record.");
+            Assert.That(stages.Select(stage => stage.StageId), Does.Contain(1),
+                "3스테이지 재구성(Stage01 -> Stage10 -> Stage13)의 시작 스테이지 레코드가 필요하다.");
+            Assert.That(stages.Select(stage => stage.StageId), Does.Contain(10),
+                "Issue #57 requires an authored Stage10 record.");
+            Assert.That(stages.Select(stage => stage.StageId), Does.Contain(13),
+                "Issue #58 requires an authored Stage13 record.");
 
 
             foreach (var stage in stages)
@@ -32,57 +32,6 @@ namespace Daeume.Tests.EditMode
                 Assert.That(stage.ValidateData(), Is.Empty, $"Stage {stage.StageId} ({stage.name}) has invalid narrative fields.");
             }
         }
-
-        [Test]
-        public void Test_Progression_Stage04DeclaresHappyDormitoryContract()
-        {
-            var stage = LoadAllStageData().Single(value => value.StageId == 4);
-            Assert.That(stage.Location, Does.Contain("기숙사"));
-            Assert.That(stage.EmotionalRole.ToString(), Is.EqualTo("Happiness"));
-            Assert.That(stage.HospitalImageryDirectness, Is.Zero);
-            Assert.That(stage.EncounterIds, Is.EqualTo(new[]
-            {
-                "stage04.encounter.01", "stage04.encounter.02", "stage04.encounter.03"
-            }));
-            Assert.That(stage.PrimaryContaminationChannels.Count, Is.InRange(2, 3));
-            Assert.That(stage.NextStageId, Is.EqualTo(5));
-        }
-
-        [Test]
-        public void Test_Progression_Stage05DeclaresHappyAnxiousProjectRoomContract()
-        {
-            var stage = LoadAllStageData().Single(value => value.StageId == 5);
-            Assert.That(stage.Location, Does.Contain("프로젝트실"));
-            Assert.That(stage.EmotionalRole, Is.EqualTo(EmotionalRole.HappinessAnxiety));
-            Assert.That(stage.HospitalImageryDirectness, Is.EqualTo(1));
-            Assert.That(stage.EncounterIds, Is.EqualTo(new[]
-            {
-                "stage05.encounter.01", "stage05.encounter.02", "stage05.encounter.03"
-            }));
-            Assert.That(stage.ContaminationVariantId, Is.EqualTo("Stage05_Overlay_Intrusion"));
-            Assert.That(stage.PrimaryContaminationChannels.Count, Is.InRange(2, 3));
-            Assert.That(stage.TargetChaseSeconds, Is.GreaterThan(46f));
-            Assert.That(stage.NextStageId, Is.EqualTo(6));
-        }
-
-        [Test]
-        public void Test_Progression_Stage06DeclaresBrightStreetShopContract()
-        {
-            var stage = LoadAllStageData().Single(value => value.StageId == 6);
-            Assert.That(stage.Location, Does.Contain("거리/상점가"));
-            Assert.That(stage.EmotionalRole, Is.EqualTo(EmotionalRole.HappinessAnxiety));
-            Assert.That(stage.HospitalImageryDirectness, Is.EqualTo(1),
-                "Issue #16 overrides the overview curve for Stage06.");
-            Assert.That(stage.EncounterIds, Is.EqualTo(new[]
-            {
-                "stage06.encounter.01", "stage06.encounter.02", "stage06.encounter.03"
-            }));
-            Assert.That(stage.ContaminationVariantId, Is.EqualTo("Stage06_Overlay_Intrusion"));
-            Assert.That(stage.PrimaryContaminationChannels.Count, Is.InRange(2, 3));
-            Assert.That(stage.TargetChaseSeconds, Is.GreaterThan(49f));
-            Assert.That(stage.NextStageId, Is.EqualTo(7));
-        }
-
 
         [Test]
         public void Test_Progression_HospitalDirectnessInRange()

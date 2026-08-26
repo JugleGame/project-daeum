@@ -34,6 +34,8 @@ namespace Daeume.Core
             ["prompt.memory.stage05"] = "프로젝트 보드의 낙서 넘겨보기",
             // Stage 6 전용 InteractionVerb. 쇼핑백과 작은 장난감 외형을 함께 살펴보는 기억과 짝을 이룬다.
             ["prompt.memory.stage06"] = "쇼핑백 속 작은 장난감 살펴보기",
+            // Stage 10 전용 InteractionVerb. 육교 아래 병원 방향 표지판을 확인하는 외형과 짝을 이룬다.
+            ["prompt.memory.stage10"] = "육교 아래 표지판 확인하기",
             ["prompt.ending.lower_weapon"] = "내려놓기",
 
             ["prompt.continue"] = "계속",
@@ -43,12 +45,15 @@ namespace Daeume.Core
             // 없는 번호가 나오면 멈추므로, 줄을 늘리려면 다음 번호를 이어서 넣으면 된다.
             ["stage.opening.stage01.01"] = "무슨 일이 일어난 거지…?",
             ["stage.opening.stage01.02"] = "오른쪽으로 가 볼까?",
+            ["stage.opening.stage10.01"] = "이 길을 전에 달린 적이 있다.",
+            ["stage.opening.stage10.02"] = "육교의 표지판을 확인해야 한다.",
 
             // HUD 상시 표기
             ["hud.health"] = "체력",
             ["hud.chase"] = "도망치세요",
             ["hud.failed"] = "쓰러졌습니다... 체크포인트에서 다시 시작합니다.",
             ["hud.objective.memory"] = "오른쪽 끝의 기억을 찾아라",
+            ["hud.objective.stage10.memory"] = "육교의 표지판에서 기억을 확인하라",
 
             // Stage 1 튜토리얼 조작 안내. 키 이름은 실제 바인딩에서 읽어 오고, 여기에는 동작 이름만 둔다.
             ["hud.tutorial.hint"] = "조작",
@@ -111,6 +116,16 @@ namespace Daeume.Core
             ["memory.stage06.01"] = "밝은 진열대 앞에서 서로 고른 작은 장난감과 간식이 쇼핑백 안에서 부딪힌다.",
             ["memory.stage06.02"] = "파라솔 아래 벤치에 앉아 영수증 뒷면에 다음에 갈 곳을 함께 적었다.",
             ["memory.stage06.03"] = "웃음이 남은 거리를 돌아보자 작은 잔재들의 공격 예고가 밝은 간판 사이에서 번쩍인다.",
+            // Stage 10 — 병원으로 가는 밤 도로. 이 스테이지가 진실 공개를 혼자 감당한다.
+            // 세 줄의 순서가 곧 공개 순서다: 시간 기록 → 병원 확정 → 인과 부정.
+            // 마지막 줄이 심는 "이건 다음에 하자 / 나중에 가자 / 다음에 보자"는
+            // 게임 제목과 Stage13 엔딩(ending.farewell)이 그대로 회수한다.
+            // spec-008: 인물 고유 이름과 확정 병명은 쓰지 않는다.
+            ["memory.stage10.title"] = "기억의 조각 — 달려간 시간",
+            ["memory.stage10.01"] = "표지판 아래 접힌 종이에 그날의 시각이 나란히 적혀 있다. 연락을 받은 때와 도착한 때, 그 사이는 십일 분이었다.",
+            ["memory.stage10.02"] = "이 길 끝은 병원이었다. 육교를 넘어 한 번도 돌지 않고 곧장 달렸고, 도착했을 때 복도는 이미 조용했다.",
+            ["memory.stage10.03"] = "이건 다음에 하자, 나중에 가자, 다음에 보자 — 미뤄 둔 말을 전부 되돌린다 해도, 십일 분은 결과를 바꿀 수 있는 시간이 아니었다.",
+
             // Stage13 — 새로운 사실을 설명하지 않고 평범한 작별의 기억만 남긴다.
             ["memory.stage13.title"] = "기억의 조각 — 다음에 보자",
             ["memory.stage13.01"] = "정류장 벤치에 나란히 앉아, 오지 않는 버스를 한참 기다렸다.",
