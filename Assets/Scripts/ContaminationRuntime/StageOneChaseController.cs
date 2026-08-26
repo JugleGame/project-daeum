@@ -28,6 +28,8 @@ namespace Daeume.ContaminationRuntime
         [SerializeField] private Transform player;
         [SerializeField] private GameObject trauma;
         [SerializeField] private bool keepChaseActiveUntilEscape;
+        [SerializeField] private bool restoreChaseOnCheckpoint = true;
+        [SerializeField] private bool revealTraumaOnMemoryComplete;
 
         /// <summary>실제로 저장에 쓰는 체크포인트 ID. 씬에서 비워 두면 기본 상수로 되돌아간다.</summary>
         public string ActiveCheckpointId => string.IsNullOrEmpty(checkpointId) ? CheckpointId : checkpointId;
@@ -58,7 +60,7 @@ private void OnEnable()
 
         private void HandleStageStateChanged(StageStateChanged message)
         {
-            if (message.State != StageState.Chase || ChaseStarted) return;
+            if (message.State != StageState.Chase || ChaseStarted || !restoreChaseOnCheckpoint) return;
 
             ResolveReferences();
             if (director == null || flow == null ||
@@ -108,6 +110,8 @@ private void OnEnable()
             if (!director.BeginChase()) return false;
 
             trauma?.SetActive(true);
+            if (revealTraumaOnMemoryComplete)
+                trauma?.GetComponentInChildren<TraumaRevealVisual>(true)?.Reveal();
 
             // 체크포인트는 추격이 실제로 시작된 뒤 저장한다.
             // 그래야 추격 중 사망 시 "회상을 다시 보지 않고" 같은 지점에서 재개된다(spec-011).

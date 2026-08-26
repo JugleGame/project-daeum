@@ -174,6 +174,8 @@ GameObject:
   m_Component:
   - component: {fileID: 8556296475785621100}
   - component: {fileID: 3870197452899508559}
+  - component: {fileID: 3607764861741376097}
+  - component: {fileID: 7648050724478289691}
   - component: {fileID: 6366948025765772838}
   m_Layer: 0
   m_Name: Visual
@@ -257,6 +259,38 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
   m_BlendShapeWeights: []
+--- !u!114 &3607764861741376097
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7202050056739665674}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c48d52fb9a54201aefcd6f42f9b8d85, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Daeume.ContaminationRuntime::Daeume.ContaminationRuntime.TraumaAppearancePulse
+  target: {fileID: 3870197452899508559}
+  peakColor: {r: 1.7, g: 1.6, b: 1, a: 1}
+  cycleSeconds: 1.3
+  durationSeconds: 1.3
+--- !u!114 &7648050724478289691
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7202050056739665674}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5e69469e1f754a8fab887082c6f7ad0d, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Daeume.ContaminationRuntime::Daeume.ContaminationRuntime.TraumaRevealVisual
+  animator: {fileID: 2081515219084469999}
+  target: {fileID: 3870197452899508559}
+  characterSprite: {fileID: -1275403624107121422, guid: 1874179890d67d24ea3bfbcb24285214, type: 3}
+  pulse: {fileID: 3607764861741376097}
 --- !u!114 &6366948025765772838
 MonoBehaviour:
   m_ObjectHideFlags: 0
