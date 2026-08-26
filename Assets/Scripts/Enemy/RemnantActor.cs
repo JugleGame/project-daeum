@@ -38,6 +38,12 @@ namespace Daeume.Enemy
         /// <summary>지형 검사에 주는 여유 두께. 0이면 벽에 닿았는지 판정이 프레임마다 깜빡인다.</summary>
         private const float TerrainSkin = 0.02f;
 
+        // ponytail: 발밑을 얼마나 내려다볼지 고정값. 잔재 키·스폰 높이가 스테이지마다 크게
+        // 달라지면 RemnantDataBase로 옮겨 아키타입별로 조정한다.
+        private const float LedgeProbeDepth = 0.6f;
+
+        // 접지 보정에서 위아래로 살펴볼 거리. 스폰 지점이 조금 어긋나 있어도 바닥에 붙인다.
+        private const float GroundSnapRange = 1.5f;
         /// <summary>낙하 가속도. TraumaChaseActor와 같은 값을 쓴다.</summary>
         private const float Gravity = 30f;
 
@@ -153,6 +159,10 @@ namespace Daeume.Enemy
             {
                 return;
             }
+
+            // 잔재는 중력을 받지 않는다. 발밑을 직접 맞춰 주지 않으면 스폰 지점 높이 그대로 떠 있고,
+            // 높이가 다른 지형으로 걸어가도 처음 높이를 유지한다. (Stage01에서 40px 가량 떠 보였다)
+            SnapToGround();
 
             if (target == null)
             {
@@ -407,7 +417,7 @@ namespace Daeume.Enemy
 
         protected Transform TraumaTarget => traumaTarget;
 
-        /// <summary>진행 방향에 막히는 지형이 있는지 본다.</summary>
+        /// <summary>진행 방향에 막히는 지형이 있는지, 또는 그쪽이 낭떠러지인지 본다.</summary>
         /// <remarks>
         /// 잔재는 Rigidbody2D 없이 transform을 직접 옮긴다. 물리 엔진이 밀어내 주지 않으므로
         /// 막힘 검사를 직접 하지 않으면 벽과 잠긴 출구를 그대로 통과한다.
@@ -418,6 +428,10 @@ namespace Daeume.Enemy
         ///
         /// 거리 0 히트는 무시한다. 기준점이 이미 콜라이더 안에 있다는 뜻이라, 막힘으로 치면
         /// 벽에 살짝 겹친 잔재가 영영 그 자리에 굳는다.
+        ///
+        /// 벽뿐 아니라 낭떠러지도 막힘으로 친다. 잔재는 중력을 받지 않고 x만 움직이므로,
+        /// 이 검사가 없으면 바닥이 끊긴 구간 위를 그대로 떠서 건너 플레이어를 쫓아간다
+        /// (Stage01의 폭 9.5짜리 구덩이에서 실제로 그렇게 보였다).
         /// </remarks>
         protected bool IsBlockedTowards(float moveX)
         {
@@ -433,6 +447,57 @@ namespace Daeume.Enemy
             {
                 var hit = hits[index];
                 if (hit.collider == null || hit.collider.isTrigger || hit.distance <= 0f) continue;
+                if (hit.collider.transform == transform || hit.collider.transform.IsChildOf(transform)) continue;
+                if (FindDamageable(hit.collider.transform)?.TargetKind == DamageTargetKind.Player) continue;
+                return true;
+            }
+
+            // 벽은 없다. 이제 갈 곳 발밑에 바닥이 있는지 본다.
+            var footX = bounds.center.x + Mathf.Sign(moveX) * (bounds.extents.x + Mathf.Abs(moveX));
+            return !HasGroundAt(footX, bounds.min.y);
+        }
+
+        /// <summary>발밑 바닥에 딱 붙여 세운다.</summary>
+        /// <remarks>
+        /// 잔재의 스프라이트는 발바닥이 곧 pivot이다(캔버스 아래 여백 8px, pivot 9px).
+        /// 그래서 transform.y를 바닥 높이에 맞추면 그림의 발이 바닥에 닿는다.
+        /// 몸통 콜라이더는 트리거라 바닥에 얹힐 필요가 없다 — 기준은 그림이다.
+        ///
+        /// 바닥을 못 찾으면 아무것도 하지 않는다. 낭떠러지 위로 걸어 들어가는 것은
+        /// IsBlockedTowards가 이미 막으므로, 여기서 못 찾는 경우는 스폰 지점이 허공인 배치 실수뿐이다.
+        /// 그때 억지로 끌어내리면 원인이 감춰진다.
+        /// </remarks>
+        private void SnapToGround()
+        {
+            // 위에서 쏘면 머리 위 발판에 먼저 맞아 잔재가 그 위로 끌려 올라간다. 발밑에서 아래로만 본다.
+            var origin = new Vector2(transform.position.x, transform.position.y + TerrainSkin);
+            var hits = Physics2D.RaycastAll(origin, Vector2.down, GroundSnapRange);
+            for (var index = 0; index < hits.Length; index++)
+            {
+                var hit = hits[index];
+                if (hit.collider == null || hit.collider.isTrigger) continue;
+                if (hit.collider.transform == transform || hit.collider.transform.IsChildOf(transform)) continue;
+                if (FindDamageable(hit.collider.transform)?.TargetKind == DamageTargetKind.Player) continue;
+
+                var position = transform.position;
+                position.y = hit.point.y;
+                transform.position = position;
+                return;
+            }
+        }
+
+        /// <summary>주어진 지점의 발밑에 디딜 바닥이 있는지 본다.</summary>
+        /// <remarks>
+        /// 얕게만 본다(LedgeProbeDepth). 잔재는 떨어지지 않으므로 한참 아래에 있는 바닥은
+        /// 디딜 수 있는 곳이 아니다 — 깊게 보면 구덩이 속 기둥 위를 공중에서 밟은 셈이 된다.
+        /// </remarks>
+        private bool HasGroundAt(float x, float footY)
+        {
+            var hits = Physics2D.RaycastAll(new Vector2(x, footY + TerrainSkin), Vector2.down, LedgeProbeDepth + TerrainSkin);
+            for (var index = 0; index < hits.Length; index++)
+            {
+                var hit = hits[index];
+                if (hit.collider == null || hit.collider.isTrigger) continue;
                 if (hit.collider.transform == transform || hit.collider.transform.IsChildOf(transform)) continue;
                 if (FindDamageable(hit.collider.transform)?.TargetKind == DamageTargetKind.Player) continue;
                 return true;

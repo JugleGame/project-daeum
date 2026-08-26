@@ -356,13 +356,28 @@ namespace Daeume.Flow
         /// 때문이다. 대신 SaveSystem.ResolveRespawnHealth(deathRestore: false)로 마지막 저장 위치·체력을
         /// 그대로 복원해 되돌린다(전체 씬 리로드도 하지 않는다. 사망 재시도보다 가벼운 경로다).
         /// </summary>
-        private void OnPlayerFellOutOfBounds(PlayerFellOutOfBounds _)
+        private void OnPlayerFellOutOfBounds(PlayerFellOutOfBounds request)
         {
             var health = SaveSystem.ResolveRespawnHealth(currentData, maxHealth, false, 0);
-            GameManager.Instance?.Events.Publish(new PlayerRestoreRequested(currentData.PlayerPosition, health));
+
+            // 레벨이 낙사 복귀 지점(StageMarkerKind.FallRecovery)을 선언했으면 그쪽을 쓴다.
+            // 저장된 위치는 추격 체크포인트에서만 갱신돼서, 탐색 구간에서는 계속 (0,0)이었다 —
+            // 구덩이에 빠질 때마다 스테이지 시작점으로 튕겨 나갔다는 뜻이다.
+            var position = request.RecoveryPosition ?? currentData.PlayerPosition;
+            GameManager.Instance?.Events.Publish(new PlayerRestoreRequested(position, health));
         }
 
         /// <summary>내용 씬만 갈아 끼운다. Persistent와 Boot는 절대 내리지 않는다.</summary>
+        /// <remarks>
+        /// 올리려는 씬이 이미 떠 있어도 같이 내렸다가 다시 올린다. 예전에는 이미 로드된 씬을
+        /// 건너뛰었는데, 그러면 같은 스테이지에서 죽어 RetryFromFailure가 같은 씬을 다시 요청했을 때
+        /// 실제로는 아무것도 다시 올라오지 않아 씬이 죽기 직전 상태 그대로 남았다 —
+        /// 이미 처치한 적(EncounterController가 스폰한 Remnant)은 죽은 채로, 출구 잠금과 Wave 번호도
+        /// 그대로 유지됐다. 재시도는 스테이지를 처음 상태로 되돌려야 하므로 항상 다시 올린다.
+        ///
+        /// 플레이어와 카메라는 Persistent 씬에 있어 이 재로드에 흔들리지 않는다.
+        /// 복귀 위치는 호출한 쪽(LoadContent)이 씬을 올린 뒤 PlayerRestoreRequested로 정한다.
+        /// </remarks>
         private IEnumerator ReplaceContent(string sceneName)
         {
             // 뒤에서부터 순회하는 이유: 씬을 내리면 목록의 인덱스가 당겨져,
@@ -370,7 +385,7 @@ namespace Daeume.Flow
             for (var index = SceneManager.sceneCount - 1; index >= 0; index--)
             {
                 var scene = SceneManager.GetSceneAt(index);
-                if (scene.name == "Persistent" || scene.name == "Boot" || scene.name == sceneName)
+                if (scene.name == "Persistent" || scene.name == "Boot")
                 {
                     continue;
                 }
@@ -378,10 +393,7 @@ namespace Daeume.Flow
                 yield return SceneManager.UnloadSceneAsync(scene);
             }
 
-            if (!SceneManager.GetSceneByName(sceneName).isLoaded)
-            {
-                yield return SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
-            }
+            yield return SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
 
             var loaded = SceneManager.GetSceneByName(sceneName);
             if (loaded.IsValid())

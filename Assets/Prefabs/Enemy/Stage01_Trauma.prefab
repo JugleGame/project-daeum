@@ -21,7 +21,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &7829907258734453
 Transform:
   m_ObjectHideFlags: 0
@@ -125,7 +125,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba173a03b23512040b84ce6e68a3823c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Daeume.ContaminationRuntime::Daeume.ContaminationRuntime.TraumaChaseActor
-  gravity: 30
+  gravity: 0
   maxFallSpeed: 22
   jumpSpeed: 13
   climbSpeed: 5
@@ -371,4 +371,18 @@ MonoBehaviour:
         m_SelectedSource:
           rid: -2
         m_Provider2DCache:
-          rid: -2
+          rid: 3406140276556169316
+    - rid: 3406140276556169316
+      type: {class: 'Provider2DCache`1[[UnityEngine.Rendering.Universal.ShadowShape2DProvider, Unity.RenderPipelines.Universal.2D.Runtime]]', ns: UnityEngine.Rendering.Universal, asm: Unity.RenderPipelines.Universal.2D.Runtime}
+      data:
+        m_Cache:
+        - m_Key:
+            m_TypeName: ShadowShape2DProvider_SpriteRenderer
+            m_Component: {fileID: 3870197452899508559}
+            m_UsesComponent: 1
+          m_Value:
+            m_Provider:
+              rid: 3406140276556169317
+    - rid: 3406140276556169317
+      type: {class: ShadowShape2DProvider_SpriteRenderer, ns: UnityEngine.Rendering.Universal, asm: Unity.RenderPipelines.Universal.2D.Runtime}
+      data: 

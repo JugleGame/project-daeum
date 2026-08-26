@@ -104,10 +104,16 @@ namespace Daeume.Tests.PlayMode
         {
             yield return LoadStage();
             var manager = GameManager.Instance;
-            var flow = Object.FindAnyObjectByType<SceneFlowController>();
             var player = Object.FindAnyObjectByType<PlayerController>();
             var body = player.GetComponent<Rigidbody2D>();
-            var startPosition = flow.CurrentData.PlayerPosition;
+
+            StageMarker recovery = null;
+            foreach (var marker in Object.FindObjectsByType<StageMarker>(FindObjectsSortMode.None))
+            {
+                if (marker.Kind == StageMarkerKind.FallRecovery) { recovery = marker; break; }
+            }
+
+            Assert.That(recovery, Is.Not.Null, "Stage01은 낙사 복귀 마커를 선언해야 한다.");
 
             // 발판(blockout 바닥, minY ~= -4.5) 아래 VoidZone(#11) 안으로 완전히 벗어난다.
             body.position = new Vector2(15f, -15f);
@@ -123,8 +129,11 @@ namespace Daeume.Tests.PlayMode
             // 스테이지를 Failed로 만들지 않는다 — "보이지 않는 즉사" 금지 규칙.
             Assert.That(manager.StageState, Is.Not.EqualTo(StageState.Failed));
             Assert.That(body.position.y, Is.GreaterThan(-5f), "Player should have been teleported back onto the playable floor.");
-            Assert.That(Vector2.Distance(body.position, startPosition), Is.LessThan(0.05f),
-                "Player should be restored to the last saved checkpoint position (SaveSystem.ResolveRespawnHealth path).");
+            // 저장 위치가 아니라 레벨이 선언한 낙사 복귀 마커로 되돌린다.
+            // 저장 위치(SaveData.PlayerPosition)는 추격 체크포인트에서만 갱신돼서
+            // 탐색 구간에서는 계속 (0,0)이었다 — 구덩이에 빠질 때마다 스테이지 시작점으로 튕겼다.
+            Assert.That(Vector2.Distance(body.position, recovery.transform.position), Is.LessThan(0.05f),
+                "Player should be restored to the FallRecovery marker declared by the level.");
             LogAssert.NoUnexpectedReceived();
         }
 
@@ -136,14 +145,21 @@ namespace Daeume.Tests.PlayMode
             var hud = Object.FindAnyObjectByType<StageHudPresenter>();
             Assert.That(hud, Is.Not.Null, "StagePresentationBootstrap should have spawned the HUD.");
 
-            // HUD는 방금 생성됐을 수 있다. Start()가 구독을 마칠 한 프레임을 준 뒤에 상태 변화를 알린다
-            // (구독 전에 알리면 목표/조작 문구가 비어 있는 채로 남는다).
+            // A prior PlayMode test can replace the Persistent scene's GameManager after this
+            // persistent HUD first enabled. Re-enable it so the fixture reconnects to the current
+            // event bus before requesting the Explore-state objective.
+            hud.enabled = false;
+            hud.enabled = true;
             yield return null;
             GameManager.Instance.ResetStage();
-            yield return null;
 
-            // 튜토리얼 스테이지라 목표 문구만으로는 조작을 알 수 없다(#11).
-            Assert.That(hud.ObjectiveLabel, Does.Contain(StringTable.Get("options.rebind.jump")));
+            var jumpLabel = StringTable.Get("options.rebind.jump");
+            for (var frame = 0; frame < 30 && !hud.ObjectiveLabel.Contains(jumpLabel); frame++)
+            {
+                yield return null;
+            }
+
+            Assert.That(hud.ObjectiveLabel, Does.Contain(jumpLabel));
             Assert.That(hud.ObjectiveLabel, Does.Contain(StringTable.Get("options.rebind.interact")));
             Assert.That(hud.ObjectiveLabel, Does.Contain(StringTable.Get("hud.objective.memory")));
             LogAssert.NoUnexpectedReceived();
