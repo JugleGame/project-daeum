@@ -13,6 +13,10 @@
 [![2D](https://img.shields.io/badge/2D-URP-5C2D91?style=flat-square)](https://docs.unity3d.com/Packages/com.unity.render-pipelines.universal@17.0/manual/index.html)
 [![Input System](https://img.shields.io/badge/Input_System-1.19.0-333333?style=flat-square)](https://docs.unity3d.com/Packages/com.unity.inputsystem@1.19/manual/index.html)
 
+[![브라우저에서 플레이](https://img.shields.io/badge/▶_브라우저에서_플레이-지금_시작하기-E38B4D?style=for-the-badge)](https://juglegame.github.io/project-daeum/)
+
+**설치 없이 웹에서 바로 플레이할 수 있습니다.**
+
 탐색 · 전투 · 회상 · 오염 · 추격
 
 </div>
@@ -122,6 +126,16 @@
 
 ## 🚀 실행 방법
 
+### 브라우저에서 바로 플레이
+
+별도의 설치 없이 아래 링크에서 Web 빌드를 실행할 수 있습니다.
+
+<div align="center">
+
+### [▶ `다음에` Web 빌드 플레이하기](https://juglegame.github.io/project-daeum/)
+
+</div>
+
 ### 요구 사항
 
 - Unity **6000.5.5f1**
@@ -175,8 +189,8 @@ Explore → Memory → Chase → Cleared
 
 - 플레이 가능한 흐름: `Title → Stage 01 → Stage 10 → Stage 13 → Ending`
 - 구현된 핵심 시스템: 이동·점프·붙잡기, 근접 전투, 인카운터, 기억 재생, 오염 단계, 트라우마 추격, 저장·이어하기, 접근성 설정
-- 플랫폼: Unity Editor 기준 검증
-- 공개 다운로드 및 브라우저 빌드: 아직 제공하지 않음
+- 플랫폼: WebGL(GitHub Pages), Unity Editor
+- Web 빌드: [브라우저에서 플레이](https://juglegame.github.io/project-daeum/)
 
 개발 및 QA 기록은 [`Docs/`](Docs/)와 [`QA/`](QA/)에서 확인할 수 있습니다.
 
